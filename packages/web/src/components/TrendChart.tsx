@@ -61,7 +61,7 @@ export function TrendChart({ history, models, get, domain, unit = '', height = 3
   });
 
   return (
-    <div style={{ width: '100%', height: '100%', minHeight: height ? undefined : 0 }}>
+    <div style={{ position: 'absolute', inset: 0 }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 10, right: 16, bottom: 0, left: -12 }}>
           <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />

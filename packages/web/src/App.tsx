@@ -216,7 +216,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                 <h2>출력 토큰 (장황함)</h2>
                 <p>응답당 평균 output tokens</p>
               </div>
-              <div style={{ height: 240 }}>
+              <div style={{ position: 'relative', height: 240 }}>
                 <TrendChart history={history} models={shown} get={(e) => e.avgOutputTokens} unit="" markPeak />
               </div>
             </section>

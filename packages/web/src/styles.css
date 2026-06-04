@@ -32,8 +32,8 @@ body {
   height: 100vh;
   max-height: 100vh;
   overflow: hidden;
-  display: grid;
-  grid-template-rows: auto auto auto 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   padding-bottom: 14px;
 }
@@ -120,19 +120,17 @@ body {
 .bad-acc { color: var(--down); font-weight: 700; }
 
 /* ---- panels (charts) ---- */
-.panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 0; }
-.app.board.compact .panels { height: 100%; }
-.app.board:not(.compact) .panels { height: 300px; }
+.panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
   box-shadow: var(--shadow); padding: 14px 16px;
 }
-.panel { display: flex; flex-direction: column; min-height: 0; padding: 12px 14px 10px; }
+.panel { display: flex; flex-direction: column; padding: 12px 14px 10px; }
 .card-head { margin-bottom: 8px; }
 .card-head h2 { margin: 0; font-size: 13.5px; font-weight: 650; letter-spacing: -0.01em; display: flex; align-items: baseline; gap: 8px; }
 .card-head p { margin: 2px 0 0; font-size: 11.5px; color: var(--muted); }
 .card-head .legend { font-size: 10.5px; font-weight: 500; color: var(--faint); }
-.chartwrap { flex: 1; min-height: 0; }
+.chartwrap { position: relative; height: clamp(240px, 46vh, 480px); }
 
 /* ---- details (revealed) ---- */
 .details-extra { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
@@ -174,8 +172,8 @@ body {
 @media (max-width: 880px) {
   .app.board.compact { height: auto; max-height: none; overflow: visible; display: block; }
   .app.board.compact > * { margin-bottom: 12px; }
-  .panels, .app.board:not(.compact) .panels { grid-template-columns: 1fr; height: auto; }
-  .panel { height: 240px; }
+  .panels { grid-template-columns: 1fr; }
+  .chartwrap { height: 240px; }
   .grid-2 { grid-template-columns: 1fr; }
   .headline .hl-meta { margin-left: 0; width: 100%; }
 }
