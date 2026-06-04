@@ -27,9 +27,15 @@ function ago(updatedAt: string | null | undefined, nowTs: number): string {
   return `${Math.floor(d / 86400)}일 전`;
 }
 
-function phrase(e: HistoryModelEntry, pct: number | null): string {
-  if (!e.baseline.locked) return '기준 만드는 중';
-  if (e.condition.accDelta != null && e.condition.accDelta <= -0.1) return '정답이 평소보다 틀려짐';
+const median = (a: number[]): number | null => {
+  if (!a.length) return null;
+  const s = [...a].sort((x, y) => x - y);
+  return s[Math.floor((s.length - 1) / 2)];
+};
+
+function phrase(locked: boolean, accDrop: boolean, pct: number | null): string {
+  if (!locked) return '기준 만드는 중';
+  if (accDrop) return '정답이 평소보다 틀려짐';
   if (pct == null) return '평소와 비슷';
   if (pct <= -3) return `평소보다 ${Math.abs(pct)}% 빠름`;
   if (pct >= 3) return `평소보다 ${pct}% 느림`;
@@ -124,8 +130,38 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       return le ? { m, e: le.e, at: le.at } : null;
     })
     .filter(Boolean) as { m: string; e: HistoryModelEntry; at: string }[];
+  // Robust baseline = MEDIAN of the locked samples (ignores cold-start / spike
+  // outliers that contaminate a mean). Latency status/% are computed against it.
+  const cardInfo = (m: string, e: HistoryModelEntry) => {
+    const bm = baselines?.models[m];
+    const samples = bm ? bm.samples.map((s) => s.ttftMean).filter((v): v is number => v != null) : [];
+    const baseTtft = samples.length ? median(samples) : e.baseline.ttftMean ?? null;
+    const cur = e.avgTtftMs;
+    const locked = !!e.baseline.locked && baseTtft != null;
+    const ratio = locked && cur != null && baseTtft ? cur / baseTtft : null;
+    const pct = ratio != null ? Math.round((ratio - 1) * 100) : null;
+    const accDrop = !!e.baseline.locked && e.condition.accDelta != null && e.condition.accDelta <= -0.1;
+    const status: Status = !locked
+      ? 'baselining'
+      : accDrop
+        ? 'degraded'
+        : ratio == null
+          ? 'normal'
+          : ratio >= 1.5
+            ? 'degraded'
+            : ratio >= 1.25
+              ? 'warn'
+              : ratio <= 0.8
+                ? 'above'
+                : 'normal';
+    return { baseTtft, pct, accDrop, status, locked };
+  };
+
   let worst: Status = 'normal';
-  for (const { e } of entries) if (RANK[e.condition.status] > RANK[worst]) worst = e.condition.status;
+  for (const { m, e } of entries) {
+    const s = cardInfo(m, e).status;
+    if (RANK[s] > RANK[worst]) worst = s;
+  }
   const vchip = STATUS[worst];
 
   return (
@@ -161,17 +197,14 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       <div className={`stage ${details ? '' : 'centered'}`}>
         <div className="scards" key={history.updatedAt ?? 'x'}>
           {entries.map(({ m, e, at }, i) => {
-            const st = STATUS[e.condition.status] ?? STATUS.baselining;
-            const ratio = e.condition.latencyRatio;
-            const pct = ratio != null ? Math.round((ratio - 1) * 100) : null;
-            const series = history.runs
-              .map((r) => r.byModel[m]?.avgTtftMs)
-              .filter((v): v is number => v != null)
-              .slice(-14);
-            const accDrop = e.baseline.locked && e.condition.accDelta != null && e.condition.accDelta <= -0.1;
+            const info = cardInfo(m, e);
+            const st = STATUS[info.status] ?? STATUS.baselining;
+            const pct = info.pct;
+            const full = history.runs.map((r) => r.byModel[m]?.avgTtftMs).filter((v): v is number => v != null);
+            const series = (full.length > 3 ? full.slice(1) : full).slice(-14); // drop warm-up (cold start)
             const trip = !e.baseline.locked
               ? { t: '정답 확인중', c: 'muted' }
-              : accDrop
+              : info.accDrop
                 ? { t: '⚠ 오답 늘어남', c: 'bad' }
                 : { t: '✓ 정답 정상', c: 'ok' };
             return (
@@ -179,14 +212,14 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                 <div className="sc-emoji">{st.icon}</div>
                 <div className="sc-model" style={{ color: modelColor(m, i) }}>{modelLabel(m)}</div>
                 <div className={`sc-word ${st.cls}`}>{st.label}</div>
-                <div className="sc-phrase">{phrase(e, pct)}</div>
+                <div className="sc-phrase">{phrase(info.locked, info.accDrop, pct)}</div>
                 <div className="sc-spark">
-                  <Sparkline values={series} color={modelColor(m, i)} baseline={e.baseline.ttftMean} />
+                  <Sparkline values={series} color={modelColor(m, i)} baseline={info.baseTtft} />
                 </div>
                 <div className="sc-nums">
                   <div className="sc-num">
                     <span className="sc-n">{secs(e.avgTtftMs)}</span><span className="sc-u">초</span>
-                    <span className="sc-base">응답속도 · 평소 {secs(e.baseline.ttftMean)}초</span>
+                    <span className="sc-base">응답속도 · 평소 {secs(info.baseTtft)}초</span>
                   </div>
                   <div className={`sc-trip ${trip.c}`}>{trip.t}</div>
                 </div>

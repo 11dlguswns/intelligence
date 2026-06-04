@@ -31,6 +31,13 @@ const std = (a) => {
   const m = mean(a);
   return Math.sqrt(mean(a.map((x) => (x - m) ** 2)));
 };
+// MEDIAN is the robust baseline center — ignores cold-start / spike outliers that
+// would otherwise inflate a mean baseline and make normal readings look "faster".
+const median = (a) => {
+  if (!a.length) return null;
+  const s = [...a].sort((x, y) => x - y);
+  return s[Math.floor((s.length - 1) / 2)];
+};
 const quantile = (a, q) => {
   if (!a.length) return null;
   const s = [...a].sort((x, y) => x - y);
@@ -164,7 +171,7 @@ async function main() {
       const pp = b.samples.map((s) => s.passRate);
       const cc = b.samples.map((s) => s.consistency);
       const oo = b.samples.map((s) => s.outputTokens).filter((x) => x != null);
-      b.ttftMs = { mean: tt.length ? Math.round(mean(tt)) : null, std: tt.length ? Math.round(std(tt)) : null };
+      b.ttftMs = { mean: tt.length ? Math.round(median(tt)) : null, std: tt.length ? Math.round(std(tt)) : null };
       b.durationMs = { mean: dd.length ? Math.round(mean(dd)) : null };
       b.passRate = { mean: round3(mean(pp)), std: round3(std(pp)) };
       b.consistency = { mean: round3(mean(cc)) };
