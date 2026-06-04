@@ -1,7 +1,8 @@
 {
-  "updatedAt": "2026-06-04T00:48:46.995Z",
+  "updatedAt": "2026-06-04T02:24:31.111Z",
   "models": [
-    "claude-haiku-4-5-20251001"
+    "claude-haiku-4-5-20251001",
+    "claude-opus-4-8"
   ],
   "dimensions": [
     "counting",
@@ -49,6 +50,45 @@
           "consistency": 1,
           "avgTtftMs": 2142,
           "avgOutputTokens": 193,
+          "dimensions": {
+            "counting": 1,
+            "math": 1,
+            "crt": 1,
+            "logic": 1,
+            "instruction": 1,
+            "constraint": 1
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-06-04T02-18-40-757Z-zwn3",
+      "startedAt": "2026-06-04T02:18:40.758Z",
+      "profile": "pure",
+      "effort": "high",
+      "repeat": 3,
+      "byModel": {
+        "claude-opus-4-8": {
+          "requested": "opus",
+          "index": 100,
+          "consistency": 0.926,
+          "avgTtftMs": 1695,
+          "avgOutputTokens": 5,
+          "dimensions": {
+            "counting": 1,
+            "math": 1,
+            "crt": 1,
+            "logic": 1,
+            "instruction": 1,
+            "constraint": 1
+          }
+        },
+        "claude-haiku-4-5-20251001": {
+          "requested": "haiku",
+          "index": 100,
+          "consistency": 0.926,
+          "avgTtftMs": 2243,
+          "avgOutputTokens": 214,
           "dimensions": {
             "counting": 1,
             "math": 1,
