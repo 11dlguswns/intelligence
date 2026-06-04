@@ -1,16 +1,33 @@
-// Mirrors the JSON the runner writes into public/data/.
+// Mirrors the condition-monitor JSON the runner writes into public/data/.
 
-export interface DimensionScores {
-  [dimension: string]: number;
+export type Status = 'normal' | 'warn' | 'degraded' | 'above' | 'baselining';
+
+export interface ConditionInfo {
+  status: Status;
+  latencyRatio: number | null; // current mean TTFT / baseline mean TTFT
+  accDelta: number | null; // pass-rate points vs baseline (tripwire)
+}
+
+export interface BaselineRef {
+  ttftMean: number | null;
+  ttftStd: number | null;
+  passMean: number | null;
+  locked: boolean;
+  n: number;
 }
 
 export interface HistoryModelEntry {
   requested: string;
-  index: number;
+  level: number;
+  passRate: number;
   consistency: number;
   avgTtftMs: number | null;
+  medianTtftMs: number | null;
+  avgDurationMs: number | null;
   avgOutputTokens: number | null;
-  dimensions: DimensionScores;
+  byFamily: Record<string, number>;
+  baseline: BaselineRef;
+  condition: ConditionInfo;
 }
 
 export interface HistoryRun {
@@ -18,14 +35,14 @@ export interface HistoryRun {
   startedAt: string;
   profile: string;
   effort: string;
-  repeat: number;
+  level: number;
   byModel: Record<string, HistoryModelEntry>;
 }
 
 export interface History {
   updatedAt: string | null;
   models: string[];
-  dimensions: string[];
+  families: string[];
   runs: HistoryRun[];
 }
 
@@ -36,29 +53,39 @@ export interface Attempt {
   ttftMs: number | null;
   durationMs: number | null;
   outputTokens: number | null;
-  stopReason: string | null;
   error: string | null;
 }
 
-export interface QuestionSummary {
-  id: string;
-  dimension: string;
-  title: string;
-  passRate: number;
-  modalAnswer: string | null;
+export interface Instance {
+  prompt: string;
+  answer: string;
   modalFreq: number;
   attempts: Attempt[];
+}
+
+export interface FamilyResult {
+  id: string;
+  title: string;
+  passRate: number;
+  consistency: number;
+  instances: Instance[];
 }
 
 export interface ModelResult {
   requested: string;
   resolved: string;
-  index: number;
+  level: number;
+  passRate: number;
   consistency: number;
   avgTtftMs: number | null;
+  medianTtftMs: number | null;
+  p90TtftMs: number | null;
+  avgDurationMs: number | null;
   avgOutputTokens: number | null;
-  dimensions: DimensionScores;
-  questions: QuestionSummary[];
+  byFamily: Record<string, number>;
+  baseline: BaselineRef;
+  condition: ConditionInfo;
+  families: FamilyResult[];
 }
 
 export interface RunDetail {
@@ -67,24 +94,37 @@ export interface RunDetail {
   finishedAt: string;
   profile: string;
   effort: string;
-  repeat: number;
+  level: number;
+  instances: number;
+  reps: number;
+  seedBase: string;
   systemPrompt: string;
   models: ModelResult[];
-}
-
-export interface MetaQuestion {
-  id: string;
-  dimension: string;
-  title: string;
-  prompt: string;
-  verify: Record<string, unknown>;
 }
 
 export interface Meta {
   updatedAt: string;
   profile: string;
-  defaultEffort: string;
+  effort: string;
+  level: number;
+  baselineRuns: number;
   systemPrompt: string;
-  dimensions: string[];
-  questions: MetaQuestion[];
+  families: { id: string; title: string }[];
+}
+
+export interface BaselineModel {
+  requested: string;
+  level: number;
+  locked: boolean;
+  ttftMs: { mean: number | null; std: number | null };
+  durationMs: { mean: number | null };
+  passRate: { mean: number; std: number };
+  consistency: { mean: number };
+  outputTokens: { mean: number | null };
+  samples: { runId: string; ttftMean: number | null; durationMean: number | null; passRate: number; consistency: number; outputTokens: number | null }[];
+}
+
+export interface Baselines {
+  baselineRuns: number;
+  models: Record<string, BaselineModel>;
 }

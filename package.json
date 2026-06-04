@@ -1,8 +1,8 @@
 {
-  "name": "claude-intelligence-monitor",
+  "name": "claude-condition-monitor",
   "private": true,
   "version": "0.1.0",
-  "description": "Track whether Claude (via your Plan/subscription account) is getting dumber over time — low-token, objectively-scored, repeated benchmarks.",
+  "description": "Detect when Claude (via your Plan/subscription account) is throttled/degraded — track each model's latency vs its own baseline, with an accuracy tripwire.",
   "workspaces": [
     "packages/*"
   ],

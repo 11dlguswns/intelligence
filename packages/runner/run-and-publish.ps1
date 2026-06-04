@@ -1,13 +1,15 @@
-# Run the benchmark, then commit & push the results (triggers the Pages deploy).
+# Run one condition-monitor measurement, then commit & push the results
+# (triggers the GitHub Pages deploy). Run this on a schedule to build the
+# time-series and keep each model's baseline current.
 #
-#   ./packages/runner/run-and-publish.ps1 -Models "opus,sonnet,haiku" -Repeat 5
+#   ./packages/runner/run-and-publish.ps1 -Models "opus,sonnet,haiku"
 #
 # Requires: claude logged in (subscription), git remote configured.
+# Note: effort is PINNED in config.mjs (low) — do not override it here, or the
+# latency baseline becomes incomparable.
 
 param(
-  [string]$Models = "opus,sonnet,haiku",
-  [int]$Repeat = 5,
-  [string]$Effort = "high"
+  [string]$Models = "opus,sonnet,haiku"
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,15 +18,14 @@ $ErrorActionPreference = "Stop"
 $repo = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 Set-Location $repo
 
-Write-Host "Running benchmark: models=$Models repeat=$Repeat effort=$Effort"
-node "packages/runner/src/bench.mjs" --models $Models --repeat $Repeat --effort $Effort
+Write-Host "Condition run: models=$Models"
+node "packages/runner/src/bench.mjs" --models $Models
 
 git add packages/web/public/data
 $stamp = (Get-Date).ToString("yyyy-MM-dd HH:mm")
-# Commit only if there is something staged.
 git diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
-  git commit -m "data: benchmark run $stamp"
+  git commit -m "data: condition run $stamp"
   git push
   Write-Host "Published results for $stamp"
 } else {

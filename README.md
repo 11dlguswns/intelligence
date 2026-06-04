@@ -1,65 +1,45 @@
-# Claude Intelligence Monitor
+# Claude Condition Monitor
 
-당신의 **Claude 플랜(구독) 계정**으로, Claude가 시간이 지나며 체감상 "멍청해지는지"를
-**저토큰 · 객관채점 · 반복측정**으로 추적하는 도구입니다. 공식 공시 벤치마크가 아니라,
-*당신이 실제로 쓰는 경로(구독)* 를 통해 같은 질문을 매일 던지고 점수의 추이를 봅니다.
+당신의 **Claude 플랜(구독) 계정**으로, 각 Claude 모델이 **자기 평소 상태(기준선)** 대비 지금
+컨디션이 떨어졌는지 — 즉 **과부하·스로틀링·자원 축소로 인한 저하**를 추적하는 도구입니다.
 
-> 한 줄 요약: "출시 때 지표는 좋았는데 쓰다 보면 멍청해진다"는 가설을, 고정된 질문 세트로
-> 매일 측정해 **수치와 그래프로** 확인합니다.
+> 모델 간 비교(벤치마크)가 **아닙니다.** 각 모델을 **자기 자신**과 비교합니다.
 
 ---
 
-## 왜 이런 구조인가 (아키텍처)
+## 실험으로 알게 된 핵심 (왜 "지연 중심"인가)
 
-- **API가 아니라 구독 계정**을 프로그램으로 쓰는 유일한 정식 경로는
-  Claude Code 헤드리스(`claude -p`)입니다. 이 도구는 그걸 통로로 씁니다.
-- 구독 토큰(OAuth)은 **공개 서버에 올릴 수 없고**, "방문자가 버튼 누르면 Claude 실시간 호출"
-  방식은 당신의 **레이트 리밋**을 태웁니다.
-- 그래서 **수집(로컬)과 표시(정적 웹)를 분리**합니다:
+처음엔 정답률로 "멍청해짐"을 잡으려 했지만, 실험 결과:
 
-```
- [당신 PC]  러너 (claude 로그인됨)                 [GitHub Pages]  정적 대시보드
-   스케줄 측정 → 채점 → JSON 생성   ── git push ──▶   history.json 읽어 추이/지능지수 표시
-   * 구독 안전, 레이트리밋 통제                         * 방문자는 Claude를 건드릴 수 없음
-```
+> **프런티어 모델은 객관·기계적 과제에선 effort를 낮춰도 거의 무적입니다.**
+> haiku(가장 약한 모델)조차 effort=low로 **8자리×7자리 곱셈, 7^16 mod 1000, 26단어 다중제약 형식**을
+> 전부 정확히 풀었습니다 (난이도 L24까지 100%).
 
-- **러너** `packages/runner` — 외부 의존성 0, 순수 Node. `claude -p`를 호출하고 채점.
-- **웹** `packages/web` — Vite + React. 빌드 시 `public/data/*.json`을 그대로 정적 호스팅.
+즉 **정확도는 천장**이라 미세한 저하가 안 잡힙니다. 그래서:
+
+| 신호 | 역할 |
+|---|---|
+| **응답 지연 (TTFT)** | **주 신호.** 과부하·스로틀링·자원 축소의 가장 직접적인 지표 |
+| **정확도 (고정 난이도)** | **트립와이어.** 평상시 100%, 진짜 능력 저하가 오면 그때 떨어짐 → 경보 |
+| **자기일관성 · 출력 토큰** | 보조 신호 (샘플링/양자화·동작 변화) |
+
+**컨디션 판정** = 현재 TTFT를 모델의 **고정 기준선**과 비교 (정확도 급락은 강한 override).
 
 ---
 
-## 측정 방식 — "순수 모델 능력" 프로파일
+## 아키텍처 (수집 ↔ 표시 분리)
 
-하네스(도구·시스템 프롬프트)가 측정을 오염시키지 않도록 최대한 벗겨냅니다:
+구독 OAuth는 공개 서버에 못 올리므로, **로컬 러너가 측정**하고 **결과 JSON만 정적 사이트**에 올립니다.
 
-| 항목 | 설정 | 이유 |
-|---|---|---|
-| 시스템 프롬프트 | `--system-prompt` 로 **최소 프롬프트 교체** | Claude Code 거대 에이전트 프롬프트 제거 → 오염·토큰 ↓ |
-| 도구 | `--tools ""` (전부 OFF) | 순수 추론만 측정 |
-| MCP | `--strict-mcp-config` | 외부 MCP 무시 |
-| 추론 강도 | `--effort high` **(고정 상수)** | effort는 지능에 직접 영향 → 재현성 위해 고정 |
-| 세션 | `--no-session-persistence` | 디스크 오염 방지 |
+```
+ [당신 PC] 러너 (claude 로그인)              [GitHub Pages] 정적 대시보드
+   bench → JSON (지연·정확도·기준선)  ── git push ──▶  컨디션/추이 표시
+```
 
-> `--bare`는 쓰지 않습니다. OAuth를 막고 API 키를 강제하기 때문에 **구독과 호환되지 않습니다.**
+- 러너 `packages/runner` (의존성 0): `claude -p` 헤드리스, 도구 OFF·최소 시스템 프롬프트·**effort 고정(low)**.
+- 웹 `packages/web` (Vite+React): 컨디션 카드·TTFT 추이(+기준선)·정확도 트립와이어·일관성·문제군 레이더·드릴다운.
 
-### 질문 차원 (저토큰 · 객관채점)
-
-| 차원 | 측정하는 것 | 예시 |
-|---|---|---|
-| `counting` | 문자 단위 정밀성 | "strawberry"의 r 개수 |
-| `math` | 다단계 산술 | (17×24) − (348÷4) |
-| `crt` | 인지 반사(함정 회피) | 배트와 공, 위젯 문제 |
-| `logic` | 연역/관계 추론 | 삼단논법, 키 순서 |
-| `instruction` | 형식 준수 정확성 | "정확히 소문자 3단어" |
-| `constraint` | 제약 충족 | q로 시작·k로 끝나는 5글자 단어 |
-
-각 질문을 N회 반복해 **통과율**과 **자기일관성**(같은 답을 내는 비율)을 함께 측정합니다.
-일관성 하락은 과도한 샘플링/양자화의 신호일 수 있습니다.
-
-### 지능지수(Index)
-
-차원별 평균 통과율을 구한 뒤 **차원들을 균등 평균**해 0~100으로 환산합니다.
-(질문 수가 많은 차원이 점수를 독점하지 못하도록.)
+문제는 매 측정마다 **새로 생성**(시드 기반)되어 캐시·암기를 무력화하고, 고정 난이도(`FIXED_LEVEL`)를 유지합니다.
 
 ---
 
@@ -68,67 +48,53 @@
 ```bash
 npm install
 
-# 측정 (기본: haiku, repeat 5)
-npm run bench
-
-# 모델 전체 비교 (레이트리밋 주의)
-npm run bench:all          # = --models opus,sonnet,haiku --repeat 5
-
-# 옵션 직접 지정
-node packages/runner/src/bench.mjs --models sonnet,haiku --repeat 3 --only counting,crt
+# 컨디션 측정. 처음 몇 번은 기준선을 형성하고, 그 뒤부터 이탈을 감시합니다.
+npm run bench -- --models opus,sonnet,haiku
 
 # 대시보드 로컬 미리보기
-npm run web:dev            # http://localhost:5173/intelligence/
+npm run web:dev      # http://localhost:5173/intelligence/
 ```
 
-측정 결과는 `packages/web/public/data/` 에 쌓입니다.
+기준선은 초기 `BASELINE_RUNS`회 측정으로 **고정**됩니다. 이후 매일 측정해 추이를 쌓으세요.
+(같은 시각에 측정하면 지연 비교가 더 정확합니다.)
 
 ---
 
 ## 배포 (GitHub Pages)
 
-1. GitHub에 빈 repo 생성 후 이 폴더를 push.
-2. repo **Settings → Pages → Build and deployment → Source = GitHub Actions**.
-3. push 하면 `.github/workflows/deploy.yml` 가 빌드·배포합니다.
-   - base 경로는 **repo 이름으로 자동 설정**(`/<repo>/`)되므로 repo 이름은 자유입니다.
-   - 공개 URL: `https://<당신아이디>.github.io/<repo>/`
+1. GitHub repo 생성 후 push → **Settings → Pages → Source = GitHub Actions**
+2. push 하면 `.github/workflows/deploy.yml`가 빌드·배포. base 경로는 repo 이름으로 자동.
+3. 공개 URL: `https://<아이디>.github.io/<repo>/`
 
-로컬 빌드 확인:
-
-```bash
-npm run web:build          # packages/web/dist 생성
-```
-
----
-
-## 자동화 (매일 측정 → 자동 게시)
-
-- `packages/runner/run-and-publish.ps1` — 측정 후 결과를 커밋·push (Pages 재배포 트리거).
-- `packages/runner/schedule.ps1` — 위 스크립트를 매일 정해진 시각에 실행하도록 Windows 작업 스케줄러에 등록.
+## 자동화 (매일 측정 → 게시)
 
 ```powershell
-# 매일 09:00, 세 모델 측정 후 자동 게시
-./packages/runner/schedule.ps1 -Models "opus,sonnet,haiku" -Repeat 5 -Time "09:00"
+./packages/runner/run-and-publish.ps1 -Models "opus,sonnet,haiku"   # 측정 후 커밋·push
+./packages/runner/schedule.ps1 -Time "09:00"                         # 매일 자동
 ```
 
 ---
 
 ## 데이터 형식
 
-- `data/history.json` — 압축 시계열(차트용). 런별 모델별 index·consistency·latency·차원점수.
-- `data/latest.json` — 가장 최근 런의 전체 상세(질문별 통과율·표본 답안).
-- `data/runs/<runId>.json` — 런별 전체 상세 아카이브.
-- `data/meta.json` — 질문 카탈로그·프로파일 설명.
+- `baselines.json` — 모델별 고정 기준선(TTFT 평균·표준편차, 정확도, 표본), 고정 여부.
+- `history.json` — 런별 모델별 지연·정확도·일관성·문제군별 점수·컨디션.
+- `latest.json` — 최근 런 전체 상세(생성된 문제·정답·모델 답안).
+- `meta.json` — 문제군 카탈로그·고정 레벨·프로파일.
 
----
+## 튜닝 (`packages/runner/src/config.mjs`)
+
+`FIXED_LEVEL`(트립와이어 난이도) · `BASELINE_RUNS` · `BENCH_INSTANCES`/`BENCH_REPS` ·
+`LAT_WARN`/`LAT_DEGRADED`(지연 임계 배수) · `ACC_WARN`/`ACC_DEGRADED`(정확도 트립와이어) ·
+`DEFAULT_EFFORT`(**고정**; 바꾸면 지연 기준선이 무의미해짐).
 
 ## 한계 / 주의
 
-- **레이트 리밋**: 모델 수 × 질문 수 × 반복 수만큼 호출이 발생합니다. Opus는 특히 보수적으로.
-- 이 도구는 **Anthropic과 무관한 비공식 측정**입니다. "구독 경로로 전달되는 Claude"의
-  상대적 변화를 보는 용도이며, 절대적 모델 성능 공시값이 아닙니다.
-- 하네스를 **항상 동일하게 고정**해야 시계열 비교가 유효합니다(effort·시스템프롬프트 변경 시 새 시리즈로).
+- **레이트 리밋**: 측정 호출이 누적됩니다. Opus는 특히 보수적으로.
+- Anthropic과 무관한 비공식 측정. 절대 공시값이 아니라 *상대적 컨디션(특히 지연) 변화*를 봅니다.
+- 지연은 네트워크·시간대 영향도 받습니다. 같은 환경·시각에서 비교하세요.
+- 기준선·레벨·effort를 바꾸면 새 시리즈로 보는 게 맞습니다.
 
 ## 확장(나중)
 
-GPT·Gemini 등은 v2에서 어댑터로 추가 예정. 현재는 **Claude 특화** 단계입니다.
+GPT·Gemini 어댑터는 v2. 현재는 **Claude 특화**.

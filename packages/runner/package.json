@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Local benchmark runner — drives Claude via your subscription (claude -p headless) and writes scored, time-series results for the dashboard.",
+  "description": "Local condition-monitor runner — drives Claude via your subscription (claude -p headless) and tracks each model's latency/accuracy vs its own baseline.",
   "bin": {
     "cim-bench": "src/bench.mjs"
   },
   "scripts": {
     "bench": "node src/bench.mjs",
-    "bench:all": "node src/bench.mjs --models opus,sonnet,haiku --repeat 5"
+    "bench:all": "node src/bench.mjs --models opus,sonnet,haiku"
   }
 }

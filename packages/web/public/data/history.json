@@ -1,117 +1,411 @@
 {
-  "updatedAt": "2026-06-04T04:38:16.505Z",
+  "updatedAt": "2026-06-04T07:20:04.250Z",
   "models": [
-    "claude-haiku-4-5-20251001",
     "claude-opus-4-8",
-    "claude-sonnet-4-6"
+    "claude-sonnet-4-6",
+    "claude-haiku-4-5-20251001"
   ],
-  "dimensions": [
+  "families": [
+    "multiplication",
+    "precedence",
     "counting",
-    "math",
-    "crt",
-    "logic",
-    "instruction",
-    "constraint"
+    "modular",
+    "selection",
+    "instruction"
   ],
   "runs": [
     {
-      "runId": "2026-06-04T00-45-02-161Z-nb82",
-      "startedAt": "2026-06-04T00:45:02.162Z",
+      "runId": "2026-06-04T06-43-21-398Z-w0nk",
+      "startedAt": "2026-06-04T06:43:21.400Z",
       "profile": "pure",
-      "effort": "high",
-      "repeat": 2,
-      "byModel": {
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "index": 100,
-          "consistency": 0.944,
-          "avgTtftMs": 2426,
-          "avgOutputTokens": 189,
-          "dimensions": {
-            "counting": 1,
-            "math": 1,
-            "crt": 1,
-            "logic": 1,
-            "instruction": 1,
-            "constraint": 1
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-04T00-46-47-587Z-ro0o",
-      "startedAt": "2026-06-04T00:46:47.589Z",
-      "profile": "pure",
-      "effort": "high",
-      "repeat": 3,
-      "byModel": {
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "index": 100,
-          "consistency": 1,
-          "avgTtftMs": 2142,
-          "avgOutputTokens": 193,
-          "dimensions": {
-            "counting": 1,
-            "math": 1,
-            "crt": 1,
-            "logic": 1,
-            "instruction": 1,
-            "constraint": 1
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-04T04-31-58-888Z-vnmr",
-      "startedAt": "2026-06-04T04:31:58.890Z",
-      "profile": "pure",
-      "effort": "high",
-      "repeat": 3,
+      "effort": "low",
+      "level": 8,
       "byModel": {
         "claude-opus-4-8": {
           "requested": "opus",
-          "index": 100,
-          "consistency": 0.852,
-          "avgTtftMs": 1692,
-          "avgOutputTokens": 7,
-          "dimensions": {
+          "level": 8,
+          "passRate": 0.958,
+          "consistency": 0.875,
+          "avgTtftMs": 7418,
+          "medianTtftMs": 2591,
+          "avgDurationMs": 7532,
+          "avgOutputTokens": 88,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
             "counting": 1,
-            "math": 1,
-            "crt": 1,
-            "logic": 1,
-            "instruction": 1,
-            "constraint": 1
+            "modular": 1,
+            "selection": 0.75,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 7418,
+            "ttftStd": 0,
+            "passMean": 0.958,
+            "locked": false,
+            "n": 1
+          },
+          "condition": {
+            "status": "baselining",
+            "latencyRatio": null,
+            "accDelta": null
           }
         },
         "claude-sonnet-4-6": {
           "requested": "sonnet",
-          "index": 100,
-          "consistency": 0.926,
-          "avgTtftMs": 1832,
-          "avgOutputTokens": 7,
-          "dimensions": {
+          "level": 8,
+          "passRate": 0.667,
+          "consistency": 0.875,
+          "avgTtftMs": 3109,
+          "medianTtftMs": 2446,
+          "avgDurationMs": 3222,
+          "avgOutputTokens": 97,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 0.5,
             "counting": 1,
-            "math": 1,
-            "crt": 1,
-            "logic": 1,
-            "instruction": 1,
-            "constraint": 1
+            "modular": 0.5,
+            "selection": 0.5,
+            "instruction": 0.5
+          },
+          "baseline": {
+            "ttftMean": 3109,
+            "ttftStd": 0,
+            "passMean": 0.667,
+            "locked": false,
+            "n": 1
+          },
+          "condition": {
+            "status": "baselining",
+            "latencyRatio": null,
+            "accDelta": null
           }
         },
         "claude-haiku-4-5-20251001": {
           "requested": "haiku",
-          "index": 100,
-          "consistency": 1,
-          "avgTtftMs": 2661,
-          "avgOutputTokens": 204,
-          "dimensions": {
+          "level": 8,
+          "passRate": 1,
+          "consistency": 0.917,
+          "avgTtftMs": 5712,
+          "medianTtftMs": 3895,
+          "avgDurationMs": 5774,
+          "avgOutputTokens": 811,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
             "counting": 1,
-            "math": 1,
-            "crt": 1,
-            "logic": 1,
-            "instruction": 1,
-            "constraint": 1
+            "modular": 1,
+            "selection": 1,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 5712,
+            "ttftStd": 0,
+            "passMean": 1,
+            "locked": false,
+            "n": 1
+          },
+          "condition": {
+            "status": "baselining",
+            "latencyRatio": null,
+            "accDelta": null
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-06-04T06-53-46-901Z-gyne",
+      "startedAt": "2026-06-04T06:53:46.904Z",
+      "profile": "pure",
+      "effort": "low",
+      "level": 8,
+      "byModel": {
+        "claude-opus-4-8": {
+          "requested": "opus",
+          "level": 8,
+          "passRate": 1,
+          "consistency": 0.917,
+          "avgTtftMs": 2749,
+          "medianTtftMs": 2285,
+          "avgDurationMs": 2835,
+          "avgOutputTokens": 93,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
+            "counting": 1,
+            "modular": 1,
+            "selection": 1,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 5084,
+            "ttftStd": 2335,
+            "passMean": 0.979,
+            "locked": false,
+            "n": 2
+          },
+          "condition": {
+            "status": "baselining",
+            "latencyRatio": null,
+            "accDelta": null
+          }
+        },
+        "claude-sonnet-4-6": {
+          "requested": "sonnet",
+          "level": 8,
+          "passRate": 0.708,
+          "consistency": 0.875,
+          "avgTtftMs": 3451,
+          "medianTtftMs": 2534,
+          "avgDurationMs": 3531,
+          "avgOutputTokens": 132,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
+            "counting": 0.75,
+            "modular": 0.5,
+            "selection": 0,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 3280,
+            "ttftStd": 171,
+            "passMean": 0.688,
+            "locked": false,
+            "n": 2
+          },
+          "condition": {
+            "status": "baselining",
+            "latencyRatio": null,
+            "accDelta": null
+          }
+        },
+        "claude-haiku-4-5-20251001": {
+          "requested": "haiku",
+          "level": 8,
+          "passRate": 1,
+          "consistency": 0.917,
+          "avgTtftMs": 5832,
+          "medianTtftMs": 3409,
+          "avgDurationMs": 5890,
+          "avgOutputTokens": 750,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
+            "counting": 1,
+            "modular": 1,
+            "selection": 1,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 5772,
+            "ttftStd": 60,
+            "passMean": 1,
+            "locked": false,
+            "n": 2
+          },
+          "condition": {
+            "status": "baselining",
+            "latencyRatio": null,
+            "accDelta": null
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-06-04T07-02-44-623Z-zvjx",
+      "startedAt": "2026-06-04T07:02:44.625Z",
+      "profile": "pure",
+      "effort": "low",
+      "level": 8,
+      "byModel": {
+        "claude-opus-4-8": {
+          "requested": "opus",
+          "level": 8,
+          "passRate": 1,
+          "consistency": 0.917,
+          "avgTtftMs": 3272,
+          "medianTtftMs": 2672,
+          "avgDurationMs": 3368,
+          "avgOutputTokens": 125,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
+            "counting": 1,
+            "modular": 1,
+            "selection": 1,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 4480,
+            "ttftStd": 2089,
+            "passMean": 0.986,
+            "locked": false,
+            "n": 3
+          },
+          "condition": {
+            "status": "baselining",
+            "latencyRatio": null,
+            "accDelta": null
+          }
+        },
+        "claude-sonnet-4-6": {
+          "requested": "sonnet",
+          "level": 8,
+          "passRate": 0.75,
+          "consistency": 0.833,
+          "avgTtftMs": 3426,
+          "medianTtftMs": 2345,
+          "avgDurationMs": 3529,
+          "avgOutputTokens": 101,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 0.5,
+            "counting": 1,
+            "modular": 0.5,
+            "selection": 0.5,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 3329,
+            "ttftStd": 156,
+            "passMean": 0.708,
+            "locked": false,
+            "n": 3
+          },
+          "condition": {
+            "status": "baselining",
+            "latencyRatio": null,
+            "accDelta": null
+          }
+        },
+        "claude-haiku-4-5-20251001": {
+          "requested": "haiku",
+          "level": 8,
+          "passRate": 1,
+          "consistency": 0.917,
+          "avgTtftMs": 5319,
+          "medianTtftMs": 3278,
+          "avgDurationMs": 5372,
+          "avgOutputTokens": 755,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
+            "counting": 1,
+            "modular": 1,
+            "selection": 1,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 5621,
+            "ttftStd": 219,
+            "passMean": 1,
+            "locked": false,
+            "n": 3
+          },
+          "condition": {
+            "status": "baselining",
+            "latencyRatio": null,
+            "accDelta": null
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-06-04T07-11-14-821Z-la3e",
+      "startedAt": "2026-06-04T07:11:14.824Z",
+      "profile": "pure",
+      "effort": "low",
+      "level": 8,
+      "byModel": {
+        "claude-opus-4-8": {
+          "requested": "opus",
+          "level": 8,
+          "passRate": 0.958,
+          "consistency": 0.875,
+          "avgTtftMs": 3054,
+          "medianTtftMs": 2493,
+          "avgDurationMs": 3239,
+          "avgOutputTokens": 95,
+          "byFamily": {
+            "multiplication": 0.75,
+            "precedence": 1,
+            "counting": 1,
+            "modular": 1,
+            "selection": 1,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 4123,
+            "ttftStd": 1911,
+            "passMean": 0.979,
+            "locked": true,
+            "n": 4
+          },
+          "condition": {
+            "status": "above",
+            "latencyRatio": 0.74,
+            "accDelta": -0.021
+          }
+        },
+        "claude-sonnet-4-6": {
+          "requested": "sonnet",
+          "level": 8,
+          "passRate": 0.708,
+          "consistency": 0.917,
+          "avgTtftMs": 3045,
+          "medianTtftMs": 2521,
+          "avgDurationMs": 3158,
+          "avgOutputTokens": 99,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
+            "counting": 1,
+            "modular": 0,
+            "selection": 0.5,
+            "instruction": 0.75
+          },
+          "baseline": {
+            "ttftMean": 3258,
+            "ttftStd": 182,
+            "passMean": 0.708,
+            "locked": true,
+            "n": 4
+          },
+          "condition": {
+            "status": "normal",
+            "latencyRatio": 0.93,
+            "accDelta": 0
+          }
+        },
+        "claude-haiku-4-5-20251001": {
+          "requested": "haiku",
+          "level": 8,
+          "passRate": 0.958,
+          "consistency": 0.875,
+          "avgTtftMs": 6188,
+          "medianTtftMs": 3451,
+          "avgDurationMs": 6254,
+          "avgOutputTokens": 892,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
+            "counting": 0.75,
+            "modular": 1,
+            "selection": 1,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 5763,
+            "ttftStd": 310,
+            "passMean": 0.99,
+            "locked": true,
+            "n": 4
+          },
+          "condition": {
+            "status": "normal",
+            "latencyRatio": 1.07,
+            "accDelta": -0.032
           }
         }
       }

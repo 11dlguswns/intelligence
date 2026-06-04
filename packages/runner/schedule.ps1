@@ -1,15 +1,15 @@
-# Register a daily Windows Scheduled Task that runs the benchmark and publishes results.
+# Register a daily Windows Scheduled Task that runs the condition monitor and
+# publishes results. Measuring at the SAME time each day keeps latency comparable.
 #
-#   ./packages/runner/schedule.ps1 -Models "opus,sonnet,haiku" -Repeat 5 -Time "09:00"
+#   ./packages/runner/schedule.ps1 -Models "opus,sonnet,haiku" -Time "09:00"
 #
 # Re-run with the same name to update it. Remove with:
-#   Unregister-ScheduledTask -TaskName "ClaudeIntelligenceMonitor" -Confirm:$false
+#   Unregister-ScheduledTask -TaskName "ClaudeConditionMonitor" -Confirm:$false
 
 param(
   [string]$Models = "opus,sonnet,haiku",
-  [int]$Repeat = 5,
   [string]$Time = "09:00",
-  [string]$TaskName = "ClaudeIntelligenceMonitor"
+  [string]$TaskName = "ClaudeConditionMonitor"
 )
 
 $ErrorActionPreference = "Stop"
@@ -19,7 +19,7 @@ $repo = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 
 $action = New-ScheduledTaskAction `
   -Execute "powershell.exe" `
-  -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$publish`" -Models `"$Models`" -Repeat $Repeat" `
+  -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$publish`" -Models `"$Models`"" `
   -WorkingDirectory $repo
 
 $trigger = New-ScheduledTaskTrigger -Daily -At $Time
@@ -30,7 +30,7 @@ Register-ScheduledTask `
   -Action $action `
   -Trigger $trigger `
   -Settings $settings `
-  -Description "Daily Claude intelligence benchmark + publish" `
+  -Description "Daily Claude condition monitor + publish" `
   -Force
 
-Write-Host "Registered scheduled task '$TaskName' — daily at $Time (models=$Models, repeat=$Repeat)."
+Write-Host "Registered scheduled task '$TaskName' — daily at $Time (models=$Models)."

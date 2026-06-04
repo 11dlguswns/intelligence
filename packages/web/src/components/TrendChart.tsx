@@ -1,7 +1,22 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ReferenceLine,
+  ResponsiveContainer,
+} from 'recharts';
 import type { History, HistoryModelEntry } from '../types';
 import { modelColor, modelLabel } from '../lib/model';
 import { shortTime } from '../lib/format';
+
+interface RefLine {
+  y: number;
+  label: string;
+  color?: string;
+}
 
 interface Props {
   history: History;
@@ -10,9 +25,10 @@ interface Props {
   domain?: [number | string, number | string];
   unit?: string;
   height?: number;
+  refLines?: RefLine[];
 }
 
-export function TrendChart({ history, models, get, domain, unit = '', height = 300 }: Props) {
+export function TrendChart({ history, models, get, domain, unit = '', height = 300, refLines = [] }: Props) {
   const data = history.runs.map((run) => {
     const point: Record<string, number | string | null> = { name: shortTime(run.startedAt) };
     models.forEach((m) => {
@@ -34,6 +50,15 @@ export function TrendChart({ history, models, get, domain, unit = '', height = 3
             stroke="var(--border)"
             width={46}
           />
+          {refLines.map((r, i) => (
+            <ReferenceLine
+              key={i}
+              y={r.y}
+              stroke={r.color ?? 'var(--faint)'}
+              strokeDasharray="5 4"
+              label={{ value: r.label, position: 'insideTopRight', fill: 'var(--faint)', fontSize: 10 }}
+            />
+          ))}
           <Tooltip
             contentStyle={{
               background: 'var(--surface)',

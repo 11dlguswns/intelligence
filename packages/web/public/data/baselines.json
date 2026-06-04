@@ -1,0 +1,173 @@
+{
+  "baselineRuns": 4,
+  "models": {
+    "claude-opus-4-8": {
+      "requested": "opus",
+      "level": 8,
+      "samples": [
+        {
+          "runId": "2026-06-04T06-43-21-398Z-w0nk",
+          "ttftMean": 7418,
+          "durationMean": 7532,
+          "passRate": 0.958,
+          "consistency": 0.875,
+          "outputTokens": 88
+        },
+        {
+          "runId": "2026-06-04T06-53-46-901Z-gyne",
+          "ttftMean": 2749,
+          "durationMean": 2835,
+          "passRate": 1,
+          "consistency": 0.917,
+          "outputTokens": 93
+        },
+        {
+          "runId": "2026-06-04T07-02-44-623Z-zvjx",
+          "ttftMean": 3272,
+          "durationMean": 3368,
+          "passRate": 1,
+          "consistency": 0.917,
+          "outputTokens": 125
+        },
+        {
+          "runId": "2026-06-04T07-11-14-821Z-la3e",
+          "ttftMean": 3054,
+          "durationMean": 3239,
+          "passRate": 0.958,
+          "consistency": 0.875,
+          "outputTokens": 95
+        }
+      ],
+      "locked": true,
+      "ttftMs": {
+        "mean": 4123,
+        "std": 1911
+      },
+      "durationMs": {
+        "mean": 4244
+      },
+      "passRate": {
+        "mean": 0.979,
+        "std": 0.021
+      },
+      "consistency": {
+        "mean": 0.896
+      },
+      "outputTokens": {
+        "mean": 100
+      }
+    },
+    "claude-sonnet-4-6": {
+      "requested": "sonnet",
+      "level": 8,
+      "samples": [
+        {
+          "runId": "2026-06-04T06-43-21-398Z-w0nk",
+          "ttftMean": 3109,
+          "durationMean": 3222,
+          "passRate": 0.667,
+          "consistency": 0.875,
+          "outputTokens": 97
+        },
+        {
+          "runId": "2026-06-04T06-53-46-901Z-gyne",
+          "ttftMean": 3451,
+          "durationMean": 3531,
+          "passRate": 0.708,
+          "consistency": 0.875,
+          "outputTokens": 132
+        },
+        {
+          "runId": "2026-06-04T07-02-44-623Z-zvjx",
+          "ttftMean": 3426,
+          "durationMean": 3529,
+          "passRate": 0.75,
+          "consistency": 0.833,
+          "outputTokens": 101
+        },
+        {
+          "runId": "2026-06-04T07-11-14-821Z-la3e",
+          "ttftMean": 3045,
+          "durationMean": 3158,
+          "passRate": 0.708,
+          "consistency": 0.917,
+          "outputTokens": 99
+        }
+      ],
+      "locked": true,
+      "ttftMs": {
+        "mean": 3258,
+        "std": 182
+      },
+      "durationMs": {
+        "mean": 3360
+      },
+      "passRate": {
+        "mean": 0.708,
+        "std": 0.029
+      },
+      "consistency": {
+        "mean": 0.875
+      },
+      "outputTokens": {
+        "mean": 107
+      }
+    },
+    "claude-haiku-4-5-20251001": {
+      "requested": "haiku",
+      "level": 8,
+      "samples": [
+        {
+          "runId": "2026-06-04T06-43-21-398Z-w0nk",
+          "ttftMean": 5712,
+          "durationMean": 5774,
+          "passRate": 1,
+          "consistency": 0.917,
+          "outputTokens": 811
+        },
+        {
+          "runId": "2026-06-04T06-53-46-901Z-gyne",
+          "ttftMean": 5832,
+          "durationMean": 5890,
+          "passRate": 1,
+          "consistency": 0.917,
+          "outputTokens": 750
+        },
+        {
+          "runId": "2026-06-04T07-02-44-623Z-zvjx",
+          "ttftMean": 5319,
+          "durationMean": 5372,
+          "passRate": 1,
+          "consistency": 0.917,
+          "outputTokens": 755
+        },
+        {
+          "runId": "2026-06-04T07-11-14-821Z-la3e",
+          "ttftMean": 6188,
+          "durationMean": 6254,
+          "passRate": 0.958,
+          "consistency": 0.875,
+          "outputTokens": 892
+        }
+      ],
+      "locked": true,
+      "ttftMs": {
+        "mean": 5763,
+        "std": 310
+      },
+      "durationMs": {
+        "mean": 5823
+      },
+      "passRate": {
+        "mean": 0.99,
+        "std": 0.018
+      },
+      "consistency": {
+        "mean": 0.907
+      },
+      "outputTokens": {
+        "mean": 802
+      }
+    }
+  }
+}

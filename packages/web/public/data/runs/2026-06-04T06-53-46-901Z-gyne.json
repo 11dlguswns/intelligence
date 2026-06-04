@@ -1,0 +1,1160 @@
+{
+  "runId": "2026-06-04T06-53-46-901Z-gyne",
+  "startedAt": "2026-06-04T06:53:46.904Z",
+  "finishedAt": "2026-06-04T07:02:44.399Z",
+  "profile": "pure",
+  "effort": "low",
+  "level": 8,
+  "instances": 2,
+  "reps": 2,
+  "seedBase": "2026-06-04T06-53-46-901Z-gyne",
+  "systemPrompt": "You are taking a short test. Read each question carefully and respond exactly as instructed, with no extra commentary, explanation, or formatting.",
+  "models": [
+    {
+      "requested": "opus",
+      "resolved": "claude-opus-4-8",
+      "level": 8,
+      "passRate": 1,
+      "consistency": 0.917,
+      "avgTtftMs": 2749,
+      "medianTtftMs": 2285,
+      "p90TtftMs": 3799,
+      "avgDurationMs": 2835,
+      "avgOutputTokens": 93,
+      "byFamily": {
+        "multiplication": 1,
+        "precedence": 1,
+        "counting": 1,
+        "modular": 1,
+        "selection": 1,
+        "instruction": 1
+      },
+      "baseline": {
+        "ttftMean": 5084,
+        "ttftStd": 2335,
+        "passMean": 0.979,
+        "locked": false,
+        "n": 2
+      },
+      "condition": {
+        "status": "baselining",
+        "latencyRatio": null,
+        "accDelta": null
+      },
+      "families": [
+        {
+          "id": "multiplication",
+          "title": "Multi-digit multiplication",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Compute 628792 × 67400. Respond with only the resulting integer and nothing else.",
+              "answer": "42380580800",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "42380580800",
+                  "parsed": "42380580800",
+                  "correct": true,
+                  "ttftMs": 2135,
+                  "durationMs": 2205,
+                  "outputTokens": 6,
+                  "error": null
+                },
+                {
+                  "raw": "42380580800",
+                  "parsed": "42380580800",
+                  "correct": true,
+                  "ttftMs": 2574,
+                  "durationMs": 2655,
+                  "outputTokens": 72,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Compute 570080 × 26997. Respond with only the resulting integer and nothing else.",
+              "answer": "15390449760",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "15390449760",
+                  "parsed": "15390449760",
+                  "correct": true,
+                  "ttftMs": 2710,
+                  "durationMs": 2773,
+                  "outputTokens": 62,
+                  "error": null
+                },
+                {
+                  "raw": "15390449760",
+                  "parsed": "15390449760",
+                  "correct": true,
+                  "ttftMs": 2285,
+                  "durationMs": 2358,
+                  "outputTokens": 54,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "precedence",
+          "title": "Order of operations",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Compute 2 - 2 + 6 × 8 × 2 - 4 × 2 × 3 + 7 + 2. Use standard order of operations. Respond with only the resulting integer and nothing else.",
+              "answer": "81",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "81",
+                  "parsed": "81",
+                  "correct": true,
+                  "ttftMs": 1981,
+                  "durationMs": 2045,
+                  "outputTokens": 37,
+                  "error": null
+                },
+                {
+                  "raw": "81",
+                  "parsed": "81",
+                  "correct": true,
+                  "ttftMs": 1997,
+                  "durationMs": 2049,
+                  "outputTokens": 18,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Compute 6 × 6 - 5 × 5 - 6 + 9 - 9 - 7 + 8 + 2. Use standard order of operations. Respond with only the resulting integer and nothing else.",
+              "answer": "8",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "8",
+                  "parsed": "8",
+                  "correct": true,
+                  "ttftMs": 1639,
+                  "durationMs": 1733,
+                  "outputTokens": 3,
+                  "error": null
+                },
+                {
+                  "raw": "8",
+                  "parsed": "8",
+                  "correct": true,
+                  "ttftMs": 2195,
+                  "durationMs": 2277,
+                  "outputTokens": 54,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "counting",
+          "title": "Letter counting in a string",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "In the string \"bbbgafeecfececceefbacbdgdcdgbcgdfaeafabdfgcbcefbbdedbadbgcaagdfcbbffbb\", how many times does the letter \"d\" appear? Respond with only the integer and nothing else.",
+              "answer": "9",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "9",
+                  "parsed": "9",
+                  "correct": true,
+                  "ttftMs": 5988,
+                  "durationMs": 6064,
+                  "outputTokens": 445,
+                  "error": null
+                },
+                {
+                  "raw": "9",
+                  "parsed": "9",
+                  "correct": true,
+                  "ttftMs": 5198,
+                  "durationMs": 5348,
+                  "outputTokens": 256,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "In the string \"fbbfcdadegbegcgffegbacdbaafccdcdfeedgeggcdfcdfbafffggaefaabefaeadcedca\", how many times does the letter \"g\" appear? Respond with only the integer and nothing else.",
+              "answer": "9",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "9",
+                  "parsed": "9",
+                  "correct": true,
+                  "ttftMs": 6955,
+                  "durationMs": 7020,
+                  "outputTokens": 554,
+                  "error": null
+                },
+                {
+                  "raw": "9",
+                  "parsed": "9",
+                  "correct": true,
+                  "ttftMs": 3799,
+                  "durationMs": 3872,
+                  "outputTokens": 183,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "modular",
+          "title": "Modular exponentiation",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Compute 2^10 mod 1000 (the remainder when 2 to the power 10 is divided by 1000). Respond with only the integer and nothing else.",
+              "answer": "24",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "24",
+                  "parsed": "24",
+                  "correct": true,
+                  "ttftMs": 1741,
+                  "durationMs": 1799,
+                  "outputTokens": 3,
+                  "error": null
+                },
+                {
+                  "raw": "24",
+                  "parsed": "24",
+                  "correct": true,
+                  "ttftMs": 1646,
+                  "durationMs": 1714,
+                  "outputTokens": 3,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Compute 9^10 mod 1000 (the remainder when 9 to the power 10 is divided by 1000). Respond with only the integer and nothing else.",
+              "answer": "401",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "401",
+                  "parsed": "401",
+                  "correct": true,
+                  "ttftMs": 2384,
+                  "durationMs": 2458,
+                  "outputTokens": 62,
+                  "error": null
+                },
+                {
+                  "raw": "401",
+                  "parsed": "401",
+                  "correct": true,
+                  "ttftMs": 2455,
+                  "durationMs": 2596,
+                  "outputTokens": 104,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "selection",
+          "title": "Nth-largest selection",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Consider this list: 91, 50, 70, 29, 95, 34, 68, 79, 42, 52, 32, 33, 47, 30, 20, 73, 98, 92, 57. What is the sixth largest number in it? Respond with only the number and nothing else.",
+              "answer": "73",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "73",
+                  "parsed": "73",
+                  "correct": true,
+                  "ttftMs": 2347,
+                  "durationMs": 2423,
+                  "outputTokens": 59,
+                  "error": null
+                },
+                {
+                  "raw": "73",
+                  "parsed": "73",
+                  "correct": true,
+                  "ttftMs": 1996,
+                  "durationMs": 2086,
+                  "outputTokens": 61,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Consider this list: 97, 72, 22, 24, 65, 86, 66, 69, 90, 37, 38, 88, 20, 98, 31, 83, 28, 87, 60. What is the third largest number in it? Respond with only the number and nothing else.",
+              "answer": "90",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "90",
+                  "parsed": "90",
+                  "correct": true,
+                  "ttftMs": 1685,
+                  "durationMs": 1753,
+                  "outputTokens": 25,
+                  "error": null
+                },
+                {
+                  "raw": "90",
+                  "parsed": "90",
+                  "correct": true,
+                  "ttftMs": 1808,
+                  "durationMs": 1892,
+                  "outputTokens": 3,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "instruction",
+          "title": "Multi-constraint formatting",
+          "passRate": 1,
+          "consistency": 0.5,
+          "instances": [
+            {
+              "prompt": "Respond with: exactly 10 words; all words lowercase letters only; single spaces between words; no word repeated; word #3 must be \"fox\"; word #7 must be \"car\"; word #5 must be \"ice\"; word #2 must be \"one\"; word #1 must be \"two\"; word #9 must be \"cat\"; word #10 must be \"key\". Output only the words, nothing else.",
+              "answer": "10 words; #3=fox,#7=car,#5=ice,#2=one,#1=two,#9=cat,#10=key",
+              "modalFreq": 0.5,
+              "attempts": [
+                {
+                  "raw": "two one fox blue ice green car red cat key",
+                  "parsed": "two one fox blue ice green car red cat key",
+                  "correct": true,
+                  "ttftMs": 2812,
+                  "durationMs": 2908,
+                  "outputTokens": 16,
+                  "error": null
+                },
+                {
+                  "raw": "two one fox dog ice run car bird cat key",
+                  "parsed": "two one fox dog ice run car bird cat key",
+                  "correct": true,
+                  "ttftMs": 2117,
+                  "durationMs": 2193,
+                  "outputTokens": 17,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Respond with: exactly 10 words; all words lowercase letters only; single spaces between words; no word repeated; word #4 must be \"sun\"; word #10 must be \"fox\"; word #8 must be \"pen\"; word #1 must be \"arm\"; word #2 must be \"car\"; word #6 must be \"bee\"; word #7 must be \"run\". Output only the words, nothing else.",
+              "answer": "10 words; #4=sun,#10=fox,#8=pen,#1=arm,#2=car,#6=bee,#7=run",
+              "modalFreq": 0.5,
+              "attempts": [
+                {
+                  "raw": "arm car tree sun lake bee run pen owl fox",
+                  "parsed": "arm car tree sun lake bee run pen owl fox",
+                  "correct": true,
+                  "ttftMs": 2381,
+                  "durationMs": 2460,
+                  "outputTokens": 20,
+                  "error": null
+                },
+                {
+                  "raw": "arm car dog sun tree bee run pen hat fox",
+                  "parsed": "arm car dog sun tree bee run pen hat fox",
+                  "correct": true,
+                  "ttftMs": 3149,
+                  "durationMs": 3367,
+                  "outputTokens": 107,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requested": "sonnet",
+      "resolved": "claude-sonnet-4-6",
+      "level": 8,
+      "passRate": 0.708,
+      "consistency": 0.875,
+      "avgTtftMs": 3451,
+      "medianTtftMs": 2534,
+      "p90TtftMs": 5895,
+      "avgDurationMs": 3531,
+      "avgOutputTokens": 132,
+      "byFamily": {
+        "multiplication": 1,
+        "precedence": 1,
+        "counting": 0.75,
+        "modular": 0.5,
+        "selection": 0,
+        "instruction": 1
+      },
+      "baseline": {
+        "ttftMean": 3280,
+        "ttftStd": 171,
+        "passMean": 0.688,
+        "locked": false,
+        "n": 2
+      },
+      "condition": {
+        "status": "baselining",
+        "latencyRatio": null,
+        "accDelta": null
+      },
+      "families": [
+        {
+          "id": "multiplication",
+          "title": "Multi-digit multiplication",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Compute 258255 × 31866. Respond with only the resulting integer and nothing else.",
+              "answer": "8229553830",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "8229553830",
+                  "parsed": "8229553830",
+                  "correct": true,
+                  "ttftMs": 4184,
+                  "durationMs": 4251,
+                  "outputTokens": 174,
+                  "error": null
+                },
+                {
+                  "raw": "8229553830",
+                  "parsed": "8229553830",
+                  "correct": true,
+                  "ttftMs": 3441,
+                  "durationMs": 3530,
+                  "outputTokens": 144,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Compute 945301 × 33573. Respond with only the resulting integer and nothing else.",
+              "answer": "31736590473",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "31736590473",
+                  "parsed": "31736590473",
+                  "correct": true,
+                  "ttftMs": 4986,
+                  "durationMs": 5052,
+                  "outputTokens": 275,
+                  "error": null
+                },
+                {
+                  "raw": "31736590473",
+                  "parsed": "31736590473",
+                  "correct": true,
+                  "ttftMs": 4359,
+                  "durationMs": 4442,
+                  "outputTokens": 186,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "precedence",
+          "title": "Order of operations",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Compute 3 - 3 - 6 × 6 + 2 - 4 + 2 - 6 × 6 - 8. Use standard order of operations. Respond with only the resulting integer and nothing else.",
+              "answer": "-80",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "-80",
+                  "parsed": "-80",
+                  "correct": true,
+                  "ttftMs": 1975,
+                  "durationMs": 2033,
+                  "outputTokens": 53,
+                  "error": null
+                },
+                {
+                  "raw": "-80",
+                  "parsed": "-80",
+                  "correct": true,
+                  "ttftMs": 1987,
+                  "durationMs": 2148,
+                  "outputTokens": 53,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Compute 5 × 3 - 8 + 8 × 7 - 2 × 5 × 7 - 2 - 8. Use standard order of operations. Respond with only the resulting integer and nothing else.",
+              "answer": "-17",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "-17",
+                  "parsed": "-17",
+                  "correct": true,
+                  "ttftMs": 2328,
+                  "durationMs": 2390,
+                  "outputTokens": 67,
+                  "error": null
+                },
+                {
+                  "raw": "-17",
+                  "parsed": "-17",
+                  "correct": true,
+                  "ttftMs": 2632,
+                  "durationMs": 2700,
+                  "outputTokens": 67,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "counting",
+          "title": "Letter counting in a string",
+          "passRate": 0.75,
+          "consistency": 0.75,
+          "instances": [
+            {
+              "prompt": "In the string \"bbfedccefdcbdaaecdgfcegabbeaaeacagdbcdebcebfdccgdaacdadadafdefagdbcegc\", how many times does the letter \"c\" appear? Respond with only the integer and nothing else.",
+              "answer": "13",
+              "modalFreq": 0.5,
+              "attempts": [
+                {
+                  "raw": "13",
+                  "parsed": "13",
+                  "correct": true,
+                  "ttftMs": 9318,
+                  "durationMs": 9383,
+                  "outputTokens": 636,
+                  "error": null
+                },
+                {
+                  "raw": "14",
+                  "parsed": "14",
+                  "correct": false,
+                  "ttftMs": 8153,
+                  "durationMs": 8206,
+                  "outputTokens": 627,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "In the string \"eggfgfagfcggeebbgcdfgdagggeabfaefadaaedfeccbdgfebcccbcgddbcbaabbggffgb\", how many times does the letter \"e\" appear? Respond with only the integer and nothing else.",
+              "answer": "8",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "8",
+                  "parsed": "8",
+                  "correct": true,
+                  "ttftMs": 7547,
+                  "durationMs": 7629,
+                  "outputTokens": 508,
+                  "error": null
+                },
+                {
+                  "raw": "8",
+                  "parsed": "8",
+                  "correct": true,
+                  "ttftMs": 5895,
+                  "durationMs": 5970,
+                  "outputTokens": 296,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "modular",
+          "title": "Modular exponentiation",
+          "passRate": 0.5,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Compute 6^10 mod 1000 (the remainder when 6 to the power 10 is divided by 1000). Respond with only the integer and nothing else.",
+              "answer": "176",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "736",
+                  "parsed": "736",
+                  "correct": false,
+                  "ttftMs": 1771,
+                  "durationMs": 1864,
+                  "outputTokens": 5,
+                  "error": null
+                },
+                {
+                  "raw": "736",
+                  "parsed": "736",
+                  "correct": false,
+                  "ttftMs": 1708,
+                  "durationMs": 1788,
+                  "outputTokens": 5,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Compute 5^10 mod 1000 (the remainder when 5 to the power 10 is divided by 1000). Respond with only the integer and nothing else.",
+              "answer": "625",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "625",
+                  "parsed": "625",
+                  "correct": true,
+                  "ttftMs": 1892,
+                  "durationMs": 1954,
+                  "outputTokens": 5,
+                  "error": null
+                },
+                {
+                  "raw": "625",
+                  "parsed": "625",
+                  "correct": true,
+                  "ttftMs": 2980,
+                  "durationMs": 3062,
+                  "outputTokens": 5,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "selection",
+          "title": "Nth-largest selection",
+          "passRate": 0,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Consider this list: 58, 75, 25, 87, 33, 13, 53, 99, 42, 92, 39, 15, 30, 46, 26, 43, 86, 70, 93. What is the fifth largest number in it? Respond with only the number and nothing else.",
+              "answer": "86",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "75",
+                  "parsed": "75",
+                  "correct": false,
+                  "ttftMs": 1546,
+                  "durationMs": 1648,
+                  "outputTokens": 5,
+                  "error": null
+                },
+                {
+                  "raw": "75",
+                  "parsed": "75",
+                  "correct": false,
+                  "ttftMs": 1886,
+                  "durationMs": 1978,
+                  "outputTokens": 5,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Consider this list: 22, 84, 28, 76, 25, 23, 37, 94, 82, 95, 42, 80, 16, 93, 64, 11, 56, 89, 51. What is the fourth largest number in it? Respond with only the number and nothing else.",
+              "answer": "89",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "84",
+                  "parsed": "84",
+                  "correct": false,
+                  "ttftMs": 1744,
+                  "durationMs": 1897,
+                  "outputTokens": 5,
+                  "error": null
+                },
+                {
+                  "raw": "84",
+                  "parsed": "84",
+                  "correct": false,
+                  "ttftMs": 1855,
+                  "durationMs": 1922,
+                  "outputTokens": 5,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "instruction",
+          "title": "Multi-constraint formatting",
+          "passRate": 1,
+          "consistency": 0.5,
+          "instances": [
+            {
+              "prompt": "Respond with: exactly 10 words; all words lowercase letters only; single spaces between words; no word repeated; word #4 must be \"run\"; word #8 must be \"arm\"; word #1 must be \"map\"; word #9 must be \"car\"; word #5 must be \"cup\"; word #2 must be \"red\"; word #6 must be \"sky\". Output only the words, nothing else.",
+              "answer": "10 words; #4=run,#8=arm,#1=map,#9=car,#5=cup,#2=red,#6=sky",
+              "modalFreq": 0.5,
+              "attempts": [
+                {
+                  "raw": "map red fox run cup sky blue arm car sun",
+                  "parsed": "map red fox run cup sky blue arm car sun",
+                  "correct": true,
+                  "ttftMs": 2534,
+                  "durationMs": 2601,
+                  "outputTokens": 13,
+                  "error": null
+                },
+                {
+                  "raw": "map red blue run cup sky long arm car fish",
+                  "parsed": "map red blue run cup sky long arm car fish",
+                  "correct": true,
+                  "ttftMs": 2438,
+                  "durationMs": 2497,
+                  "outputTokens": 13,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Respond with: exactly 10 words; all words lowercase letters only; single spaces between words; no word repeated; word #1 must be \"bee\"; word #4 must be \"sky\"; word #10 must be \"dot\"; word #2 must be \"sun\"; word #7 must be \"dog\"; word #8 must be \"box\"; word #9 must be \"ice\". Output only the words, nothing else.",
+              "answer": "10 words; #1=bee,#4=sky,#10=dot,#2=sun,#7=dog,#8=box,#9=ice",
+              "modalFreq": 0.5,
+              "attempts": [
+                {
+                  "raw": "bee sun over sky blue bright dog box ice dot",
+                  "parsed": "bee sun over sky blue bright dog box ice dot",
+                  "correct": true,
+                  "ttftMs": 2838,
+                  "durationMs": 2883,
+                  "outputTokens": 13,
+                  "error": null
+                },
+                {
+                  "raw": "bee sun and sky over the dog box ice dot",
+                  "parsed": "bee sun and sky over the dog box ice dot",
+                  "correct": true,
+                  "ttftMs": 2838,
+                  "durationMs": 2917,
+                  "outputTokens": 13,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requested": "haiku",
+      "resolved": "claude-haiku-4-5-20251001",
+      "level": 8,
+      "passRate": 1,
+      "consistency": 0.917,
+      "avgTtftMs": 5832,
+      "medianTtftMs": 3409,
+      "p90TtftMs": 9971,
+      "avgDurationMs": 5890,
+      "avgOutputTokens": 750,
+      "byFamily": {
+        "multiplication": 1,
+        "precedence": 1,
+        "counting": 1,
+        "modular": 1,
+        "selection": 1,
+        "instruction": 1
+      },
+      "baseline": {
+        "ttftMean": 5772,
+        "ttftStd": 60,
+        "passMean": 1,
+        "locked": false,
+        "n": 2
+      },
+      "condition": {
+        "status": "baselining",
+        "latencyRatio": null,
+        "accDelta": null
+      },
+      "families": [
+        {
+          "id": "multiplication",
+          "title": "Multi-digit multiplication",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Compute 268553 × 71242. Respond with only the resulting integer and nothing else.",
+              "answer": "19132252826",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "19132252826",
+                  "parsed": "19132252826",
+                  "correct": true,
+                  "ttftMs": 15740,
+                  "durationMs": 15789,
+                  "outputTokens": 2807,
+                  "error": null
+                },
+                {
+                  "raw": "19132252826",
+                  "parsed": "19132252826",
+                  "correct": true,
+                  "ttftMs": 9971,
+                  "durationMs": 10030,
+                  "outputTokens": 1469,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Compute 322594 × 58216. Respond with only the resulting integer and nothing else.",
+              "answer": "18780132304",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "18780132304",
+                  "parsed": "18780132304",
+                  "correct": true,
+                  "ttftMs": 8231,
+                  "durationMs": 8273,
+                  "outputTokens": 1043,
+                  "error": null
+                },
+                {
+                  "raw": "18780132304",
+                  "parsed": "18780132304",
+                  "correct": true,
+                  "ttftMs": 12584,
+                  "durationMs": 12592,
+                  "outputTokens": 2069,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "precedence",
+          "title": "Order of operations",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Compute 6 - 2 + 6 + 4 - 7 - 5 × 3 × 9 × 3 + 7. Use standard order of operations. Respond with only the resulting integer and nothing else.",
+              "answer": "-391",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "-391",
+                  "parsed": "-391",
+                  "correct": true,
+                  "ttftMs": 2245,
+                  "durationMs": 2253,
+                  "outputTokens": 258,
+                  "error": null
+                },
+                {
+                  "raw": "-391",
+                  "parsed": "-391",
+                  "correct": true,
+                  "ttftMs": 2600,
+                  "durationMs": 2735,
+                  "outputTokens": 254,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Compute 7 + 4 + 6 - 7 × 9 - 6 - 9 + 4 × 3 + 3. Use standard order of operations. Respond with only the resulting integer and nothing else.",
+              "answer": "-46",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "-46",
+                  "parsed": "-46",
+                  "correct": true,
+                  "ttftMs": 2194,
+                  "durationMs": 2261,
+                  "outputTokens": 249,
+                  "error": null
+                },
+                {
+                  "raw": "-46",
+                  "parsed": "-46",
+                  "correct": true,
+                  "ttftMs": 2068,
+                  "durationMs": 2154,
+                  "outputTokens": 255,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "counting",
+          "title": "Letter counting in a string",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "In the string \"gefeafgfdfafeeegbgcgcfadcbfegcgeefgagagebbeecgddedageagbgfdecfbfbdaade\", how many times does the letter \"g\" appear? Respond with only the integer and nothing else.",
+              "answer": "14",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "14",
+                  "parsed": "14",
+                  "correct": true,
+                  "ttftMs": 9914,
+                  "durationMs": 9991,
+                  "outputTokens": 1547,
+                  "error": null
+                },
+                {
+                  "raw": "14",
+                  "parsed": "14",
+                  "correct": true,
+                  "ttftMs": 16799,
+                  "durationMs": 16935,
+                  "outputTokens": 1979,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "In the string \"gefgbbdefcfeeggfebcdbgadbbbbfcceaagebffccafeebdaaffagefcefeffbedfafada\", how many times does the letter \"g\" appear? Respond with only the integer and nothing else.",
+              "answer": "7",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "7",
+                  "parsed": "7",
+                  "correct": true,
+                  "ttftMs": 8409,
+                  "durationMs": 8513,
+                  "outputTokens": 1217,
+                  "error": null
+                },
+                {
+                  "raw": "7",
+                  "parsed": "7",
+                  "correct": true,
+                  "ttftMs": 5559,
+                  "durationMs": 5599,
+                  "outputTokens": 777,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "modular",
+          "title": "Modular exponentiation",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Compute 3^10 mod 1000 (the remainder when 3 to the power 10 is divided by 1000). Respond with only the integer and nothing else.",
+              "answer": "49",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "49",
+                  "parsed": "49",
+                  "correct": true,
+                  "ttftMs": 1893,
+                  "durationMs": 1928,
+                  "outputTokens": 171,
+                  "error": null
+                },
+                {
+                  "raw": "49",
+                  "parsed": "49",
+                  "correct": true,
+                  "ttftMs": 2664,
+                  "durationMs": 2702,
+                  "outputTokens": 173,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Compute 3^10 mod 1000 (the remainder when 3 to the power 10 is divided by 1000). Respond with only the integer and nothing else.",
+              "answer": "49",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "49",
+                  "parsed": "49",
+                  "correct": true,
+                  "ttftMs": 2080,
+                  "durationMs": 2125,
+                  "outputTokens": 207,
+                  "error": null
+                },
+                {
+                  "raw": "49",
+                  "parsed": "49",
+                  "correct": true,
+                  "ttftMs": 2050,
+                  "durationMs": 2068,
+                  "outputTokens": 230,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "selection",
+          "title": "Nth-largest selection",
+          "passRate": 1,
+          "consistency": 1,
+          "instances": [
+            {
+              "prompt": "Consider this list: 93, 14, 38, 76, 74, 27, 58, 46, 44, 31, 15, 22, 55, 41, 47, 90, 85, 57, 56. What is the fifth largest number in it? Respond with only the number and nothing else.",
+              "answer": "74",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "74",
+                  "parsed": "74",
+                  "correct": true,
+                  "ttftMs": 3409,
+                  "durationMs": 3515,
+                  "outputTokens": 377,
+                  "error": null
+                },
+                {
+                  "raw": "74",
+                  "parsed": "74",
+                  "correct": true,
+                  "ttftMs": 2696,
+                  "durationMs": 2764,
+                  "outputTokens": 304,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Consider this list: 58, 10, 15, 63, 54, 51, 69, 88, 28, 23, 96, 99, 75, 59, 41, 39, 78, 65, 84. What is the sixth largest number in it? Respond with only the number and nothing else.",
+              "answer": "75",
+              "modalFreq": 1,
+              "attempts": [
+                {
+                  "raw": "75",
+                  "parsed": "75",
+                  "correct": true,
+                  "ttftMs": 3121,
+                  "durationMs": 3130,
+                  "outputTokens": 429,
+                  "error": null
+                },
+                {
+                  "raw": "75",
+                  "parsed": "75",
+                  "correct": true,
+                  "ttftMs": 2235,
+                  "durationMs": 2285,
+                  "outputTokens": 217,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "instruction",
+          "title": "Multi-constraint formatting",
+          "passRate": 1,
+          "consistency": 0.5,
+          "instances": [
+            {
+              "prompt": "Respond with: exactly 10 words; all words lowercase letters only; single spaces between words; no word repeated; word #8 must be \"map\"; word #9 must be \"ice\"; word #3 must be \"box\"; word #2 must be \"cup\"; word #7 must be \"arm\"; word #6 must be \"fox\"; word #1 must be \"cat\". Output only the words, nothing else.",
+              "answer": "10 words; #8=map,#9=ice,#3=box,#2=cup,#7=arm,#6=fox,#1=cat",
+              "modalFreq": 0.5,
+              "attempts": [
+                {
+                  "raw": "cat cup box dog hat fox arm map ice sun",
+                  "parsed": "cat cup box dog hat fox arm map ice sun",
+                  "correct": true,
+                  "ttftMs": 7022,
+                  "durationMs": 7098,
+                  "outputTokens": 489,
+                  "error": null
+                },
+                {
+                  "raw": "cat cup box and day fox arm map ice sea",
+                  "parsed": "cat cup box and day fox arm map ice sea",
+                  "correct": true,
+                  "ttftMs": 4112,
+                  "durationMs": 4168,
+                  "outputTokens": 462,
+                  "error": null
+                }
+              ]
+            },
+            {
+              "prompt": "Respond with: exactly 10 words; all words lowercase letters only; single spaces between words; no word repeated; word #7 must be \"cup\"; word #10 must be \"box\"; word #8 must be \"dot\"; word #6 must be \"two\"; word #1 must be \"sun\"; word #3 must be \"arm\"; word #5 must be \"sky\". Output only the words, nothing else.",
+              "answer": "10 words; #7=cup,#10=box,#8=dot,#6=two,#1=sun,#3=arm,#5=sky",
+              "modalFreq": 0.5,
+              "attempts": [
+                {
+                  "raw": "sun and arm big sky two cup dot in box",
+                  "parsed": "sun and arm big sky two cup dot in box",
+                  "correct": true,
+                  "ttftMs": 7432,
+                  "durationMs": 7483,
+                  "outputTokens": 495,
+                  "error": null
+                },
+                {
+                  "raw": "sun and arm near sky two cup dot in box",
+                  "parsed": "sun and arm near sky two cup dot in box",
+                  "correct": true,
+                  "ttftMs": 4931,
+                  "durationMs": 4971,
+                  "outputTokens": 526,
+                  "error": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

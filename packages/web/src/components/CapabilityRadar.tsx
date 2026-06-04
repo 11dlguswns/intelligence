@@ -13,16 +13,19 @@ import { modelColor, modelLabel } from '../lib/model';
 interface Props {
   run: HistoryRun;
   models: string[];
-  dimensions: string[];
+  families: string[];
   height?: number;
 }
 
-export function CapabilityRadar({ run, models, dimensions, height = 300 }: Props) {
+// Per-family pass rate for the latest run. NOTE: each model is tested at its OWN
+// calibrated level, so this shows where a model is relatively weak — not a
+// cross-model comparison of absolute difficulty.
+export function CapabilityRadar({ run, models, families, height = 300 }: Props) {
   const present = models.filter((m) => run.byModel[m]);
-  const data = dimensions.map((dim) => {
-    const row: Record<string, number | string> = { dimension: dim };
+  const data = families.map((fam) => {
+    const row: Record<string, number | string> = { family: fam };
     present.forEach((m) => {
-      row[m] = Math.round((run.byModel[m].dimensions[dim] ?? 0) * 100);
+      row[m] = Math.round((run.byModel[m].byFamily?.[fam] ?? 0) * 100);
     });
     return row;
   });
@@ -32,7 +35,7 @@ export function CapabilityRadar({ run, models, dimensions, height = 300 }: Props
       <ResponsiveContainer>
         <RadarChart data={data} outerRadius="70%">
           <PolarGrid stroke="var(--border)" />
-          <PolarAngleAxis dataKey="dimension" tick={{ fill: 'var(--muted)', fontSize: 11 }} />
+          <PolarAngleAxis dataKey="family" tick={{ fill: 'var(--muted)', fontSize: 11 }} />
           <PolarRadiusAxis domain={[0, 100]} tick={{ fill: 'var(--faint)', fontSize: 9 }} angle={90} />
           {present.map((m, i) => (
             <Radar
