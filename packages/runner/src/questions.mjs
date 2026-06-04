@@ -1,0 +1,88 @@
+// The benchmark question bank.
+//
+// Design goals:
+//   - LOW TOKEN: every prompt is short and demands a terse answer.
+//   - OBJECTIVE: every answer is machine-checkable (no LLM judge needed).
+//   - CAPABILITY-SENSITIVE: each item is a known "canary" where a strong model
+//     succeeds and a degraded/over-sampled one slips, so the score moves when the
+//     real-world model quality moves.
+//
+// Each question declares a `verify` spec interpreted by verify.mjs.
+// `dimension` groups questions so the index is balanced across capability types.
+
+export const QUESTIONS = [
+  {
+    id: 'count-r-strawberry',
+    dimension: 'counting',
+    title: 'Count letters: "r" in "strawberry"',
+    prompt:
+      'How many times does the letter "r" appear in the word "strawberry"? Respond with only a single integer and nothing else.',
+    verify: { type: 'numeric', equals: 3 },
+  },
+  {
+    id: 'count-e-beekeeper',
+    dimension: 'counting',
+    title: 'Count letters: "e" in "beekeeper"',
+    prompt:
+      'How many times does the letter "e" appear in the word "beekeeper"? Respond with only a single integer and nothing else.',
+    verify: { type: 'numeric', equals: 5 },
+  },
+  {
+    id: 'math-multistep',
+    dimension: 'math',
+    title: 'Multi-step arithmetic',
+    prompt:
+      'Compute (17 × 24) − (348 ÷ 4). Respond with only the resulting integer and nothing else.',
+    verify: { type: 'numeric', equals: 321 },
+  },
+  {
+    id: 'crt-bat-ball',
+    dimension: 'crt',
+    title: 'Cognitive reflection: bat & ball',
+    prompt:
+      'A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How many cents does the ball cost? Respond with only the integer number of cents and nothing else.',
+    verify: { type: 'numeric', equals: 5 },
+  },
+  {
+    id: 'crt-widgets',
+    dimension: 'crt',
+    title: 'Cognitive reflection: widgets',
+    prompt:
+      'If 5 machines take 5 minutes to make 5 widgets, how many minutes would 100 machines take to make 100 widgets? Respond with only the integer and nothing else.',
+    verify: { type: 'numeric', equals: 5 },
+  },
+  {
+    id: 'logic-syllogism',
+    dimension: 'logic',
+    title: 'Transitive syllogism',
+    prompt:
+      'All bloops are razzies. All razzies are lazzies. Are all bloops definitely lazzies? Answer with only the single word "yes" or "no".',
+    verify: { type: 'word', equals: 'yes' },
+  },
+  {
+    id: 'logic-relations',
+    dimension: 'logic',
+    title: 'Relational ordering',
+    prompt:
+      "Tom is taller than Sara. Sara is taller than Mia. Who is the shortest? Respond with only that person's first name and nothing else.",
+    verify: { type: 'word', equals: 'mia' },
+  },
+  {
+    id: 'instruction-three-words',
+    dimension: 'instruction',
+    title: 'Strict format: exactly three lowercase words',
+    prompt:
+      'Respond with exactly three words. All words must be lowercase letters only. Separate them with single spaces. Include no punctuation, no numbers, and no other text.',
+    verify: { type: 'regex', pattern: '^[a-z]+ [a-z]+ [a-z]+$' },
+  },
+  {
+    id: 'constraint-q-k-word',
+    dimension: 'constraint',
+    title: 'Constraint satisfaction: a q…k word',
+    prompt:
+      'Give one English word that is exactly five letters long, starts with the letter "q", and ends with the letter "k". Respond with only the word in lowercase and nothing else.',
+    verify: { type: 'wordset', anyOf: ['quack', 'quark', 'quirk', 'quick'] },
+  },
+];
+
+export const DIMENSIONS = [...new Set(QUESTIONS.map((q) => q.dimension))];

@@ -1,0 +1,64 @@
+{
+  "updatedAt": "2026-06-04T00:48:46.995Z",
+  "models": [
+    "claude-haiku-4-5-20251001"
+  ],
+  "dimensions": [
+    "counting",
+    "math",
+    "crt",
+    "logic",
+    "instruction",
+    "constraint"
+  ],
+  "runs": [
+    {
+      "runId": "2026-06-04T00-45-02-161Z-nb82",
+      "startedAt": "2026-06-04T00:45:02.162Z",
+      "profile": "pure",
+      "effort": "high",
+      "repeat": 2,
+      "byModel": {
+        "claude-haiku-4-5-20251001": {
+          "requested": "haiku",
+          "index": 100,
+          "consistency": 0.944,
+          "avgTtftMs": 2426,
+          "avgOutputTokens": 189,
+          "dimensions": {
+            "counting": 1,
+            "math": 1,
+            "crt": 1,
+            "logic": 1,
+            "instruction": 1,
+            "constraint": 1
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-06-04T00-46-47-587Z-ro0o",
+      "startedAt": "2026-06-04T00:46:47.589Z",
+      "profile": "pure",
+      "effort": "high",
+      "repeat": 3,
+      "byModel": {
+        "claude-haiku-4-5-20251001": {
+          "requested": "haiku",
+          "index": 100,
+          "consistency": 1,
+          "avgTtftMs": 2142,
+          "avgOutputTokens": 193,
+          "dimensions": {
+            "counting": 1,
+            "math": 1,
+            "crt": 1,
+            "logic": 1,
+            "instruction": 1,
+            "constraint": 1
+          }
+        }
+      }
+    }
+  ]
+}

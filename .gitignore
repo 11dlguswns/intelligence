@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Claude Code local state (avoid leaking personal settings/auth into a public repo)
+.claude/
+
+# Keep benchmark data tracked (packages/web/public/data/**) — it powers the dashboard.
+# Ignore only scratch/temp.
+*.tmp

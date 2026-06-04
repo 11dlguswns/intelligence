@@ -1,0 +1,299 @@
+{
+  "runId": "2026-06-04T00-45-02-161Z-nb82",
+  "startedAt": "2026-06-04T00:45:02.162Z",
+  "finishedAt": "2026-06-04T00:46:25.058Z",
+  "profile": "pure",
+  "effort": "high",
+  "repeat": 2,
+  "systemPrompt": "You are taking a short test. Read each question carefully and respond exactly as instructed, with no extra commentary, explanation, or formatting.",
+  "models": [
+    {
+      "requested": "haiku",
+      "resolved": "claude-haiku-4-5-20251001",
+      "index": 100,
+      "consistency": 0.944,
+      "avgTtftMs": 2426,
+      "avgOutputTokens": 189,
+      "dimensions": {
+        "counting": 1,
+        "math": 1,
+        "crt": 1,
+        "logic": 1,
+        "instruction": 1,
+        "constraint": 1
+      },
+      "questions": [
+        {
+          "id": "count-r-strawberry",
+          "dimension": "counting",
+          "title": "Count letters: \"r\" in \"strawberry\"",
+          "passRate": 1,
+          "modalAnswer": "3",
+          "modalFreq": 1,
+          "attempts": [
+            {
+              "raw": "3",
+              "parsed": "3",
+              "correct": true,
+              "ttftMs": 5567,
+              "durationMs": 5709,
+              "outputTokens": 173,
+              "stopReason": "end_turn",
+              "error": null
+            },
+            {
+              "raw": "3",
+              "parsed": "3",
+              "correct": true,
+              "ttftMs": 1587,
+              "durationMs": 1633,
+              "outputTokens": 183,
+              "stopReason": "end_turn",
+              "error": null
+            }
+          ]
+        },
+        {
+          "id": "count-e-beekeeper",
+          "dimension": "counting",
+          "title": "Count letters: \"e\" in \"beekeeper\"",
+          "passRate": 1,
+          "modalAnswer": "5",
+          "modalFreq": 1,
+          "attempts": [
+            {
+              "raw": "5",
+              "parsed": "5",
+              "correct": true,
+              "ttftMs": 1633,
+              "durationMs": 1669,
+              "outputTokens": 195,
+              "stopReason": "end_turn",
+              "error": null
+            },
+            {
+              "raw": "5",
+              "parsed": "5",
+              "correct": true,
+              "ttftMs": 2042,
+              "durationMs": 2085,
+              "outputTokens": 209,
+              "stopReason": "end_turn",
+              "error": null
+            }
+          ]
+        },
+        {
+          "id": "math-multistep",
+          "dimension": "math",
+          "title": "Multi-step arithmetic",
+          "passRate": 1,
+          "modalAnswer": "321",
+          "modalFreq": 1,
+          "attempts": [
+            {
+              "raw": "321",
+              "parsed": "321",
+              "correct": true,
+              "ttftMs": 1508,
+              "durationMs": 1590,
+              "outputTokens": 130,
+              "stopReason": "end_turn",
+              "error": null
+            },
+            {
+              "raw": "321",
+              "parsed": "321",
+              "correct": true,
+              "ttftMs": 1274,
+              "durationMs": 1311,
+              "outputTokens": 114,
+              "stopReason": "end_turn",
+              "error": null
+            }
+          ]
+        },
+        {
+          "id": "crt-bat-ball",
+          "dimension": "crt",
+          "title": "Cognitive reflection: bat & ball",
+          "passRate": 1,
+          "modalAnswer": "5",
+          "modalFreq": 1,
+          "attempts": [
+            {
+              "raw": "5",
+              "parsed": "5",
+              "correct": true,
+              "ttftMs": 5029,
+              "durationMs": 5190,
+              "outputTokens": 197,
+              "stopReason": "end_turn",
+              "error": null
+            },
+            {
+              "raw": "5",
+              "parsed": "5",
+              "correct": true,
+              "ttftMs": 2039,
+              "durationMs": 2144,
+              "outputTokens": 188,
+              "stopReason": "end_turn",
+              "error": null
+            }
+          ]
+        },
+        {
+          "id": "crt-widgets",
+          "dimension": "crt",
+          "title": "Cognitive reflection: widgets",
+          "passRate": 1,
+          "modalAnswer": "5",
+          "modalFreq": 1,
+          "attempts": [
+            {
+              "raw": "5",
+              "parsed": "5",
+              "correct": true,
+              "ttftMs": 3713,
+              "durationMs": 3759,
+              "outputTokens": 305,
+              "stopReason": "end_turn",
+              "error": null
+            },
+            {
+              "raw": "5",
+              "parsed": "5",
+              "correct": true,
+              "ttftMs": 3462,
+              "durationMs": 3569,
+              "outputTokens": 356,
+              "stopReason": "end_turn",
+              "error": null
+            }
+          ]
+        },
+        {
+          "id": "logic-syllogism",
+          "dimension": "logic",
+          "title": "Transitive syllogism",
+          "passRate": 1,
+          "modalAnswer": "yes",
+          "modalFreq": 1,
+          "attempts": [
+            {
+              "raw": "yes",
+              "parsed": "yes",
+              "correct": true,
+              "ttftMs": 1957,
+              "durationMs": 2004,
+              "outputTokens": 165,
+              "stopReason": "end_turn",
+              "error": null
+            },
+            {
+              "raw": "yes",
+              "parsed": "yes",
+              "correct": true,
+              "ttftMs": 1668,
+              "durationMs": 1704,
+              "outputTokens": 154,
+              "stopReason": "end_turn",
+              "error": null
+            }
+          ]
+        },
+        {
+          "id": "logic-relations",
+          "dimension": "logic",
+          "title": "Relational ordering",
+          "passRate": 1,
+          "modalAnswer": "mia",
+          "modalFreq": 1,
+          "attempts": [
+            {
+              "raw": "Mia",
+              "parsed": "mia",
+              "correct": true,
+              "ttftMs": 1505,
+              "durationMs": 1563,
+              "outputTokens": 88,
+              "stopReason": "end_turn",
+              "error": null
+            },
+            {
+              "raw": "Mia",
+              "parsed": "mia",
+              "correct": true,
+              "ttftMs": 1556,
+              "durationMs": 1595,
+              "outputTokens": 84,
+              "stopReason": "end_turn",
+              "error": null
+            }
+          ]
+        },
+        {
+          "id": "instruction-three-words",
+          "dimension": "instruction",
+          "title": "Strict format: exactly three lowercase words",
+          "passRate": 1,
+          "modalAnswer": "hello world test",
+          "modalFreq": 0.5,
+          "attempts": [
+            {
+              "raw": "hello world test",
+              "parsed": "hello world test",
+              "correct": true,
+              "ttftMs": 1486,
+              "durationMs": 1530,
+              "outputTokens": 114,
+              "stopReason": "end_turn",
+              "error": null
+            },
+            {
+              "raw": "ready to proceed",
+              "parsed": "ready to proceed",
+              "correct": true,
+              "ttftMs": 3516,
+              "durationMs": 3570,
+              "outputTokens": 330,
+              "stopReason": "end_turn",
+              "error": null
+            }
+          ]
+        },
+        {
+          "id": "constraint-q-k-word",
+          "dimension": "constraint",
+          "title": "Constraint satisfaction: a q…k word",
+          "passRate": 1,
+          "modalAnswer": "quick",
+          "modalFreq": 1,
+          "attempts": [
+            {
+              "raw": "quick",
+              "parsed": "quick",
+              "correct": true,
+              "ttftMs": 2071,
+              "durationMs": 2196,
+              "outputTokens": 192,
+              "stopReason": "end_turn",
+              "error": null
+            },
+            {
+              "raw": "quick",
+              "parsed": "quick",
+              "correct": true,
+              "ttftMs": 2060,
+              "durationMs": 2100,
+              "outputTokens": 233,
+              "stopReason": "end_turn",
+              "error": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

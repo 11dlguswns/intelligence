@@ -1,0 +1,85 @@
+// Drives Claude through the subscription/Plan account via Claude Code headless mode.
+// This is the ONLY supported way to use a Plan account programmatically (no API key).
+
+import { execFileSync } from 'node:child_process';
+import { SYSTEM_PROMPT, DEFAULT_EFFORT, PER_CALL_TIMEOUT_MS } from './config.mjs';
+
+let _bin = null;
+
+/** Resolve the `claude` executable once (honour CLAUDE_BIN, else PATH lookup). */
+export function resolveClaudeBin() {
+  if (_bin) return _bin;
+  if (process.env.CLAUDE_BIN) return (_bin = process.env.CLAUDE_BIN);
+  const which = process.platform === 'win32' ? 'where' : 'which';
+  try {
+    const out = execFileSync(which, ['claude'], { encoding: 'utf8' });
+    const first = out.split(/\r?\n/).map((s) => s.trim()).filter(Boolean)[0];
+    if (first) return (_bin = first);
+  } catch {
+    /* fall through */
+  }
+  return (_bin = 'claude');
+}
+
+/**
+ * Ask Claude a single prompt under the pure-capability profile.
+ *
+ * Flags: tools off, MCP ignored, slash-commands off, no session files, minimal
+ * system prompt, pinned effort. (Note: --bare is intentionally NOT used — it
+ * forces API-key auth and would bypass the subscription.)
+ *
+ * @returns {{ok:boolean, result:string, ttftMs:number|null, durationMs:number|null,
+ *            outputTokens:number|null, stopReason:string|null, resolvedModel:string,
+ *            error:string|null}}
+ */
+export function askClaude(model, prompt, { effort = DEFAULT_EFFORT } = {}) {
+  const bin = resolveClaudeBin();
+  const args = [
+    '-p',
+    '--output-format', 'json',
+    '--model', model,
+    '--effort', effort,
+    '--tools', '',
+    '--strict-mcp-config',
+    '--no-session-persistence',
+    '--disable-slash-commands',
+    '--system-prompt', SYSTEM_PROMPT,
+    prompt,
+  ];
+
+  try {
+    const stdout = execFileSync(bin, args, {
+      encoding: 'utf8',
+      timeout: PER_CALL_TIMEOUT_MS,
+      maxBuffer: 32 * 1024 * 1024,
+      windowsHide: true,
+    });
+    const json = JSON.parse(stdout);
+    const resolvedModel = json.modelUsage ? Object.keys(json.modelUsage)[0] : model;
+    return {
+      ok: json.is_error !== true && json.subtype === 'success',
+      result: typeof json.result === 'string' ? json.result : '',
+      ttftMs: json.ttft_ms ?? null,
+      durationMs: json.duration_ms ?? null,
+      outputTokens: json.usage?.output_tokens ?? null,
+      stopReason: json.stop_reason ?? null,
+      resolvedModel,
+      error: null,
+    };
+  } catch (err) {
+    // Non-zero exit (rate limit / overload), timeout, or unparseable output.
+    let detail = err && err.message ? err.message : String(err);
+    if (err && err.stdout) {
+      try {
+        const j = JSON.parse(err.stdout.toString());
+        detail = j.result || j.error || detail;
+      } catch {
+        /* keep detail */
+      }
+    }
+    return {
+      ok: false, result: '', ttftMs: null, durationMs: null, outputTokens: null,
+      stopReason: 'error', resolvedModel: model, error: detail,
+    };
+  }
+}

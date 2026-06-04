@@ -1,0 +1,14 @@
+{
+  "name": "@cim/runner",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local benchmark runner — drives Claude via your subscription (claude -p headless) and writes scored, time-series results for the dashboard.",
+  "bin": {
+    "cim-bench": "src/bench.mjs"
+  },
+  "scripts": {
+    "bench": "node src/bench.mjs",
+    "bench:all": "node src/bench.mjs --models opus,sonnet,haiku --repeat 5"
+  }
+}

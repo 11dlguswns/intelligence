@@ -1,0 +1,20 @@
+{
+  "name": "claude-intelligence-monitor",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Track whether Claude (via your Plan/subscription account) is getting dumber over time — low-token, objectively-scored, repeated benchmarks.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "bench": "npm run bench -w @cim/runner",
+    "bench:all": "npm run bench:all -w @cim/runner",
+    "web:dev": "npm run dev -w @cim/web",
+    "web:build": "npm run build -w @cim/web",
+    "web:preview": "npm run preview -w @cim/web",
+    "typecheck": "npm run typecheck -w @cim/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
