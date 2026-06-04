@@ -168,6 +168,12 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
               .map((r) => r.byModel[m]?.avgTtftMs)
               .filter((v): v is number => v != null)
               .slice(-14);
+            const accDrop = e.baseline.locked && e.condition.accDelta != null && e.condition.accDelta <= -0.1;
+            const trip = !e.baseline.locked
+              ? { t: '정답 확인중', c: 'muted' }
+              : accDrop
+                ? { t: '⚠ 오답 늘어남', c: 'bad' }
+                : { t: '✓ 정답 정상', c: 'ok' };
             return (
               <div className={`scard ${st.cls}`} key={m}>
                 <div className="sc-emoji">{st.icon}</div>
@@ -182,10 +188,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                     <span className="sc-n">{secs(e.avgTtftMs)}</span><span className="sc-u">초</span>
                     <span className="sc-base">응답속도 · 평소 {secs(e.baseline.ttftMean)}초</span>
                   </div>
-                  <div className="sc-num">
-                    <span className="sc-n">{Math.round(e.passRate * 100)}</span><span className="sc-u">%</span>
-                    <span className="sc-base">정답률</span>
-                  </div>
+                  <div className={`sc-trip ${trip.c}`}>{trip.t}</div>
                 </div>
                 <div className="sc-when">측정 {ago(at, nowTs)}</div>
               </div>
