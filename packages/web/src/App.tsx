@@ -6,6 +6,7 @@ import { currentPeak } from './lib/peak';
 import { TrendChart } from './components/TrendChart';
 import { CapabilityRadar } from './components/CapabilityRadar';
 import { FamilyTable } from './components/FamilyTable';
+import { Sparkline } from './components/Sparkline';
 
 const STATUS: Record<Status, { label: string; cls: string; icon: string }> = {
   normal: { label: '정상', cls: 'st-normal', icon: '🟢' },
@@ -163,12 +164,19 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
             const st = STATUS[e.condition.status] ?? STATUS.baselining;
             const ratio = e.condition.latencyRatio;
             const pct = ratio != null ? Math.round((ratio - 1) * 100) : null;
+            const series = history.runs
+              .map((r) => r.byModel[m]?.avgTtftMs)
+              .filter((v): v is number => v != null)
+              .slice(-14);
             return (
               <div className={`scard ${st.cls}`} key={m}>
                 <div className="sc-emoji">{st.icon}</div>
                 <div className="sc-model" style={{ color: modelColor(m, i) }}>{modelLabel(m)}</div>
                 <div className={`sc-word ${st.cls}`}>{st.label}</div>
                 <div className="sc-phrase">{phrase(e, pct)}</div>
+                <div className="sc-spark">
+                  <Sparkline values={series} color={modelColor(m, i)} baseline={e.baseline.ttftMean} />
+                </div>
                 <div className="sc-nums">
                   <div className="sc-num">
                     <span className="sc-n">{secs(e.avgTtftMs)}</span><span className="sc-u">초</span>
