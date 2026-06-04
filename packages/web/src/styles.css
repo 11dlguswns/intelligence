@@ -119,6 +119,44 @@ body {
 .ok-acc { color: var(--up); font-weight: 600; }
 .bad-acc { color: var(--down); font-weight: 700; }
 
+/* ---- board spacing ---- */
+.app.board { display: flex; flex-direction: column; gap: 12px; }
+
+/* ---- metric cards: numbers + one-line explanation ---- */
+.mcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
+.mcard { background: var(--surface); border: 1px solid var(--border); border-left-width: 3px; border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; }
+.mcard.st-normal { border-left-color: var(--up); }
+.mcard.st-warn { border-left-color: var(--warn); }
+.mcard.st-degraded { border-left-color: var(--down); }
+.mcard.st-above { border-left-color: #3f6fb0; }
+.mcard.st-base { border-left-color: var(--faint); }
+.mc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.mc-rows { display: flex; flex-direction: column; }
+.mc-row { display: flex; align-items: baseline; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.mc-row:last-child { border-bottom: none; }
+.mc-label { font-size: 12.5px; color: var(--muted); flex: 1; }
+.mc-label i { font-style: normal; font-size: 10px; color: var(--faint); background: var(--bg-2); border-radius: 5px; padding: 1px 5px; margin-left: 4px; }
+.mc-val { font-family: var(--mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+.mc-val b { font-weight: 700; }
+.mc-val.sub { color: var(--muted); font-size: 13px; }
+.mc-row.primary .mc-val { font-size: 18px; }
+.mc-row.primary .mc-val b { font-size: 23px; letter-spacing: -0.02em; }
+.mc-delta { font-family: var(--mono); font-size: 12px; font-weight: 600; min-width: 82px; text-align: right; }
+.mc-delta.neg { color: var(--down); }
+.mc-delta.pos { color: var(--up); }
+.mc-delta.muted { color: var(--faint); font-weight: 500; }
+.mc-verdict { margin-top: 10px; font-size: 12.5px; line-height: 1.5; color: var(--ink); background: var(--bg-2); border-radius: 9px; padding: 8px 11px; }
+
+/* ---- explanation panel ---- */
+.explain { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; }
+.ex-item { font-size: 12.5px; line-height: 1.55; color: var(--muted); }
+.ex-item b { color: var(--ink); font-weight: 650; }
+.ex-item .neg { color: var(--down); font-weight: 600; }
+.ex-foot { grid-column: 1 / -1; margin-top: 4px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 11.5px; color: var(--faint); line-height: 1.6; }
+.ex-foot b { color: var(--muted); }
+.explain code { font-family: var(--mono); }
+.details-extra { display: flex; flex-direction: column; gap: 12px; }
+
 /* ---- panels (charts) ---- */
 .panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .card {
