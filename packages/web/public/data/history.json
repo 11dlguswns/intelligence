@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-04T09:19:15.734Z",
+  "updatedAt": "2026-06-04T09:22:11.793Z",
   "models": [
     "claude-opus-4-8",
     "claude-sonnet-4-6",
@@ -562,6 +562,45 @@
             "status": "degraded",
             "latencyRatio": 1.95,
             "accDelta": 0.01
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-06-04T09-19-18-842Z-arhw",
+      "startedAt": "2026-06-04T09:19:18.844Z",
+      "profile": "pure",
+      "effort": "low",
+      "level": 8,
+      "byModel": {
+        "claude-haiku-4-5-20251001": {
+          "requested": "haiku",
+          "level": 8,
+          "passRate": 0.958,
+          "consistency": 0.875,
+          "avgTtftMs": 4293,
+          "medianTtftMs": 3277,
+          "avgDurationMs": 4332,
+          "avgOutputTokens": 609,
+          "byFamily": {
+            "multiplication": 1,
+            "precedence": 1,
+            "counting": 1,
+            "modular": 1,
+            "selection": 0.75,
+            "instruction": 1
+          },
+          "baseline": {
+            "ttftMean": 5763,
+            "ttftStd": 310,
+            "passMean": 0.99,
+            "locked": true,
+            "n": 4
+          },
+          "condition": {
+            "status": "above",
+            "latencyRatio": 0.74,
+            "accDelta": -0.032
           }
         }
       }
