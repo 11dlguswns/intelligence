@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2026-06-04T02:24:31.111Z",
+  "updatedAt": "2026-06-04T04:38:16.505Z",
   "models": [
     "claude-haiku-4-5-20251001",
-    "claude-opus-4-8"
+    "claude-opus-4-8",
+    "claude-sonnet-4-6"
   ],
   "dimensions": [
     "counting",
@@ -62,8 +63,8 @@
       }
     },
     {
-      "runId": "2026-06-04T02-18-40-757Z-zwn3",
-      "startedAt": "2026-06-04T02:18:40.758Z",
+      "runId": "2026-06-04T04-31-58-888Z-vnmr",
+      "startedAt": "2026-06-04T04:31:58.890Z",
       "profile": "pure",
       "effort": "high",
       "repeat": 3,
@@ -71,9 +72,24 @@
         "claude-opus-4-8": {
           "requested": "opus",
           "index": 100,
+          "consistency": 0.852,
+          "avgTtftMs": 1692,
+          "avgOutputTokens": 7,
+          "dimensions": {
+            "counting": 1,
+            "math": 1,
+            "crt": 1,
+            "logic": 1,
+            "instruction": 1,
+            "constraint": 1
+          }
+        },
+        "claude-sonnet-4-6": {
+          "requested": "sonnet",
+          "index": 100,
           "consistency": 0.926,
-          "avgTtftMs": 1695,
-          "avgOutputTokens": 5,
+          "avgTtftMs": 1832,
+          "avgOutputTokens": 7,
           "dimensions": {
             "counting": 1,
             "math": 1,
@@ -86,9 +102,9 @@
         "claude-haiku-4-5-20251001": {
           "requested": "haiku",
           "index": 100,
-          "consistency": 0.926,
-          "avgTtftMs": 2243,
-          "avgOutputTokens": 214,
+          "consistency": 1,
+          "avgTtftMs": 2661,
+          "avgOutputTokens": 204,
           "dimensions": {
             "counting": 1,
             "math": 1,

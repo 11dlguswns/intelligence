@@ -21,6 +21,22 @@ export function resolveClaudeBin() {
   return (_bin = 'claude');
 }
 
+// Claude Code can report MULTIPLE models in modelUsage: the requested model PLUS
+// an auxiliary haiku it uses internally. Naively taking Object.keys()[0] can grab
+// that haiku key (e.g. `--model sonnet` mis-recorded as haiku, colliding with the
+// real haiku row). Pick the key matching the requested family instead.
+function pickResolvedModel(json, requested) {
+  if (!json || !json.modelUsage) return requested;
+  const keys = Object.keys(json.modelUsage);
+  if (keys.length === 0) return requested;
+  const fam = (/(opus|sonnet|haiku)/i.exec(requested) || [])[1];
+  if (fam) {
+    const hit = keys.find((k) => k.toLowerCase().includes(fam.toLowerCase()));
+    if (hit) return hit;
+  }
+  return keys.find((k) => /(opus|sonnet|haiku)/i.test(k)) || keys[0];
+}
+
 /**
  * Ask Claude a single prompt under the pure-capability profile.
  *
@@ -55,7 +71,7 @@ export function askClaude(model, prompt, { effort = DEFAULT_EFFORT } = {}) {
       windowsHide: true,
     });
     const json = JSON.parse(stdout);
-    const resolvedModel = json.modelUsage ? Object.keys(json.modelUsage)[0] : model;
+    const resolvedModel = pickResolvedModel(json, model);
     return {
       ok: json.is_error !== true && json.subtype === 'success',
       result: typeof json.result === 'string' ? json.result : '',
