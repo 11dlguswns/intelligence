@@ -29,10 +29,10 @@ function ago(updatedAt: string | null | undefined, nowTs: number): string {
 
 function phrase(e: HistoryModelEntry, pct: number | null): string {
   if (!e.baseline.locked) return '기준 만드는 중';
-  const accDrop = e.condition.accDelta != null && e.condition.accDelta <= -0.07;
-  if (e.condition.status === 'degraded') return accDrop ? '정답이 평소보다 틀려짐' : `평소보다 ${pct}% 느림`;
-  if (e.condition.status === 'warn') return `평소보다 ${pct}% 느림`;
-  if (e.condition.status === 'above') return `평소보다 ${Math.abs(pct ?? 0)}% 빠름`;
+  if (e.condition.accDelta != null && e.condition.accDelta <= -0.1) return '정답이 평소보다 틀려짐';
+  if (pct == null) return '평소와 비슷';
+  if (pct <= -3) return `평소보다 ${Math.abs(pct)}% 빠름`;
+  if (pct >= 3) return `평소보다 ${pct}% 느림`;
   return '평소와 비슷';
 }
 
