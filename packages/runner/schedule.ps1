@@ -1,15 +1,22 @@
-# Register a daily Windows Scheduled Task that runs the condition monitor and
-# publishes results. Measuring at the SAME time each day keeps latency comparable.
+# Register a recurring Windows Scheduled Task that measures the intelligence score and
+# publishes results. Default = every hour (real-time, hour-by-hour tracking).
 #
-#   ./packages/runner/schedule.ps1 -Models "opus,sonnet,haiku" -Time "09:00"
+#   ./packages/runner/schedule.ps1 -IntervalMinutes 60                    # hourly (default)
+#   ./packages/runner/schedule.ps1 -IntervalMinutes 30 -Models "opus"     # every 30 min, opus only
+#   ./packages/runner/schedule.ps1 -IntervalMinutes 0  -Time "09:00"      # once daily instead
 #
-# Re-run with the same name to update it. Remove with:
-#   Unregister-ScheduledTask -TaskName "ClaudeConditionMonitor" -Confirm:$false
+# Remove with:
+#   Unregister-ScheduledTask -TaskName "ClaudeIntelligenceMonitor" -Confirm:$false
+#
+# COST NOTE: each run = (questions x 2 calls) x models. Hourly x 3 models is heavy on
+# rate limits (esp. the Opus judge). If you hit limits, raise -IntervalMinutes or cut
+# -Models. effort is pinned in config.mjs.
 
 param(
   [string]$Models = "opus,sonnet,haiku",
+  [int]$IntervalMinutes = 60,
   [string]$Time = "09:00",
-  [string]$TaskName = "ClaudeConditionMonitor"
+  [string]$TaskName = "ClaudeIntelligenceMonitor"
 )
 
 $ErrorActionPreference = "Stop"
@@ -22,15 +29,27 @@ $action = New-ScheduledTaskAction `
   -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$publish`" -Models `"$Models`"" `
   -WorkingDirectory $repo
 
-$trigger = New-ScheduledTaskTrigger -Daily -At $Time
-$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd
+if ($IntervalMinutes -gt 0) {
+  # Repeat every N minutes, indefinitely, starting ~2 minutes from now.
+  $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(2)
+  $rep = (New-ScheduledTaskTrigger -Once -At (Get-Date) `
+      -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes) `
+      -RepetitionDuration (New-TimeSpan -Days 3650)).Repetition
+  $trigger.Repetition = $rep
+  $cadence = "every $IntervalMinutes min"
+} else {
+  $trigger = New-ScheduledTaskTrigger -Daily -At $Time
+  $cadence = "daily at $Time"
+}
+
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -MultipleInstances IgnoreNew
 
 Register-ScheduledTask `
   -TaskName $TaskName `
   -Action $action `
   -Trigger $trigger `
   -Settings $settings `
-  -Description "Daily Claude condition monitor + publish" `
+  -Description "Claude intelligence-score monitor + publish" `
   -Force
 
-Write-Host "Registered scheduled task '$TaskName' — daily at $Time (models=$Models)."
+Write-Host "Registered '$TaskName' — $cadence (models=$Models). First run in ~2 min."

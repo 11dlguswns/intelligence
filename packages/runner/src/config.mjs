@@ -61,7 +61,7 @@ export const SYSTEM_PROMPT =
 export const FIXED_LEVEL = 8; // tripwire difficulty (hard, but every healthy model passes)
 export const BENCH_INSTANCES = 3; // distinct problems per family
 export const BENCH_REPS = 2; // repeats of each (latency samples + self-consistency)
-export const BASELINE_RUNS = 4; // lock each model's baseline after this many runs
+export const BASELINE_RUNS = 3; // lock each model's baseline after this many runs
 
 // Latency condition: current mean TTFT vs the model's baseline mean (ratio).
 export const LAT_WARN = 1.25; // 25% slower than usual
@@ -69,3 +69,11 @@ export const LAT_DEGRADED = 1.5; // 50% slower than usual
 // Accuracy tripwire: drop in pass-rate points vs baseline.
 export const ACC_WARN = 0.07;
 export const ACC_DEGRADED = 0.15;
+
+// ----- AI-judge intelligence score -----
+// Objective accuracy is at ceiling (even haiku aces AIME), so "smartness" is measured
+// by an independent Opus judge scoring answer QUALITY on hard open-ended questions.
+export const ANSWER_EFFORT = 'low'; // effort the model answers at (low reveals raw capability + is fast)
+export const JUDGE_EFFORT = 'low'; // grader is rubric-anchored; low is fine + fast
+export const QUALITY_WARN = 7; // 지능 점수 drop (points) vs baseline -> 주의
+export const QUALITY_DEGRADED = 15; // drop -> 저하 (got dumber)

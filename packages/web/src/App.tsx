@@ -3,20 +3,24 @@ import type { History, RunDetail, Meta, Baselines, Status, HistoryModelEntry } f
 import { loadJson } from './lib/data';
 import { modelColor, modelLabel } from './lib/model';
 import { currentPeak } from './lib/peak';
-import { TrendChart } from './components/TrendChart';
-import { CapabilityRadar } from './components/CapabilityRadar';
-import { FamilyTable } from './components/FamilyTable';
 import { Sparkline } from './components/Sparkline';
+import { QuestionTable } from './components/QuestionTable';
 
 const STATUS: Record<Status, { label: string; cls: string; icon: string }> = {
   normal: { label: '정상', cls: 'st-normal', icon: '🟢' },
-  above: { label: '정상', cls: 'st-normal', icon: '🟢' },
+  above: { label: '평소↑', cls: 'st-above', icon: '🟢' },
   warn: { label: '주의', cls: 'st-warn', icon: '🟡' },
-  degraded: { label: '저하', cls: 'st-degraded', icon: '🔴' },
+  degraded: { label: '멍청해짐', cls: 'st-degraded', icon: '🔴' },
   baselining: { label: '측정중', cls: 'st-base', icon: '⚪' },
 };
 const RANK: Record<Status, number> = { degraded: 3, warn: 2, baselining: 1, normal: 0, above: 0 };
 const secs = (ms: number | null | undefined) => (ms == null ? '–' : (ms / 1000).toFixed(1));
+
+const median = (a: number[]): number | null => {
+  if (!a.length) return null;
+  const s = [...a].sort((x, y) => x - y);
+  return s[Math.floor((s.length - 1) / 2)];
+};
 
 function ago(updatedAt: string | null | undefined, nowTs: number): string {
   if (!updatedAt) return '—';
@@ -27,19 +31,10 @@ function ago(updatedAt: string | null | undefined, nowTs: number): string {
   return `${Math.floor(d / 86400)}일 전`;
 }
 
-const median = (a: number[]): number | null => {
-  if (!a.length) return null;
-  const s = [...a].sort((x, y) => x - y);
-  return s[Math.floor((s.length - 1) / 2)];
-};
-
-function phrase(locked: boolean, accDrop: boolean, pct: number | null): string {
-  if (!locked) return '기준 만드는 중';
-  if (accDrop) return '정답이 평소보다 틀려짐';
-  if (pct == null) return '평소와 비슷';
-  if (pct <= -3) return `평소보다 ${Math.abs(pct)}% 빠름`;
-  if (pct >= 3) return `평소보다 ${pct}% 느림`;
-  return '평소와 비슷';
+function phrase(enough: boolean, gap: number | null, n: number, need: number): string {
+  if (!enough) return `최고점 쌓는 중 (${n}/${need})`;
+  if (gap == null || gap >= -2) return '최고 실력 (정상)';
+  return `최고점보다 ${Math.abs(gap)}점 낮음`;
 }
 
 export default function App() {
@@ -69,13 +64,11 @@ export default function App() {
     })();
   }, []);
 
-  // live clock — the always-changing element (proves the page is alive)
   useEffect(() => {
     const t = setInterval(() => setNowTs(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
 
-  // auto-refresh — pick up newly published measurements without a manual reload
   useEffect(() => {
     const t = setInterval(async () => {
       const h = await loadJson<History>('history.json');
@@ -110,7 +103,6 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
 
   const allModels = history.models;
   const lastRun = history.runs[history.runs.length - 1];
-  const families = history.families ?? [];
   const shown = selected.length ? selected : allModels;
   const peak = currentPeak();
 
@@ -130,31 +122,26 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       return le ? { m, e: le.e, at: le.at } : null;
     })
     .filter(Boolean) as { m: string; e: HistoryModelEntry; at: string }[];
-  // Robust baseline = MEDIAN of the locked samples (ignores cold-start / spike
-  // outliers that contaminate a mean). Latency status/% are computed against it.
+
+  // Reference = the model's PEAK (best score ever observed = its true ceiling).
+  // We show how far CURRENT sits BELOW that peak — i.e. how much it has dropped.
+  const need = meta?.baselineRuns ?? 3;
   const cardInfo = (m: string, e: HistoryModelEntry) => {
-    const bm = baselines?.models[m];
-    const samples = bm ? bm.samples.map((s) => s.ttftMean).filter((v): v is number => v != null) : [];
-    const baseTtft = samples.length ? median(samples) : e.baseline.ttftMean ?? null;
-    const cur = e.avgTtftMs;
-    const locked = !!e.baseline.locked && baseTtft != null;
-    const ratio = locked && cur != null && baseTtft ? cur / baseTtft : null;
-    const pct = ratio != null ? Math.round((ratio - 1) * 100) : null;
-    const accDrop = !!e.baseline.locked && e.condition.accDelta != null && e.condition.accDelta <= -0.1;
-    const status: Status = !locked
+    const all = history.runs.map((r) => r.byModel[m]?.qualityScore).filter((v): v is number => v != null);
+    const peak = all.length ? Math.max(...all) : null;
+    const cur = e.qualityScore;
+    const enough = all.length >= need && peak != null;
+    const gap = enough && cur != null && peak != null ? Math.round((cur - peak) * 10) / 10 : null; // <= 0
+    const status: Status = !enough
       ? 'baselining'
-      : accDrop
-        ? 'degraded'
-        : ratio == null
-          ? 'normal'
-          : ratio >= 1.5
-            ? 'degraded'
-            : ratio >= 1.25
-              ? 'warn'
-              : ratio <= 0.8
-                ? 'above'
-                : 'normal';
-    return { baseTtft, pct, accDrop, status, locked };
+      : gap == null
+        ? 'normal'
+        : gap <= -18
+          ? 'degraded'
+          : gap <= -8
+            ? 'warn'
+            : 'normal';
+    return { peak, gap, status, enough, n: all.length };
   };
 
   let worst: Status = 'normal';
@@ -169,14 +156,14 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       <header className="bar">
         <div className="brand-min">
           <div className="logo sm" aria-hidden />
-          <b>지금 Claude는 멍청한가?</b>
-          <span className={`vchip ${vchip.cls}`}>{vchip.icon} {worst === 'degraded' ? '저하' : worst === 'warn' ? '주의' : worst === 'baselining' ? '측정중' : '정상'}</span>
+          <b>지금 Claude, 최고 실력 대비?</b>
+          <span className={`vchip ${vchip.cls}`}>{vchip.icon} {worst === 'degraded' ? '멍청해짐' : worst === 'warn' ? '주의' : worst === 'baselining' ? '측정중' : '정상'}</span>
         </div>
         <div className="bar-right">
-          <span className="live" title="페이지는 25초마다 자동 새로고침되어 새 측정을 가져옵니다.">
+          <span className="live" title="25초마다 자동 새로고침. 새 측정이 올라오면 갱신됩니다.">
             <span className="live-dot" />LIVE · 측정 {ago(history.updatedAt, nowTs)}
           </span>
-          <span className={`peak-badge ${peak.peak ? 'on' : ''}`} title="과거 피크창: 평일 5–11 AM PT(붐비는 시간). Pro/Max는 2026-05-06 해제됨.">
+          <span className={`peak-badge ${peak.peak ? 'on' : ''}`} title="과거 피크창: 평일 5–11 AM PT. Pro/Max는 2026-05-06 해제됨.">
             {peak.peak ? '🟠 붐빔' : '🟢 한산'} · {peak.clock}
           </span>
           <div className="chips inline">
@@ -199,70 +186,42 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
           {entries.map(({ m, e, at }, i) => {
             const info = cardInfo(m, e);
             const st = STATUS[info.status] ?? STATUS.baselining;
-            const pct = info.pct;
-            const full = history.runs.map((r) => r.byModel[m]?.avgTtftMs).filter((v): v is number => v != null);
-            const series = (full.length > 3 ? full.slice(1) : full).slice(-14); // drop warm-up (cold start)
-            const trip = !e.baseline.locked
-              ? { t: '정답 확인중', c: 'muted' }
-              : info.accDrop
-                ? { t: '⚠ 오답 늘어남', c: 'bad' }
-                : { t: '✓ 정답 정상', c: 'ok' };
+            const series = history.runs.map((r) => r.byModel[m]?.qualityScore).filter((v): v is number => v != null).slice(-24);
             return (
               <div className={`scard ${st.cls}`} key={m}>
                 <div className="sc-emoji">{st.icon}</div>
                 <div className="sc-model" style={{ color: modelColor(m, i) }}>{modelLabel(m)}</div>
-                <div className={`sc-word ${st.cls}`}>{st.label}</div>
-                <div className="sc-phrase">{phrase(info.locked, info.accDrop, pct)}</div>
+                <div className="sc-score">
+                  {Math.round(e.qualityScore)}<small>/100</small>
+                </div>
+                <div className="sc-scorelabel">현재 지능 점수</div>
+                <div className="sc-phrase">{phrase(info.enough, info.gap, info.n, need)}</div>
                 <div className="sc-spark">
-                  <Sparkline values={series} color={modelColor(m, i)} baseline={info.baseTtft} />
+                  <Sparkline values={series} color={modelColor(m, i)} baseline={info.peak} />
                 </div>
-                <div className="sc-nums">
-                  <div className="sc-num">
-                    <span className="sc-n">{secs(e.avgTtftMs)}</span><span className="sc-u">초</span>
-                    <span className="sc-base">응답속도 · 평소 {secs(info.baseTtft)}초</span>
-                  </div>
-                  <div className={`sc-trip ${trip.c}`}>{trip.t}</div>
+                <div className="sc-foot">
+                  최고 {info.peak != null ? Math.round(info.peak) : '–'}점{info.gap != null && info.gap < 0 ? ` · ${info.gap}점` : info.enough ? ' · 최고치' : ''} · {ago(at, nowTs)}
                 </div>
-                <div className="sc-when">측정 {ago(at, nowTs)}</div>
               </div>
             );
           })}
         </div>
-        <div className="legend-line">🟢 정상 · 🟡 주의 · 🔴 저하 — 각 모델의 <b>평소</b>와 비교 (지금 {peak.peak ? '붐빔' : '한산'})</div>
+        <div className="legend-line">
+          🟢 최고 근처 · 🟡 다소 하락 · 🔴 멍청해짐 — Opus 심사위원이 답변 품질을 0~100 채점, 각 모델의 <b>최고점</b> 대비 현재 하락폭
+        </div>
       </div>
 
-      {details && (
+      {details && latest && (
         <div className="details-extra">
           <div className="explain">
-            <div className="ex-item"><b>응답속도</b> — 평소보다 크게 <span className="neg">느려지면</span> 서버가 붐비거나(과부하) 자원을 줄인(스로틀링) 신호.</div>
-            <div className="ex-item"><b>정답률</b> — 객관 문제 정답률. 평소 거의 100%, <span className="neg">떨어지면</span> 진짜 능력 저하 경보.</div>
-            <div className="ex-item"><b>붐빔(피크창)</b> — 평일 5–11 AM PT. Pro/Max는 2026-05-06 해제. 지금 <b>{peak.peak ? '붐빔' : '한산'}</b>.</div>
-            <div className="ex-item"><b>비교 방식</b> — 모델끼리가 아니라 <b>각 모델을 자기 평소(기준선)와</b> 비교합니다.</div>
-            <div className="ex-foot">매 측정마다 새 문제를 생성(캐시·암기 무력화), 구독 계정 <code>claude -p</code>·도구 OFF·effort 고정. 비공식 측정.</div>
+            <div className="ex-item"><b>지능 점수</b> — 어려운 추론 문제(12공 저울·확률·논리 등) 답변을 독립된 <b>Opus 심사위원</b>이 채점한 평균.</div>
+            <div className="ex-item"><b>왜 정답률이 아니라 품질?</b> 객관식 정답은 haiku도 AIME를 풀 만큼 다 천장이라, 변별되는 건 <b>추론의 깊이·정확성(품질)</b>입니다.</div>
+            <div className="ex-item"><b>최고점 대비</b> — 각 모델이 <b>역대 보여준 최고 점수</b>를 기준(=그 모델의 진짜 실력)으로, 현재가 <span className="neg">얼마나 떨어졌는지</span>를 봅니다. 15점↓ 지속 하락 = 멍청해짐. (한 번의 운 나쁜 하락은 노이즈)</div>
+            <div className="ex-item"><b>심사위원</b> — {meta?.judgeModel} 고정. 답변 effort={meta?.answerEffort} 고정. 비공식 측정.</div>
           </div>
-          <div className="panels">
-            <section className="card panel">
-              <div className="card-head"><h2>응답속도 추이 <span className="legend">◎ 붐빔</span></h2><p>점선 = 평소</p></div>
-              <div className="chartwrap"><TrendChart history={history} models={shown} get={(e) => e.avgTtftMs} unit="ms" refLines={shown.map((m, i) => { const bm = baselines?.models[m]; return bm?.locked && bm.ttftMs.mean != null ? { y: bm.ttftMs.mean, label: '', color: modelColor(m, i) } : null; }).filter(Boolean) as { y: number; label: string; color: string }[]} markPeak /></div>
-            </section>
-            <section className="card panel">
-              <div className="card-head"><h2>정답률 추이</h2><p>평상시 100% — 떨어지면 경보</p></div>
-              <div className="chartwrap"><TrendChart history={history} models={shown} get={(e) => Math.round(e.passRate * 100)} domain={[0, 100]} unit="%" markPeak /></div>
-            </section>
-            <section className="card panel">
-              <div className="card-head"><h2>자기일관성</h2><p>하락 = 샘플링/양자화</p></div>
-              <div className="chartwrap"><TrendChart history={history} models={shown} get={(e) => Math.round(e.consistency * 100)} domain={[0, 100]} unit="%" markPeak /></div>
-            </section>
-          </div>
-          {latest && (
-            <section className="card">
-              <div className="card-head"><h2>문제군 상세 (최근 측정)</h2><p>행을 클릭하면 실제 문제·정답·모델 답안 · 난이도 L{latest.level} · effort {latest.effort}</p></div>
-              <FamilyTable latest={latest} models={shown} />
-            </section>
-          )}
           <section className="card">
-            <div className="card-head"><h2>문제 유형별 정답률 (최근)</h2><p>어느 유형에서 먼저 깨지는지</p></div>
-            {lastRun && <CapabilityRadar run={lastRun} models={shown} families={families} />}
+            <div className="card-head"><h2>문제별 점수 (최근)</h2><p>행을 클릭하면 실제 문제·모델 답안·심사위원 점수</p></div>
+            <QuestionTable latest={latest} models={shown} />
           </section>
         </div>
       )}

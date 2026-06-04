@@ -1,645 +1,304 @@
 {
-  "updatedAt": "2026-06-04T09:25:59.621Z",
+  "updatedAt": "2026-06-04T15:47:48.640Z",
   "models": [
     "claude-opus-4-8",
     "claude-sonnet-4-6",
     "claude-haiku-4-5-20251001"
   ],
-  "families": [
-    "multiplication",
-    "precedence",
-    "counting",
-    "modular",
-    "selection",
-    "instruction"
+  "questions": [
+    "weigh12",
+    "prob-tuesday",
+    "knaves",
+    "pct-trap",
+    "fake-proof",
+    "fermi-pingpong",
+    "hens-eggs",
+    "cube-2faces",
+    "rooks",
+    "monty"
   ],
   "runs": [
     {
-      "runId": "2026-06-04T06-43-21-398Z-w0nk",
-      "startedAt": "2026-06-04T06:43:21.400Z",
+      "runId": "2026-06-04T15-18-23-479Z-op1j",
+      "startedAt": "2026-06-04T15:18:23.480Z",
       "profile": "pure",
-      "effort": "low",
-      "level": 8,
+      "answerEffort": "low",
       "byModel": {
         "claude-opus-4-8": {
           "requested": "opus",
-          "level": 8,
-          "passRate": 0.958,
-          "consistency": 0.875,
-          "avgTtftMs": 7418,
-          "medianTtftMs": 2591,
-          "avgDurationMs": 7532,
-          "avgOutputTokens": 88,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 0.75,
-            "instruction": 1
+          "qualityScore": 95,
+          "avgTtftMs": 5680,
+          "byQuestion": {
+            "weigh12": 92,
+            "prob-tuesday": 96,
+            "knaves": 96,
+            "pct-trap": 97,
+            "fake-proof": 95,
+            "fermi-pingpong": 87,
+            "hens-eggs": 96,
+            "cube-2faces": 95,
+            "rooks": 98,
+            "monty": 98
           },
           "baseline": {
-            "ttftMean": 7418,
-            "ttftStd": 0,
-            "passMean": 0.958,
+            "qMedian": 95,
+            "qStd": 0,
+            "ttftMedian": 5680,
             "locked": false,
             "n": 1
           },
           "condition": {
             "status": "baselining",
-            "latencyRatio": null,
-            "accDelta": null
+            "qDelta": null,
+            "latencyRatio": null
           }
         },
         "claude-sonnet-4-6": {
           "requested": "sonnet",
-          "level": 8,
-          "passRate": 0.667,
-          "consistency": 0.875,
-          "avgTtftMs": 3109,
-          "medianTtftMs": 2446,
-          "avgDurationMs": 3222,
-          "avgOutputTokens": 97,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 0.5,
-            "counting": 1,
-            "modular": 0.5,
-            "selection": 0.5,
-            "instruction": 0.5
+          "qualityScore": 86.3,
+          "avgTtftMs": 5809,
+          "byQuestion": {
+            "weigh12": 80,
+            "prob-tuesday": 95,
+            "knaves": 96,
+            "pct-trap": 98,
+            "fake-proof": 95,
+            "fermi-pingpong": 85,
+            "hens-eggs": 24,
+            "cube-2faces": 98,
+            "rooks": 98,
+            "monty": 94
           },
           "baseline": {
-            "ttftMean": 3109,
-            "ttftStd": 0,
-            "passMean": 0.667,
+            "qMedian": 86.3,
+            "qStd": 0,
+            "ttftMedian": 5809,
             "locked": false,
             "n": 1
           },
           "condition": {
             "status": "baselining",
-            "latencyRatio": null,
-            "accDelta": null
+            "qDelta": null,
+            "latencyRatio": null
           }
         },
         "claude-haiku-4-5-20251001": {
           "requested": "haiku",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 5712,
-          "medianTtftMs": 3895,
-          "avgDurationMs": 5774,
-          "avgOutputTokens": 811,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
+          "qualityScore": 94.8,
+          "avgTtftMs": 17990,
+          "byQuestion": {
+            "weigh12": 93,
+            "prob-tuesday": 95,
+            "knaves": 92,
+            "pct-trap": 96,
+            "fake-proof": 95,
+            "fermi-pingpong": 90,
+            "hens-eggs": 96,
+            "cube-2faces": 98,
+            "rooks": 98,
+            "monty": 95
           },
           "baseline": {
-            "ttftMean": 5712,
-            "ttftStd": 0,
-            "passMean": 1,
+            "qMedian": 94.8,
+            "qStd": 0,
+            "ttftMedian": 17990,
             "locked": false,
             "n": 1
           },
           "condition": {
             "status": "baselining",
-            "latencyRatio": null,
-            "accDelta": null
+            "qDelta": null,
+            "latencyRatio": null
           }
         }
       }
     },
     {
-      "runId": "2026-06-04T06-53-46-901Z-gyne",
-      "startedAt": "2026-06-04T06:53:46.904Z",
+      "runId": "2026-06-04T15-30-10-526Z-8bw0",
+      "startedAt": "2026-06-04T15:30:10.527Z",
       "profile": "pure",
-      "effort": "low",
-      "level": 8,
+      "answerEffort": "low",
       "byModel": {
         "claude-opus-4-8": {
           "requested": "opus",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 2749,
-          "medianTtftMs": 2285,
-          "avgDurationMs": 2835,
-          "avgOutputTokens": 93,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
+          "qualityScore": 95.6,
+          "avgTtftMs": 4154,
+          "byQuestion": {
+            "weigh12": 96,
+            "prob-tuesday": 96,
+            "knaves": 95,
+            "pct-trap": 97,
+            "fake-proof": 95,
+            "fermi-pingpong": 91,
+            "hens-eggs": 96,
+            "cube-2faces": 96,
+            "rooks": 98,
+            "monty": 96
           },
           "baseline": {
-            "ttftMean": 5084,
-            "ttftStd": 2335,
-            "passMean": 0.979,
+            "qMedian": 95,
+            "qStd": 0.3,
+            "ttftMedian": 4154,
             "locked": false,
             "n": 2
           },
           "condition": {
             "status": "baselining",
-            "latencyRatio": null,
-            "accDelta": null
+            "qDelta": null,
+            "latencyRatio": null
           }
         },
         "claude-sonnet-4-6": {
           "requested": "sonnet",
-          "level": 8,
-          "passRate": 0.708,
-          "consistency": 0.875,
-          "avgTtftMs": 3451,
-          "medianTtftMs": 2534,
-          "avgDurationMs": 3531,
-          "avgOutputTokens": 132,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 0.75,
-            "modular": 0.5,
-            "selection": 0,
-            "instruction": 1
+          "qualityScore": 94.2,
+          "avgTtftMs": 4852,
+          "byQuestion": {
+            "weigh12": 87,
+            "prob-tuesday": 95,
+            "knaves": 96,
+            "pct-trap": 97,
+            "fake-proof": 95,
+            "fermi-pingpong": 86,
+            "hens-eggs": 96,
+            "cube-2faces": 98,
+            "rooks": 96,
+            "monty": 96
           },
           "baseline": {
-            "ttftMean": 3280,
-            "ttftStd": 171,
-            "passMean": 0.688,
+            "qMedian": 86.3,
+            "qStd": 4,
+            "ttftMedian": 4852,
             "locked": false,
             "n": 2
           },
           "condition": {
             "status": "baselining",
-            "latencyRatio": null,
-            "accDelta": null
+            "qDelta": null,
+            "latencyRatio": null
           }
         },
         "claude-haiku-4-5-20251001": {
           "requested": "haiku",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 5832,
-          "medianTtftMs": 3409,
-          "avgDurationMs": 5890,
-          "avgOutputTokens": 750,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
+          "qualityScore": 87.9,
+          "avgTtftMs": 11575,
+          "byQuestion": {
+            "weigh12": 96,
+            "prob-tuesday": 95,
+            "knaves": 95,
+            "pct-trap": 98,
+            "fake-proof": 95,
+            "fermi-pingpong": 84,
+            "hens-eggs": 24,
+            "cube-2faces": 98,
+            "rooks": 98,
+            "monty": 96
           },
           "baseline": {
-            "ttftMean": 5772,
-            "ttftStd": 60,
-            "passMean": 1,
+            "qMedian": 87.9,
+            "qStd": 3.4,
+            "ttftMedian": 11575,
             "locked": false,
             "n": 2
           },
           "condition": {
             "status": "baselining",
-            "latencyRatio": null,
-            "accDelta": null
+            "qDelta": null,
+            "latencyRatio": null
           }
         }
       }
     },
     {
-      "runId": "2026-06-04T07-02-44-623Z-zvjx",
-      "startedAt": "2026-06-04T07:02:44.625Z",
+      "runId": "2026-06-04T15-38-48-592Z-sn9y",
+      "startedAt": "2026-06-04T15:38:48.594Z",
       "profile": "pure",
-      "effort": "low",
-      "level": 8,
+      "answerEffort": "low",
       "byModel": {
         "claude-opus-4-8": {
           "requested": "opus",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 3272,
-          "medianTtftMs": 2672,
-          "avgDurationMs": 3368,
-          "avgOutputTokens": 125,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
+          "qualityScore": 95.5,
+          "avgTtftMs": 4354,
+          "byQuestion": {
+            "weigh12": 93,
+            "prob-tuesday": 97,
+            "knaves": 96,
+            "pct-trap": 97,
+            "fake-proof": 95,
+            "fermi-pingpong": 92,
+            "hens-eggs": 96,
+            "cube-2faces": 95,
+            "rooks": 98,
+            "monty": 96
           },
           "baseline": {
-            "ttftMean": 4480,
-            "ttftStd": 2089,
-            "passMean": 0.986,
-            "locked": false,
+            "qMedian": 95.5,
+            "qStd": 0.3,
+            "ttftMedian": 4354,
+            "locked": true,
             "n": 3
           },
           "condition": {
-            "status": "baselining",
-            "latencyRatio": null,
-            "accDelta": null
+            "status": "normal",
+            "qDelta": 0,
+            "latencyRatio": 1
           }
         },
         "claude-sonnet-4-6": {
           "requested": "sonnet",
-          "level": 8,
-          "passRate": 0.75,
-          "consistency": 0.833,
-          "avgTtftMs": 3426,
-          "medianTtftMs": 2345,
-          "avgDurationMs": 3529,
-          "avgOutputTokens": 101,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 0.5,
-            "counting": 1,
-            "modular": 0.5,
-            "selection": 0.5,
-            "instruction": 1
+          "qualityScore": 94.7,
+          "avgTtftMs": 6324,
+          "byQuestion": {
+            "weigh12": 92,
+            "prob-tuesday": 96,
+            "knaves": 96,
+            "pct-trap": 97,
+            "fake-proof": 95,
+            "fermi-pingpong": 89,
+            "hens-eggs": 95,
+            "cube-2faces": 97,
+            "rooks": 98,
+            "monty": 92
           },
           "baseline": {
-            "ttftMean": 3329,
-            "ttftStd": 156,
-            "passMean": 0.708,
-            "locked": false,
+            "qMedian": 94.2,
+            "qStd": 3.8,
+            "ttftMedian": 5809,
+            "locked": true,
             "n": 3
           },
           "condition": {
-            "status": "baselining",
-            "latencyRatio": null,
-            "accDelta": null
+            "status": "normal",
+            "qDelta": 0.5,
+            "latencyRatio": 1.09
           }
         },
         "claude-haiku-4-5-20251001": {
           "requested": "haiku",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 5319,
-          "medianTtftMs": 3278,
-          "avgDurationMs": 5372,
-          "avgOutputTokens": 755,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
+          "qualityScore": 79.1,
+          "avgTtftMs": 13788,
+          "byQuestion": {
+            "weigh12": 30,
+            "prob-tuesday": 95,
+            "knaves": 98,
+            "pct-trap": 98,
+            "fake-proof": 97,
+            "fermi-pingpong": 55,
+            "hens-eggs": 24,
+            "cube-2faces": 100,
+            "rooks": 98,
+            "monty": 96
           },
           "baseline": {
-            "ttftMean": 5621,
-            "ttftStd": 219,
-            "passMean": 1,
-            "locked": false,
+            "qMedian": 87.9,
+            "qStd": 6.4,
+            "ttftMedian": 13788,
+            "locked": true,
             "n": 3
           },
           "condition": {
-            "status": "baselining",
-            "latencyRatio": null,
-            "accDelta": null
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-04T07-11-14-821Z-la3e",
-      "startedAt": "2026-06-04T07:11:14.824Z",
-      "profile": "pure",
-      "effort": "low",
-      "level": 8,
-      "byModel": {
-        "claude-opus-4-8": {
-          "requested": "opus",
-          "level": 8,
-          "passRate": 0.958,
-          "consistency": 0.875,
-          "avgTtftMs": 3054,
-          "medianTtftMs": 2493,
-          "avgDurationMs": 3239,
-          "avgOutputTokens": 95,
-          "byFamily": {
-            "multiplication": 0.75,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
-          },
-          "baseline": {
-            "ttftMean": 4123,
-            "ttftStd": 1911,
-            "passMean": 0.979,
-            "locked": true,
-            "n": 4
-          },
-          "condition": {
-            "status": "above",
-            "latencyRatio": 0.74,
-            "accDelta": -0.021
-          }
-        },
-        "claude-sonnet-4-6": {
-          "requested": "sonnet",
-          "level": 8,
-          "passRate": 0.708,
-          "consistency": 0.917,
-          "avgTtftMs": 3045,
-          "medianTtftMs": 2521,
-          "avgDurationMs": 3158,
-          "avgOutputTokens": 99,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 0,
-            "selection": 0.5,
-            "instruction": 0.75
-          },
-          "baseline": {
-            "ttftMean": 3258,
-            "ttftStd": 182,
-            "passMean": 0.708,
-            "locked": true,
-            "n": 4
-          },
-          "condition": {
-            "status": "normal",
-            "latencyRatio": 0.93,
-            "accDelta": 0
-          }
-        },
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "level": 8,
-          "passRate": 0.958,
-          "consistency": 0.875,
-          "avgTtftMs": 6188,
-          "medianTtftMs": 3451,
-          "avgDurationMs": 6254,
-          "avgOutputTokens": 892,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 0.75,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
-          },
-          "baseline": {
-            "ttftMean": 5763,
-            "ttftStd": 310,
-            "passMean": 0.99,
-            "locked": true,
-            "n": 4
-          },
-          "condition": {
-            "status": "normal",
-            "latencyRatio": 1.07,
-            "accDelta": -0.032
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-04T09-02-55-145Z-ghbd",
-      "startedAt": "2026-06-04T09:02:55.148Z",
-      "profile": "pure",
-      "effort": "low",
-      "level": 8,
-      "byModel": {
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 6077,
-          "medianTtftMs": 2951,
-          "avgDurationMs": 6135,
-          "avgOutputTokens": 846,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
-          },
-          "baseline": {
-            "ttftMean": 5763,
-            "ttftStd": 310,
-            "passMean": 0.99,
-            "locked": true,
-            "n": 4
-          },
-          "condition": {
-            "status": "normal",
-            "latencyRatio": 1.05,
-            "accDelta": 0.01
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-04T09-06-41-071Z-b452",
-      "startedAt": "2026-06-04T09:06:41.075Z",
-      "profile": "pure",
-      "effort": "low",
-      "level": 8,
-      "byModel": {
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 6312,
-          "medianTtftMs": 3928,
-          "avgDurationMs": 6375,
-          "avgOutputTokens": 829,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
-          },
-          "baseline": {
-            "ttftMean": 5763,
-            "ttftStd": 310,
-            "passMean": 0.99,
-            "locked": true,
-            "n": 4
-          },
-          "condition": {
-            "status": "normal",
-            "latencyRatio": 1.1,
-            "accDelta": 0.01
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-04T09-10-25-968Z-z33b",
-      "startedAt": "2026-06-04T09:10:25.969Z",
-      "profile": "pure",
-      "effort": "low",
-      "level": 8,
-      "byModel": {
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 5005,
-          "medianTtftMs": 3459,
-          "avgDurationMs": 5043,
-          "avgOutputTokens": 729,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
-          },
-          "baseline": {
-            "ttftMean": 5763,
-            "ttftStd": 310,
-            "passMean": 0.99,
-            "locked": true,
-            "n": 4
-          },
-          "condition": {
-            "status": "normal",
-            "latencyRatio": 0.87,
-            "accDelta": 0.01
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-04T09-13-37-349Z-v5kn",
-      "startedAt": "2026-06-04T09:13:37.351Z",
-      "profile": "pure",
-      "effort": "low",
-      "level": 8,
-      "byModel": {
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 11250,
-          "medianTtftMs": 3422,
-          "avgDurationMs": 11282,
-          "avgOutputTokens": 2012,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
-          },
-          "baseline": {
-            "ttftMean": 5763,
-            "ttftStd": 310,
-            "passMean": 0.99,
-            "locked": true,
-            "n": 4
-          },
-          "condition": {
-            "status": "degraded",
-            "latencyRatio": 1.95,
-            "accDelta": 0.01
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-04T09-19-18-842Z-arhw",
-      "startedAt": "2026-06-04T09:19:18.844Z",
-      "profile": "pure",
-      "effort": "low",
-      "level": 8,
-      "byModel": {
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "level": 8,
-          "passRate": 0.958,
-          "consistency": 0.875,
-          "avgTtftMs": 4293,
-          "medianTtftMs": 3277,
-          "avgDurationMs": 4332,
-          "avgOutputTokens": 609,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 0.75,
-            "instruction": 1
-          },
-          "baseline": {
-            "ttftMean": 5763,
-            "ttftStd": 310,
-            "passMean": 0.99,
-            "locked": true,
-            "n": 4
-          },
-          "condition": {
-            "status": "above",
-            "latencyRatio": 0.74,
-            "accDelta": -0.032
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-04T09-22-15-200Z-mdv6",
-      "startedAt": "2026-06-04T09:22:15.203Z",
-      "profile": "pure",
-      "effort": "low",
-      "level": 8,
-      "byModel": {
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "level": 8,
-          "passRate": 1,
-          "consistency": 0.917,
-          "avgTtftMs": 5816,
-          "medianTtftMs": 3987,
-          "avgDurationMs": 5870,
-          "avgOutputTokens": 775,
-          "byFamily": {
-            "multiplication": 1,
-            "precedence": 1,
-            "counting": 1,
-            "modular": 1,
-            "selection": 1,
-            "instruction": 1
-          },
-          "baseline": {
-            "ttftMean": 5763,
-            "ttftStd": 310,
-            "passMean": 0.99,
-            "locked": true,
-            "n": 4
-          },
-          "condition": {
-            "status": "normal",
-            "latencyRatio": 1.01,
-            "accDelta": 0.01
+            "status": "warn",
+            "qDelta": -8.8,
+            "latencyRatio": 1
           }
         }
       }

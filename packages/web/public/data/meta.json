@@ -1,34 +1,50 @@
 {
-  "updatedAt": "2026-06-04T09:25:59.621Z",
+  "updatedAt": "2026-06-04T15:47:48.640Z",
   "profile": "pure",
-  "effort": "low",
-  "level": 8,
-  "baselineRuns": 4,
+  "answerEffort": "low",
+  "judgeModel": "opus",
+  "baselineRuns": 3,
   "systemPrompt": "You are taking a short test. Read each question carefully and respond exactly as instructed, with no extra commentary, explanation, or formatting.",
-  "families": [
+  "questions": [
     {
-      "id": "multiplication",
-      "title": "Multi-digit multiplication"
+      "id": "weigh12",
+      "title": "12-ball weighing (3 weighings)"
     },
     {
-      "id": "precedence",
-      "title": "Order of operations"
+      "id": "prob-tuesday",
+      "title": "Boy-girl-Tuesday probability"
     },
     {
-      "id": "counting",
-      "title": "Letter counting in a string"
+      "id": "knaves",
+      "title": "Knights and knaves"
     },
     {
-      "id": "modular",
-      "title": "Modular exponentiation"
+      "id": "pct-trap",
+      "title": "Percent increase/discount trap"
     },
     {
-      "id": "selection",
-      "title": "Nth-largest selection"
+      "id": "fake-proof",
+      "title": "Find the flaw in a 2=1 proof"
     },
     {
-      "id": "instruction",
-      "title": "Multi-constraint formatting"
+      "id": "fermi-pingpong",
+      "title": "Estimate ping-pong balls in a 737"
+    },
+    {
+      "id": "hens-eggs",
+      "title": "Hens and eggs rate trap"
+    },
+    {
+      "id": "cube-2faces",
+      "title": "Painted 3x3x3 cube"
+    },
+    {
+      "id": "rooks",
+      "title": "Non-attacking rooks"
+    },
+    {
+      "id": "monty",
+      "title": "Monty Hall"
     }
   ]
 }
