@@ -110,10 +110,19 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
   const toggle = (m: string) =>
     setSelected((s) => (s.includes(m) ? s.filter((x) => x !== m) : [...s, m]));
 
-  const entries = shown.map((m) => ({ m, e: lastRun?.byModel[m] })).filter((x) => x.e) as {
-    m: string;
-    e: HistoryModelEntry;
-  }[];
+  const latestOf = (m: string): { e: HistoryModelEntry; at: string } | null => {
+    for (let i = history.runs.length - 1; i >= 0; i--) {
+      const e = history.runs[i].byModel[m];
+      if (e) return { e, at: history.runs[i].startedAt };
+    }
+    return null;
+  };
+  const entries = shown
+    .map((m) => {
+      const le = latestOf(m);
+      return le ? { m, e: le.e, at: le.at } : null;
+    })
+    .filter(Boolean) as { m: string; e: HistoryModelEntry; at: string }[];
   let worst: Status = 'normal';
   for (const { e } of entries) if (RANK[e.condition.status] > RANK[worst]) worst = e.condition.status;
   const vchip = STATUS[worst];
@@ -150,7 +159,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
 
       <div className={`stage ${details ? '' : 'centered'}`}>
         <div className="scards" key={history.updatedAt ?? 'x'}>
-          {entries.map(({ m, e }, i) => {
+          {entries.map(({ m, e, at }, i) => {
             const st = STATUS[e.condition.status] ?? STATUS.baselining;
             const ratio = e.condition.latencyRatio;
             const pct = ratio != null ? Math.round((ratio - 1) * 100) : null;
@@ -170,6 +179,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                     <span className="sc-base">정답률</span>
                   </div>
                 </div>
+                <div className="sc-when">측정 {ago(at, nowTs)}</div>
               </div>
             );
           })}
