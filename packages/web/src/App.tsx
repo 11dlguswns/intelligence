@@ -118,6 +118,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
         </div>
       </header>
 
+      <div className={`stage ${details ? '' : 'centered'}`}>
       {/* the big answer */}
       <div className={`answer ${answer.cls}`}>
         <span className="ans-icon">{answer.icon}</span>
@@ -149,6 +150,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
 
       <div className="legend-line">
         🟢 정상 · 🟡 평소보다 느림(주의) · 🔴 저하(과부하·자원 축소 또는 능력 저하) — 각 모델을 <b>자기 평소 기준선</b>과 비교
+      </div>
       </div>
 
       {/* details */}

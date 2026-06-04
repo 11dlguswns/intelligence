@@ -158,22 +158,25 @@ body {
 .details-extra { display: flex; flex-direction: column; gap: 12px; }
 
 /* ---- simple traffic-light view ---- */
-.answer { display: flex; align-items: center; gap: 18px; background: var(--surface); border: 1px solid var(--border); border-left-width: 5px; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 22px; }
+.app.board.simple { min-height: 100vh; }
+.stage { display: flex; flex-direction: column; gap: 16px; }
+.stage.centered { flex: 1; justify-content: center; }
+.answer { display: flex; align-items: center; gap: 20px; background: var(--surface); border: 1px solid var(--border); border-left-width: 5px; border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px 28px; }
 .answer.st-normal { border-left-color: var(--up); }
 .answer.st-warn { border-left-color: var(--warn); }
 .answer.st-degraded { border-left-color: var(--down); }
 .answer.st-base { border-left-color: var(--faint); }
-.ans-icon { font-size: 38px; line-height: 1; }
+.ans-icon { font-size: 46px; line-height: 1; }
 .ans-text { flex: 1; }
-.ans-q { font-size: 24px; font-weight: 750; letter-spacing: -0.02em; }
+.ans-q { font-size: 27px; font-weight: 750; letter-spacing: -0.02em; }
 .ans-sub { font-size: 13.5px; color: var(--muted); margin-top: 3px; }
 .ans-meta { font-size: 11.5px; color: var(--faint); text-align: right; line-height: 1.5; font-variant-numeric: tabular-nums; }
 
 .lights { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.light { text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px 16px 16px; }
-.lt-emoji { font-size: 42px; line-height: 1; }
-.lt-model { font-size: 13px; font-weight: 650; margin-top: 12px; }
-.lt-word { font-size: 23px; font-weight: 750; margin-top: 2px; letter-spacing: -0.01em; }
+.light { text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 34px 18px 26px; }
+.lt-emoji { font-size: 50px; line-height: 1; }
+.lt-model { font-size: 13.5px; font-weight: 650; margin-top: 14px; }
+.lt-word { font-size: 27px; font-weight: 750; margin-top: 3px; letter-spacing: -0.01em; }
 .lt-word.st-normal { color: var(--up); }
 .lt-word.st-warn { color: #a9741f; }
 .lt-word.st-degraded { color: var(--down); }
