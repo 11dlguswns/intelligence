@@ -88,7 +88,7 @@ async function main() {
       const ans = askClaude(requested, q.prompt, { effort: opts.effort });
       if (ans.resolvedModel) resolved = ans.resolvedModel;
       if (ans.ttftMs != null) ttfts.push(ans.ttftMs);
-      const graded = gradeAnswer(q.prompt, ans.result);
+      const graded = gradeAnswer(q.prompt, q.reference, ans.result);
       const score = graded.score == null ? 0 : graded.score;
       questions.push({
         id: q.id,

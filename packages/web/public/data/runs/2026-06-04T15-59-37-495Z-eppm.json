@@ -1,0 +1,377 @@
+{
+  "runId": "2026-06-04T15-59-37-495Z-eppm",
+  "startedAt": "2026-06-04T15:59:37.497Z",
+  "finishedAt": "2026-06-04T16:09:26.336Z",
+  "profile": "pure",
+  "answerEffort": "low",
+  "judgeModel": "opus",
+  "systemPrompt": "You are taking a short test. Read each question carefully and respond exactly as instructed, with no extra commentary, explanation, or formatting.",
+  "models": [
+    {
+      "requested": "opus",
+      "resolved": "claude-opus-4-8",
+      "qualityScore": 97.4,
+      "avgTtftMs": 4605,
+      "byQuestion": {
+        "weigh12": 96,
+        "prob-tuesday": 100,
+        "knaves": 100,
+        "pct-trap": 100,
+        "fake-proof": 100,
+        "fermi-pingpong": 78,
+        "hens-eggs": 100,
+        "cube-2faces": 100,
+        "rooks": 100,
+        "monty": 100
+      },
+      "baseline": {
+        "qMedian": 97.4,
+        "qStd": 0,
+        "ttftMedian": 4605,
+        "locked": false,
+        "n": 1
+      },
+      "condition": {
+        "status": "baselining",
+        "qDelta": null,
+        "latencyRatio": null
+      },
+      "questions": [
+        {
+          "id": "weigh12",
+          "title": "12-ball weighing (3 weighings)",
+          "prompt": "You have 12 identical-looking balls; exactly one is a different weight (it could be heavier OR lighter). Using a balance scale only 3 times, give a strategy that ALWAYS identifies the odd ball and whether it is heavier or lighter. Explain the full procedure for every outcome.",
+          "answer": "Label the balls 1–12. Divide into three groups of four.\n\n**Weighing 1: {1,2,3,4} vs {5,6,7,8}**\n\n---\n\n**Case A — Balanced.** The odd ball is among 9,10,11,12 (1–8 are all good).\n\n**Weighing 2: {9,10,11} vs {1,2,3}** (1,2,3 known good)\n- **Balanced:** odd ball is 12. **Weighing 3:** 12 vs 1 → tells if 12 is heavier or lighter.\n- **Left heavy:** one of 9,10,11 is heavy. **Weighing 3:** 9 vs 10 → heavier one is odd; if balanced, 11 is the heavy one.\n- **Left light:** one of 9,10,11 is light. **Weighing 3:** 9 vs 10 → lighter one is odd; if balanced, 11 is the light one.\n\n---\n\n**Case B — Left side {1,2,3,4} heavier.** So either one of 1–4 is heavy, or one of 5–8 is light. (9–12 good)\n\n**Weighing",
+          "score": 96,
+          "ttftMs": 17186,
+          "error": null
+        },
+        {
+          "id": "prob-tuesday",
+          "title": "Boy-girl-Tuesday probability",
+          "prompt": "A family has two children. You are told at least one is a boy born on a Tuesday. What is the exact probability that both children are boys? Give the fraction and explain the reasoning carefully.",
+          "answer": "**13/27**\n\nReasoning:\n\nModel each child by two attributes: sex (Boy/Girl) and day of birth (one of 7 days), all equally likely. So each child has 2 × 7 = 14 equally likely types, and a two-child family has 14 × 14 = 196 equally likely outcomes (treating the children as ordered, e.g., older/younger).\n\n**Condition:** \"at least one is a boy born on a Tuesday.\"\n\nCount outcomes satisfying this condition. It's easiest via the complement. A single child is *not* a boy-born-Tuesday in 13 of the 14 cases. So both children avoid being a boy-Tuesday in 13 × 13 = 169 outcomes. Therefore the number of outcomes with **at least one** boy-Tuesday is:\n\n196 − 169 = **27**.\n\n**Favorable:** both children are bo",
+          "score": 100,
+          "ttftMs": 5106,
+          "error": null
+        },
+        {
+          "id": "knaves",
+          "title": "Knights and knaves",
+          "prompt": "Knights always tell the truth; knaves always lie. You meet A, B, C. A says \"B is a knave.\" B says \"A and C are the same type.\" C says \"B is a knight.\" Determine the type of each, with full reasoning.",
+          "answer": "**A is a knight, B is a knave, C is a knave.**\n\nReasoning:\n\n1. A says \"B is a knave\" and C says \"B is a knight.\" These are contradictory, so A and C must be of **opposite types** (one tells the truth about B, the other lies).\n\n2. B says \"A and C are the same type.\" But we just established A and C are opposite types, so B's statement is **false**. Therefore **B is a knave**.\n\n3. Since B is a knave, A's statement \"B is a knave\" is **true**, so **A is a knight**.\n\n4. Since A and C are opposite types, **C is a knave**. Check: C said \"B is a knight,\" which is false — consistent with C being a knave.\n\nAll statements are consistent: A (knight) ✓, B (knave) ✓, C (knave) ✓.",
+          "score": 100,
+          "ttftMs": 3226,
+          "error": null
+        },
+        {
+          "id": "pct-trap",
+          "title": "Percent increase/discount trap",
+          "prompt": "A $100 item is increased by 10%, then the new price is discounted by 10%. A customer claims the price is back to $100. Compute the exact final price and explain whether the customer is right.",
+          "answer": "Final price: $99. The customer is wrong.\n\nWorking: $100 × 1.10 = $110, then $110 × 0.90 = $99. The 10% discount applies to the higher price ($110), so it removes $11, which is more than the $10 that was added. The percentage changes don't cancel out, leaving the item $1 below the original price.",
+          "score": 100,
+          "ttftMs": 2389,
+          "error": null
+        },
+        {
+          "id": "fake-proof",
+          "title": "Find the flaw in a 2=1 proof",
+          "prompt": "Find the exact error in this \"proof\" that 2 = 1: Let a = b. Then a^2 = ab, so a^2 - b^2 = ab - b^2, i.e. (a+b)(a-b) = b(a-b). Dividing both sides by (a-b) gives a+b = b, and since a = b, 2b = b, so 2 = 1. Identify the precise invalid step and why.",
+          "answer": "Dividing both sides by (a−b) is invalid, because a = b means a−b = 0, and division by zero is undefined.",
+          "score": 100,
+          "ttftMs": 2038,
+          "error": null
+        },
+        {
+          "id": "fermi-pingpong",
+          "title": "Estimate ping-pong balls in a 737",
+          "prompt": "Estimate how many ping-pong balls would fit inside a Boeing 737 cabin. Show your decomposition, assumptions, and arithmetic.",
+          "answer": "**Decomposition: balls = (cabin volume × packing efficiency) ÷ ball volume**\n\n**Assumptions**\n- 737 cabin ≈ cylinder, length ~30 m, interior diameter ~3.5 m (radius 1.75 m). I'll discount for seats/curvature and use an effective usable volume of ~250 m³.\n- Ping-pong ball diameter = 40 mm = 0.04 m → radius 0.02 m.\n- Random sphere packing efficiency ≈ 0.70.\n\n**Arithmetic**\n- Cabin cross-section: π × 1.75² ≈ 9.6 m²; × 30 m ≈ 290 m³; round down to ~250 m³ for obstructions.\n- Ball volume: (4/3)π(0.02)³ ≈ 3.35 × 10⁻⁵ m³.\n- Filled volume: 250 × 0.70 = 175 m³.\n- Count: 175 ÷ 3.35 × 10⁻⁵ ≈ 5.2 × 10⁶.\n\n**Estimate: roughly 5 million ping-pong balls.**",
+          "score": 78,
+          "ttftMs": 5745,
+          "error": null
+        },
+        {
+          "id": "hens-eggs",
+          "title": "Hens and eggs rate trap",
+          "prompt": "If a hen and a half lays an egg and a half in a day and a half, how many eggs do 6 hens lay in 6 days? Show the rate reasoning step by step.",
+          "answer": "Step 1: Start with the given rate — 1.5 hens lay 1.5 eggs in 1.5 days.\n\nStep 2: Find the rate per hen per day.\nEggs per hen per day = 1.5 eggs ÷ (1.5 hens × 1.5 days) = 1.5 ÷ 2.25 = 2/3 egg per hen per day.\n\nStep 3: Scale up to 6 hens over 6 days.\nEggs = (2/3) × 6 hens × 6 days = (2/3) × 36 = 24.\n\nAnswer: 24 eggs.",
+          "score": 100,
+          "ttftMs": 3062,
+          "error": null
+        },
+        {
+          "id": "cube-2faces",
+          "title": "Painted 3x3x3 cube",
+          "prompt": "A 3x3x3 cube has all its outer faces painted, then is cut into 27 unit cubes. Exactly how many of the unit cubes have paint on exactly two faces? Explain.",
+          "answer": "12.\n\nThe cubes with exactly two painted faces are the edge cubes (not corners, not face centers). A cube has 12 edges, and each edge contributes one such unit cube in a 3×3×3 cube, giving 12.",
+          "score": 100,
+          "ttftMs": 2215,
+          "error": null
+        },
+        {
+          "id": "rooks",
+          "title": "Non-attacking rooks",
+          "prompt": "In how many distinct ways can 8 rooks be placed on a standard 8x8 chessboard so that no two attack each other? Give the number and explain why.",
+          "answer": "8! = 40320.\n\nEach row must contain exactly one rook (8 rooks, 8 rows, no two sharing a row). Assigning the columns means choosing a distinct column for each row—a permutation of 8 columns. There are 8! = 40320 such permutations, ensuring no two rooks share a row or column.",
+          "score": 100,
+          "ttftMs": 3063,
+          "error": null
+        },
+        {
+          "id": "monty",
+          "title": "Monty Hall",
+          "prompt": "In the Monty Hall problem (3 doors, one car), you pick a door, the host opens a different door revealing a goat, and offers you the switch. Should you switch? Give the exact win probabilities for staying vs switching and explain.",
+          "answer": "Yes, you should switch.\n\n- Staying wins: 1/3\n- Switching wins: 2/3\n\nExplanation: Your initial pick has a 1/3 chance of being the car, so 2/3 of the time the car is behind one of the other two doors. The host, who knows where the car is, always opens a goat door among those others. This concentrates that entire 2/3 probability onto the single remaining unopened door. So staying keeps your original 1/3, while switching gives you 2/3 — double the chance of winning.",
+          "score": 100,
+          "ttftMs": 2018,
+          "error": null
+        }
+      ]
+    },
+    {
+      "requested": "sonnet",
+      "resolved": "claude-sonnet-4-6",
+      "qualityScore": 97.6,
+      "avgTtftMs": 6520,
+      "byQuestion": {
+        "weigh12": 96,
+        "prob-tuesday": 100,
+        "knaves": 100,
+        "pct-trap": 100,
+        "fake-proof": 100,
+        "fermi-pingpong": 82,
+        "hens-eggs": 100,
+        "cube-2faces": 100,
+        "rooks": 100,
+        "monty": 98
+      },
+      "baseline": {
+        "qMedian": 97.6,
+        "qStd": 0,
+        "ttftMedian": 6520,
+        "locked": false,
+        "n": 1
+      },
+      "condition": {
+        "status": "baselining",
+        "qDelta": null,
+        "latencyRatio": null
+      },
+      "questions": [
+        {
+          "id": "weigh12",
+          "title": "12-ball weighing (3 weighings)",
+          "prompt": "You have 12 identical-looking balls; exactly one is a different weight (it could be heavier OR lighter). Using a balance scale only 3 times, give a strategy that ALWAYS identifies the odd ball and whether it is heavier or lighter. Explain the full procedure for every outcome.",
+          "answer": "# 12-Ball Problem — Complete Strategy\n\n## Setup: Label balls 1–12\n\n---\n\n## Weighing 1: {1,2,3,4} vs {5,6,7,8} — set aside {9,10,11,12}\n\n---\n\n## CASE A — Weighing 1 Balances\nOdd ball is among **9, 10, 11, 12**.\n\n**Weighing 2:** {9,10,11} vs {1,2,3} *(1,2,3 are confirmed normal)*\n\n- **Balances** → odd is **12**\n  - **Weighing 3:** 12 vs 1 → heavier or lighter — ✅\n- **Left (9,10,11) heavy** → odd is heavy, in {9,10,11}\n  - **Weighing 3:** 9 vs 10\n    - Balance → **11 is heavy** ✅\n    - Left heavy → **9 is heavy** ✅\n    - Right heavy → **10 is heavy** ✅\n- **Left light** → odd is light, in {9,10,11}\n  - **Weighing 3:** 9 vs 10\n    - Balance → **11 is light** ✅\n    - Left light → **9 is light** ✅\n",
+          "score": 96,
+          "ttftMs": 28888,
+          "error": null
+        },
+        {
+          "id": "prob-tuesday",
+          "title": "Boy-girl-Tuesday probability",
+          "prompt": "A family has two children. You are told at least one is a boy born on a Tuesday. What is the exact probability that both children are boys? Give the fraction and explain the reasoning carefully.",
+          "answer": "## The Answer: **13/27**\n\n---\n\n### Setup\n\nEach child has 14 equally likely \"slots\": 7 days × 2 genders (Boy-Mon, Boy-Tue, ..., Boy-Sun, Girl-Mon, ..., Girl-Sun).\n\nFor an ordered pair (Child 1, Child 2), the sample space is **14 × 14 = 196** equally likely outcomes.\n\n---\n\n### Step 1: Count outcomes where at least one child is a Boy-born-on-Tuesday\n\nIt's easier to use complementary counting:\n\n- Outcomes where **neither** child is Boy-Tuesday: each child has 13 choices → **13 × 13 = 169**\n- Outcomes with **at least one** Boy-Tuesday: **196 − 169 = 27**\n\n---\n\n### Step 2: Count outcomes where **both are boys** AND at least one is Boy-Tuesday\n\nBoth boys means each child is one of 7 boy-slots (Boy-",
+          "score": 100,
+          "ttftMs": 5826,
+          "error": null
+        },
+        {
+          "id": "knaves",
+          "title": "Knights and knaves",
+          "prompt": "Knights always tell the truth; knaves always lie. You meet A, B, C. A says \"B is a knave.\" B says \"A and C are the same type.\" C says \"B is a knight.\" Determine the type of each, with full reasoning.",
+          "answer": "## Solution: A = Knight, B = Knave, C = Knave\n\n### Reasoning\n\n**Assume A is a Knight.**\n\n- A's statement \"B is a knave\" → **B is a Knave** ✓\n- B is a Knave, so B's statement \"A and C are the same type\" must be **false** → A and C are *different* types → since A is a Knight, **C is a Knave** ✓\n- C is a Knave, so C's statement \"B is a knight\" must be **false** → B is not a knight → **B is a Knave** ✓ (consistent)\n\nAll three statements check out with no contradictions.\n\n**Verify the alternative (A = Knave) fails:**\n- A lies → B is actually a Knight.\n- B is a Knight → \"A and C are the same type\" is true → C is also a Knave (same as A).\n- C is a Knave → \"B is a knight\" must be false → B is a Knav",
+          "score": 100,
+          "ttftMs": 4783,
+          "error": null
+        },
+        {
+          "id": "pct-trap",
+          "title": "Percent increase/discount trap",
+          "prompt": "A $100 item is increased by 10%, then the new price is discounted by 10%. A customer claims the price is back to $100. Compute the exact final price and explain whether the customer is right.",
+          "answer": "**Final price: $99**\n\nThe customer is wrong.\n\n- $100 × 1.10 = $110\n- $110 × 0.90 = **$99**\n\nThe 10% discount applies to the higher price ($110), so the discount amount ($11) exceeds the original markup ($10), resulting in a net loss of $1. Percentage changes are not reversible by applying the same percentage in the opposite direction.",
+          "score": 100,
+          "ttftMs": 3830,
+          "error": null
+        },
+        {
+          "id": "fake-proof",
+          "title": "Find the flaw in a 2=1 proof",
+          "prompt": "Find the exact error in this \"proof\" that 2 = 1: Let a = b. Then a^2 = ab, so a^2 - b^2 = ab - b^2, i.e. (a+b)(a-b) = b(a-b). Dividing both sides by (a-b) gives a+b = b, and since a = b, 2b = b, so 2 = 1. Identify the precise invalid step and why.",
+          "answer": "The exact error: **dividing both sides by (a−b)**.\n\nSince a = b, we have a − b = 0, and **division by zero is undefined**. The step is invalid precisely because (a−b) = 0, not because of any algebraic manipulation before or after it.",
+          "score": 100,
+          "ttftMs": 3182,
+          "error": null
+        },
+        {
+          "id": "fermi-pingpong",
+          "title": "Estimate ping-pong balls in a 737",
+          "prompt": "Estimate how many ping-pong balls would fit inside a Boeing 737 cabin. Show your decomposition, assumptions, and arithmetic.",
+          "answer": "## 보잉 737 객실에 탁구공 몇 개?\n\n---\n\n### 1단계 — 객실 부피 추정\n\n| 항목 | 값 |\n|---|---|\n| 객실 길이 | ~28 m |\n| 객실 폭 (내부) | ~3.5 m |\n| 객실 높이 (평균) | ~2.2 m |\n| **원통 근사 부피** | 28 × 3.5 × 2.2 ≈ **215 m³** |\n\n> 좌석, 짐칸, 갤리 등 내부 구조물이 약 30~35% 차지한다고 가정  \n> 유효 빈 공간 ≈ 215 × 0.65 ≈ **140 m³**\n\n---\n\n### 2단계 — 탁구공 하나의 부피\n\n- 지름: 40 mm → 반지름 0.02 m  \n- 구 부피: (4/3)π r³ = (4/3)π(0.02)³ ≈ **3.35 × 10⁻⁵ m³**\n\n---\n\n### 3단계 — 패킹 효율\n\n무작위 구 채우기 패킹 효율 ≈ **64%**\n\n---\n\n### 4단계 — 계산\n\n$$N = \\frac{\\text{유효 공간} \\times \\text{패킹 효율}}{\\text{공 하나 부피}}$$\n\n$$N = \\frac{140 \\times 0.64}{3.35 \\times 10^{-5}} = \\frac{89.6}{3.35 \\times 10^{-5}} \\approx \\mathbf{2.7 \\times 10^6}$$\n\n---\n\n### 결론\n\n**약 270만 개** (대략 **2~3백만 개** 범위)\n\n주요 불확실성: 객실 내 구조물 비율(±10%)",
+          "score": 82,
+          "ttftMs": 2172,
+          "error": null
+        },
+        {
+          "id": "hens-eggs",
+          "title": "Hens and eggs rate trap",
+          "prompt": "If a hen and a half lays an egg and a half in a day and a half, how many eggs do 6 hens lay in 6 days? Show the rate reasoning step by step.",
+          "answer": "## Step-by-Step Rate Reasoning\n\n**Step 1: Find the rate per hen per day**\n\nThe given relationship:\n> 1.5 hens × 1.5 days = 1.5 eggs\n\nEggs per hen per day = 1.5 ÷ 1.5 ÷ 1.5 = **2/3 egg per hen per day**\n\n**Step 2: Scale up**\n\n> 6 hens × 6 days × (2/3 egg / hen / day)\n\n= 6 × 6 × 2/3\n\n= 36 × 2/3\n\n= **24 eggs**\n\n---\n\n**Answer: 24 eggs**\n\nThe trick is that the original rate stays constant — one hen lays ²⁄₃ of an egg per day — so you just multiply that unit rate by the new number of hens and days.",
+          "score": 100,
+          "ttftMs": 4201,
+          "error": null
+        },
+        {
+          "id": "cube-2faces",
+          "title": "Painted 3x3x3 cube",
+          "prompt": "A 3x3x3 cube has all its outer faces painted, then is cut into 27 unit cubes. Exactly how many of the unit cubes have paint on exactly two faces? Explain.",
+          "answer": "**12**\n\nThe corner cubes (8) have 3 painted faces. The face-center cubes (6) have 1 painted face. The very center cube (1) has 0 painted faces.\n\nThe **edge cubes** sit along the 12 edges of the cube, one per edge (not counting corners). Each is exposed on exactly **2 faces**.\n\n12 edges × 1 cube each = **12 unit cubes** with paint on exactly two faces.",
+          "score": 100,
+          "ttftMs": 3603,
+          "error": null
+        },
+        {
+          "id": "rooks",
+          "title": "Non-attacking rooks",
+          "prompt": "In how many distinct ways can 8 rooks be placed on a standard 8x8 chessboard so that no two attack each other? Give the number and explain why.",
+          "answer": "**40,320**\n\nThis equals 8! (8 factorial).\n\n**Why:** No two rooks attack each other means no two can share a row or column. Since there are 8 rows and 8 columns, you must place exactly one rook per row and one per column.\n\n- Row 1: choose any of 8 columns\n- Row 2: choose any of 7 remaining columns\n- Row 3: 6 choices\n- ...and so on\n\nTotal = 8 × 7 × 6 × 5 × 4 × 3 × 2 × 1 = **40,320**\n\nThis is equivalent to counting the number of permutations of 8 columns — each valid arrangement corresponds to a bijection from rows to columns.",
+          "score": 100,
+          "ttftMs": 4405,
+          "error": null
+        },
+        {
+          "id": "monty",
+          "title": "Monty Hall",
+          "prompt": "In the Monty Hall problem (3 doors, one car), you pick a door, the host opens a different door revealing a goat, and offers you the switch. Should you switch? Give the exact win probabilities for staying vs switching and explain.",
+          "answer": "**Switch.**\n\n- **Stay:** 1/3\n- **Switch:** 2/3\n\n**Why:** When you first pick, you have a 1/3 chance of being right. The host always reveals a goat from the remaining doors, which doesn't change your initial odds. So the other unopened door absorbs the remaining 2/3 probability. Switching wins 2/3 of the time.",
+          "score": 98,
+          "ttftMs": 4307,
+          "error": null
+        }
+      ]
+    },
+    {
+      "requested": "haiku",
+      "resolved": "claude-haiku-4-5-20251001",
+      "qualityScore": 97.2,
+      "avgTtftMs": 16050,
+      "byQuestion": {
+        "weigh12": 96,
+        "prob-tuesday": 98,
+        "knaves": 98,
+        "pct-trap": 100,
+        "fake-proof": 100,
+        "fermi-pingpong": 80,
+        "hens-eggs": 100,
+        "cube-2faces": 100,
+        "rooks": 100,
+        "monty": 100
+      },
+      "baseline": {
+        "qMedian": 97.2,
+        "qStd": 0,
+        "ttftMedian": 16050,
+        "locked": false,
+        "n": 1
+      },
+      "condition": {
+        "status": "baselining",
+        "qDelta": null,
+        "latencyRatio": null
+      },
+      "questions": [
+        {
+          "id": "weigh12",
+          "title": "12-ball weighing (3 weighings)",
+          "prompt": "You have 12 identical-looking balls; exactly one is a different weight (it could be heavier OR lighter). Using a balance scale only 3 times, give a strategy that ALWAYS identifies the odd ball and whether it is heavier or lighter. Explain the full procedure for every outcome.",
+          "answer": "# Strategy for Identifying the Odd Ball in 3 Weighings\n\n## First Weighing\nDivide into three groups of 4:\n- **Weigh {1,2,3,4} vs {5,6,7,8}**\n\nThis determines where the odd ball is located.\n\n---\n\n## Case A: First Weighing BALANCED\n\nThe odd ball is in {9,10,11,12}\n\n**Second Weighing: {9,10,11} vs {1,2,3}** (using known good balls)\n\n**If balanced:**\n- **Third: 12 vs 1** → If 12 > 1: heavy | If 12 < 1: light\n\n**If {9,10,11} is heavier:**\n- **Third: 9 vs 10**\n  - 9 > 10 → 9 is heavy\n  - 9 = 10 → 11 is heavy  \n  - 9 < 10 → 10 is heavy\n\n**If {9,10,11} is lighter:**\n- **Third: 9 vs 10**\n  - 9 > 10 → 10 is light\n  - 9 = 10 → 11 is light\n  - 9 < 10 → 9 is light\n\n---\n\n## Case B: First Weighing {1,2,3,4}",
+          "score": 96,
+          "ttftMs": 87362,
+          "error": null
+        },
+        {
+          "id": "prob-tuesday",
+          "title": "Boy-girl-Tuesday probability",
+          "prompt": "A family has two children. You are told at least one is a boy born on a Tuesday. What is the exact probability that both children are boys? Give the fraction and explain the reasoning carefully.",
+          "answer": "# Solution: 13/27\n\n## Reasoning\n\nThis requires careful application of conditional probability. We need: P(both boys | at least one boy born on Tuesday)\n\n**Setting up the probability space:**\n- Each child has 14 equally likely states: 2 genders × 7 days of week\n- Total outcomes: 14 × 14 = 196\n\n**Finding the condition (at least one boy born on Tuesday):**\n\nUsing inclusion-exclusion:\n- Child 1 is (boy, Tuesday): 1 × 14 = 14 outcomes\n- Child 2 is (boy, Tuesday): 14 × 1 = 14 outcomes  \n- Both are (boy, Tuesday): 1 × 1 = 1 outcome (double-counted)\n- **Total: 14 + 14 - 1 = 27 outcomes**\n\n**Finding outcomes satisfying both conditions (both boys AND at least one born on Tuesday):**\n\n- Total outcomes ",
+          "score": 98,
+          "ttftMs": 20359,
+          "error": null
+        },
+        {
+          "id": "knaves",
+          "title": "Knights and knaves",
+          "prompt": "Knights always tell the truth; knaves always lie. You meet A, B, C. A says \"B is a knave.\" B says \"A and C are the same type.\" C says \"B is a knight.\" Determine the type of each, with full reasoning.",
+          "answer": "**A: Knight | B: Knave | C: Knave**\n\n**Reasoning:**\n\nAssume A is a Knight.\n- A tells the truth, so \"B is a knave\" is true → B is a Knave ✓\n\nIf B is a Knave:\n- B lies, so \"A and C are the same type\" is false → A and C are different types\n- A is a Knight, so C must be a Knave ✓\n\nVerify C (Knave):\n- C lies, and C says \"B is a knight\"\n- B is actually a Knave, so C's statement is false ✓\n\n**Verification:** All statements check out consistently with this assignment.\n\n(Testing the alternative—A is a Knave—leads to contradiction: B would be a Knight, making \"A and C are the same type\" true, forcing C to be a Knave. But then C lies while stating a truth, which is impossible.)",
+          "score": 98,
+          "ttftMs": 7221,
+          "error": null
+        },
+        {
+          "id": "pct-trap",
+          "title": "Percent increase/discount trap",
+          "prompt": "A $100 item is increased by 10%, then the new price is discounted by 10%. A customer claims the price is back to $100. Compute the exact final price and explain whether the customer is right.",
+          "answer": "# Final Price: $99\n\n**Calculation:**\n- After 10% increase: $100 × 1.10 = $110\n- After 10% discount: $110 × 0.90 = $99\n\n**The customer is wrong.** The price is not back to $100.\n\n**Why:** The 10% discount applies to $110 (the increased price), removing $11. The original 10% increase only added $10. Since $11 > $10, the final price is $1 less than the original.",
+          "score": 100,
+          "ttftMs": 2852,
+          "error": null
+        },
+        {
+          "id": "fake-proof",
+          "title": "Find the flaw in a 2=1 proof",
+          "prompt": "Find the exact error in this \"proof\" that 2 = 1: Let a = b. Then a^2 = ab, so a^2 - b^2 = ab - b^2, i.e. (a+b)(a-b) = b(a-b). Dividing both sides by (a-b) gives a+b = b, and since a = b, 2b = b, so 2 = 1. Identify the precise invalid step and why.",
+          "answer": "**Invalid step:** Dividing both sides by (a-b)\n\n**Why:** Since a = b (given at the start), then a - b = 0. Division by zero is undefined and not allowed in algebra. This step violates the fundamental rule that you cannot divide by zero.",
+          "score": 100,
+          "ttftMs": 3804,
+          "error": null
+        },
+        {
+          "id": "fermi-pingpong",
+          "title": "Estimate ping-pong balls in a 737",
+          "prompt": "Estimate how many ping-pong balls would fit inside a Boeing 737 cabin. Show your decomposition, assumptions, and arithmetic.",
+          "answer": "# Ping-Pong Balls in a Boeing 737 Cabin\n\n## Key Assumptions\n\n| Parameter | Value | Rationale |\n|-----------|-------|-----------|\n| Aircraft | Boeing 737-800 | Common variant |\n| Cabin volume | 150 m³ | Pressurized cabin area (main deck), excluding cockpit structure |\n| Ping-pong ball diameter | 40 mm | Standard regulation size |\n| Packing efficiency | 65% | Random sphere packing |\n\n## Decomposition\n\n**Cabin Volume (Boeing 737-800):**\n- Fuselage internal diameter: ~3.54 m\n- Usable cabin length: ~30 m\n- Cylindrical approximation: π × (1.77)² × 30 ≈ 295 m³\n- Adjusted for structure/walls: **~150 m³**\n\n**Ping-Pong Ball Volume:**\n- Radius: 20 mm = 0.02 m\n- V = (4/3)πr³ = (4/3) × π × (0.02)³\n- V = ",
+          "score": 80,
+          "ttftMs": 19224,
+          "error": null
+        },
+        {
+          "id": "hens-eggs",
+          "title": "Hens and eggs rate trap",
+          "prompt": "If a hen and a half lays an egg and a half in a day and a half, how many eggs do 6 hens lay in 6 days? Show the rate reasoning step by step.",
+          "answer": "# Rate Reasoning\n\n**Step 1: Find eggs per hen per day**\n- 1.5 hens lay 1.5 eggs in 1.5 days\n- Rate = 1.5 eggs ÷ (1.5 hens × 1.5 days) = 1.5 ÷ 2.25 = 2/3 eggs per hen per day\n\n**Step 2: Calculate for 6 hens in 6 days**\n- Eggs = (2/3 eggs/hen/day) × 6 hens × 6 days\n- Eggs = 2/3 × 36 = 24 eggs\n\n**Answer: 24 eggs**",
+          "score": 100,
+          "ttftMs": 3241,
+          "error": null
+        },
+        {
+          "id": "cube-2faces",
+          "title": "Painted 3x3x3 cube",
+          "prompt": "A 3x3x3 cube has all its outer faces painted, then is cut into 27 unit cubes. Exactly how many of the unit cubes have paint on exactly two faces? Explain.",
+          "answer": "**Answer: 12**\n\n**Explanation:**\n\nWhen a 3×3×3 cube is painted and cut into 27 unit cubes, categorize by position:\n\n1. **Corner cubes** (8): Located at the 8 corners → 3 painted faces each\n2. **Edge cubes** (12): Located at the middle of each of the 12 edges → **2 painted faces each**\n3. **Face cubes** (6): Located at the center of each of the 6 faces → 1 painted face each\n4. **Center cube** (1): Completely interior → 0 painted faces\n\nThe unit cubes with exactly 2 painted faces are those on the edges. Since a cube has 12 edges, and each edge of the 3×3×3 cube contains exactly 1 such \"middle\" cube (flanked by 2 corner cubes), the answer is **12**.",
+          "score": 100,
+          "ttftMs": 7054,
+          "error": null
+        },
+        {
+          "id": "rooks",
+          "title": "Non-attacking rooks",
+          "prompt": "In how many distinct ways can 8 rooks be placed on a standard 8x8 chessboard so that no two attack each other? Give the number and explain why.",
+          "answer": "# Answer\n\n**40,320 distinct ways**\n\n## Why\n\nFor no two rooks to attack each other, there must be exactly one rook per row and exactly one rook per column.\n\nThis is equivalent to creating a permutation of columns:\n- Row 1: choose any of 8 columns\n- Row 2: choose any of remaining 7 columns\n- Row 3: choose any of remaining 6 columns\n- ... continuing to Row 8: choose the last remaining column\n\nThis gives 8 × 7 × 6 × 5 × 4 × 3 × 2 × 1 = **8! = 40,320**",
+          "score": 100,
+          "ttftMs": 3470,
+          "error": null
+        },
+        {
+          "id": "monty",
+          "title": "Monty Hall",
+          "prompt": "In the Monty Hall problem (3 doors, one car), you pick a door, the host opens a different door revealing a goat, and offers you the switch. Should you switch? Give the exact win probabilities for staying vs switching and explain.",
+          "answer": "**You should switch.**\n\n**Win probabilities:**\n- Stay: 1/3\n- Switch: 2/3\n\n**Explanation:**\n\nWhen you initially pick a door, the probability your door has the car is 1/3 (and probability it has a goat is 2/3).\n\nThe host then opens a door with a goat. This reveals information but doesn't change the probability of your original choice—it's still 1/3.\n\nSince one of the two remaining doors has the car and your door has only a 1/3 chance, the other unopened door must have a 2/3 chance. Switching gives you that 2/3 probability.\n\nAlternatively: If you initially picked a goat (2/3 probability), switching wins. If you initially picked the car (1/3 probability), switching loses. Switching wins in the 2",
+          "score": 100,
+          "ttftMs": 5914,
+          "error": null
+        }
+      ]
+    }
+  ]
+}
