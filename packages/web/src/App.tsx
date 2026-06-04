@@ -4,23 +4,20 @@ import { loadJson } from './lib/data';
 import { modelColor, modelLabel } from './lib/model';
 import { currentPeak } from './lib/peak';
 import { Sparkline } from './components/Sparkline';
+import { DimensionBars } from './components/DimensionBars';
 import { QuestionTable } from './components/QuestionTable';
 
 const STATUS: Record<Status, { label: string; cls: string; icon: string }> = {
   normal: { label: '정상', cls: 'st-normal', icon: '🟢' },
-  above: { label: '평소↑', cls: 'st-above', icon: '🟢' },
+  above: { label: '정상', cls: 'st-normal', icon: '🟢' },
   warn: { label: '주의', cls: 'st-warn', icon: '🟡' },
   degraded: { label: '멍청해짐', cls: 'st-degraded', icon: '🔴' },
   baselining: { label: '측정중', cls: 'st-base', icon: '⚪' },
 };
 const RANK: Record<Status, number> = { degraded: 3, warn: 2, baselining: 1, normal: 0, above: 0 };
-const secs = (ms: number | null | undefined) => (ms == null ? '–' : (ms / 1000).toFixed(1));
 
-const median = (a: number[]): number | null => {
-  if (!a.length) return null;
-  const s = [...a].sort((x, y) => x - y);
-  return s[Math.floor((s.length - 1) / 2)];
-};
+const DIM_LABEL: Record<string, string> = { reasoning: '추론', math: '수학', probability: '확률', spatial: '공간', estimation: '추정', knowledge: '지식' };
+const DIM_ORDER = ['reasoning', 'math', 'probability', 'spatial', 'estimation', 'knowledge'];
 
 function ago(updatedAt: string | null | undefined, nowTs: number): string {
   if (!updatedAt) return '—';
@@ -33,7 +30,7 @@ function ago(updatedAt: string | null | undefined, nowTs: number): string {
 
 function phrase(enough: boolean, gap: number | null, n: number, need: number): string {
   if (!enough) return `최고점 쌓는 중 (${n}/${need})`;
-  if (gap == null || gap >= -2) return '최고 실력 (정상)';
+  if (gap == null || gap >= -2) return '최고 실력';
   return `최고점보다 ${Math.abs(gap)}점 낮음`;
 }
 
@@ -102,9 +99,9 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
   }
 
   const allModels = history.models;
-  const lastRun = history.runs[history.runs.length - 1];
   const shown = selected.length ? selected : allModels;
   const peak = currentPeak();
+  const need = meta?.baselineRuns ?? 3;
 
   const toggle = (m: string) =>
     setSelected((s) => (s.includes(m) ? s.filter((x) => x !== m) : [...s, m]));
@@ -123,26 +120,22 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
     })
     .filter(Boolean) as { m: string; e: HistoryModelEntry; at: string }[];
 
-  // Reference = the model's PEAK (best score ever observed = its true ceiling).
-  // We show how far CURRENT sits BELOW that peak — i.e. how much it has dropped.
-  const need = meta?.baselineRuns ?? 3;
   const cardInfo = (m: string, e: HistoryModelEntry) => {
     const all = history.runs.map((r) => r.byModel[m]?.qualityScore).filter((v): v is number => v != null);
-    const peak = all.length ? Math.max(...all) : null;
+    const peakScore = all.length ? Math.max(...all) : null;
     const cur = e.qualityScore;
-    const enough = all.length >= need && peak != null;
-    const gap = enough && cur != null && peak != null ? Math.round((cur - peak) * 10) / 10 : null; // <= 0
-    const status: Status = !enough
-      ? 'baselining'
-      : gap == null
-        ? 'normal'
-        : gap <= -18
-          ? 'degraded'
-          : gap <= -8
-            ? 'warn'
-            : 'normal';
-    return { peak, gap, status, enough, n: all.length };
+    const enough = all.length >= need && peakScore != null;
+    const gap = enough && cur != null && peakScore != null ? Math.round((cur - peakScore) * 10) / 10 : null;
+    const status: Status = !enough ? 'baselining' : gap == null ? 'normal' : gap <= -18 ? 'degraded' : gap <= -8 ? 'warn' : 'normal';
+    return { peak: peakScore, gap, status, enough, n: all.length };
   };
+
+  const dimsOf = (e: HistoryModelEntry) =>
+    DIM_ORDER.map((d) => {
+      const ids = (meta?.questions ?? []).filter((q) => q.dimension === d).map((q) => q.id);
+      const ss = ids.map((id) => e.byQuestion[id]).filter((v): v is number => v != null);
+      return { dim: d, label: DIM_LABEL[d] ?? d, score: ss.length ? Math.round(ss.reduce((a, b) => a + b, 0) / ss.length) : null };
+    });
 
   let worst: Status = 'normal';
   for (const { m, e } of entries) {
@@ -152,18 +145,18 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
   const vchip = STATUS[worst];
 
   return (
-    <div className="app board simple">
+    <div className="app board locked">
       <header className="bar">
         <div className="brand-min">
           <div className="logo sm" aria-hidden />
-          <b>지금 Claude, 최고 실력 대비?</b>
+          <b>Claude 지능 — 최고 실력 대비</b>
           <span className={`vchip ${vchip.cls}`}>{vchip.icon} {worst === 'degraded' ? '멍청해짐' : worst === 'warn' ? '주의' : worst === 'baselining' ? '측정중' : '정상'}</span>
         </div>
         <div className="bar-right">
-          <span className="live" title="25초마다 자동 새로고침. 새 측정이 올라오면 갱신됩니다.">
+          <span className="live" title="25초마다 자동 새로고침. 매시간 새 측정이 반영됩니다.">
             <span className="live-dot" />LIVE · 측정 {ago(history.updatedAt, nowTs)}
           </span>
-          <span className={`peak-badge ${peak.peak ? 'on' : ''}`} title="과거 피크창: 평일 5–11 AM PT. Pro/Max는 2026-05-06 해제됨.">
+          <span className={`peak-badge ${peak.peak ? 'on' : ''}`} title="과거 피크창: 평일 5–11 AM PT.">
             {peak.peak ? '🟠 붐빔' : '🟢 한산'} · {peak.clock}
           </span>
           <div className="chips inline">
@@ -177,52 +170,58 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
               );
             })}
           </div>
-          <button className="ghost-btn" onClick={() => setDetails((d) => !d)}>{details ? '닫기 ▲' : '자세히 ▾'}</button>
+          <button className="ghost-btn" onClick={() => setDetails(true)}>자세히 ▾</button>
         </div>
       </header>
 
-      <div className={`stage ${details ? '' : 'centered'}`}>
-        <div className="scards" key={history.updatedAt ?? 'x'}>
-          {entries.map(({ m, e, at }, i) => {
-            const info = cardInfo(m, e);
-            const st = STATUS[info.status] ?? STATUS.baselining;
-            const series = history.runs.map((r) => r.byModel[m]?.qualityScore).filter((v): v is number => v != null).slice(-24);
-            return (
-              <div className={`scard ${st.cls}`} key={m}>
-                <div className="sc-emoji">{st.icon}</div>
-                <div className="sc-model" style={{ color: modelColor(m, i) }}>{modelLabel(m)}</div>
-                <div className="sc-score">
-                  {Math.round(e.qualityScore)}<small>/100</small>
-                </div>
-                <div className="sc-scorelabel">현재 지능 점수</div>
-                <div className="sc-phrase">{phrase(info.enough, info.gap, info.n, need)}</div>
-                <div className="sc-spark">
-                  <Sparkline values={series} color={modelColor(m, i)} baseline={info.peak} />
-                </div>
-                <div className="sc-foot">
-                  최고 {info.peak != null ? Math.round(info.peak) : '–'}점{info.gap != null && info.gap < 0 ? ` · ${info.gap}점` : info.enough ? ' · 최고치' : ''} · {ago(at, nowTs)}
+      <div className="cards3" key={history.updatedAt ?? 'x'}>
+        {entries.map(({ m, e, at }, i) => {
+          const info = cardInfo(m, e);
+          const st = STATUS[info.status] ?? STATUS.baselining;
+          const color = modelColor(m, i);
+          const series = history.runs.map((r) => r.byModel[m]?.qualityScore).filter((v): v is number => v != null).slice(-24);
+          return (
+            <div className={`scard tall ${st.cls}`} key={m}>
+              <div className="sc-top">
+                <span className="sc-model" style={{ color }}>
+                  <span className="dot" style={{ background: color }} />
+                  {modelLabel(m)}
+                </span>
+                <span className={`status-badge ${st.cls}`}>{st.icon} {st.label}</span>
+              </div>
+              <div className="sc-score">{Math.round(e.qualityScore)}<small>/100</small></div>
+              <div className="sc-scorelabel">종합 지능 점수 · {phrase(info.enough, info.gap, info.n, need)}{info.peak != null ? ` (최고 ${Math.round(info.peak)})` : ''}</div>
+
+              <DimensionBars bars={dimsOf(e)} color={color} />
+
+              <div className="sc-trend">
+                <div className="sc-trend-head">시간별 추이 <span>{ago(at, nowTs)}</span></div>
+                <div className="sc-trend-chart">
+                  <Sparkline values={series} color={color} baseline={info.peak} />
                 </div>
               </div>
-            );
-          })}
-        </div>
-        <div className="legend-line">
-          🟢 최고 근처 · 🟡 다소 하락 · 🔴 멍청해짐 — Opus 심사위원이 답변 품질을 0~100 채점, 각 모델의 <b>최고점</b> 대비 현재 하락폭
-        </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="legend-line">
+        종합 = 6개 차원(추론·수학·확률·공간·추정·지식)의 난문을 Opus 심사위원이 채점한 평균 · 각 모델 <b>최고점 대비</b> 현재 · 🟢정상 🟡주의 🔴멍청해짐
       </div>
 
       {details && latest && (
-        <div className="details-extra">
-          <div className="explain">
-            <div className="ex-item"><b>지능 점수</b> — 어려운 추론 문제(12공 저울·확률·논리 등) 답변을 독립된 <b>Opus 심사위원</b>이 채점한 평균.</div>
-            <div className="ex-item"><b>왜 정답률이 아니라 품질?</b> 객관식 정답은 haiku도 AIME를 풀 만큼 다 천장이라, 변별되는 건 <b>추론의 깊이·정확성(품질)</b>입니다.</div>
-            <div className="ex-item"><b>최고점 대비</b> — 각 모델이 <b>역대 보여준 최고 점수</b>를 기준(=그 모델의 진짜 실력)으로, 현재가 <span className="neg">얼마나 떨어졌는지</span>를 봅니다. 15점↓ 지속 하락 = 멍청해짐. (한 번의 운 나쁜 하락은 노이즈)</div>
-            <div className="ex-item"><b>심사위원</b> — {meta?.judgeModel} 고정. 답변 effort={meta?.answerEffort} 고정. 비공식 측정.</div>
-          </div>
-          <section className="card">
-            <div className="card-head"><h2>문제별 점수 (최근)</h2><p>행을 클릭하면 실제 문제·모델 답안·심사위원 점수</p></div>
+        <div className="modal-overlay" onClick={() => setDetails(false)}>
+          <div className="modal" onClick={(ev) => ev.stopPropagation()}>
+            <div className="modal-head">
+              <h2>문제별 점수 · 답안 (최근 측정)</h2>
+              <button className="ghost-btn" onClick={() => setDetails(false)}>닫기 ✕</button>
+            </div>
+            <div className="explain">
+              <div className="ex-item"><b>지능 점수</b> — 어려운 문제 답변을 독립된 <b>{meta?.judgeModel}</b> 심사위원이 0~100 채점(정답 레퍼런스 기반). 객관 정답은 천장이라 <b>추론 품질</b>로 잽니다.</div>
+              <div className="ex-item"><b>최고점 대비</b> — 각 모델의 역대 최고 점수 기준, 현재가 얼마나 떨어졌는지(8점↓ 주의, 18점↓ 멍청해짐).</div>
+            </div>
             <QuestionTable latest={latest} models={shown} />
-          </section>
+          </div>
         </div>
       )}
     </div>

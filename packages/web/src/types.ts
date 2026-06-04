@@ -42,6 +42,7 @@ export interface History {
 
 export interface QuestionResult {
   id: string;
+  dimension: string;
   title: string;
   prompt: string;
   answer: string;
@@ -79,7 +80,7 @@ export interface Meta {
   judgeModel: string;
   baselineRuns: number;
   systemPrompt: string;
-  questions: { id: string; title: string }[];
+  questions: { id: string; title: string; dimension: string }[];
 }
 
 export interface BaselineModel {

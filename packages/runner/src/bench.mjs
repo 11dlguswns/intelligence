@@ -92,6 +92,7 @@ async function main() {
       const score = graded.score == null ? 0 : graded.score;
       questions.push({
         id: q.id,
+        dimension: q.dimension,
         title: q.title,
         prompt: q.prompt,
         answer: (ans.result || '').slice(0, 700),
@@ -165,7 +166,7 @@ async function main() {
   writeJson(META_FILE, {
     updatedAt: finishedAt, profile: PROFILE, answerEffort: opts.effort, judgeModel: JUDGE_MODEL,
     baselineRuns: baselines.baselineRuns || BASELINE_RUNS, systemPrompt: SYSTEM_PROMPT,
-    questions: QUALITY_QUESTIONS.map((q) => ({ id: q.id, title: q.title })),
+    questions: QUALITY_QUESTIONS.map((q) => ({ id: q.id, title: q.title, dimension: q.dimension })),
   });
 
   console.log(`\n✔ run ${runId} written; history holds ${history.runs.length} run(s)\n`);

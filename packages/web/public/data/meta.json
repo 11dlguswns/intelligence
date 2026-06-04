@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-04T16:41:05.861Z",
+  "updatedAt": "2026-06-04T17:19:57.747Z",
   "profile": "pure",
   "answerEffort": "low",
   "judgeModel": "opus",
@@ -8,43 +8,68 @@
   "questions": [
     {
       "id": "weigh12",
-      "title": "12-ball weighing (3 weighings)"
-    },
-    {
-      "id": "prob-tuesday",
-      "title": "Boy-girl-Tuesday probability"
+      "title": "12-ball weighing",
+      "dimension": "reasoning"
     },
     {
       "id": "knaves",
-      "title": "Knights and knaves"
+      "title": "Knights and knaves",
+      "dimension": "reasoning"
     },
     {
       "id": "pct-trap",
-      "title": "Percent increase/discount trap"
-    },
-    {
-      "id": "fake-proof",
-      "title": "Find the flaw in a 2=1 proof"
-    },
-    {
-      "id": "fermi-pingpong",
-      "title": "Estimate ping-pong balls in a 737"
+      "title": "Percent increase/discount",
+      "dimension": "math"
     },
     {
       "id": "hens-eggs",
-      "title": "Hens and eggs rate trap"
+      "title": "Hens and eggs rate",
+      "dimension": "math"
     },
     {
-      "id": "cube-2faces",
-      "title": "Painted 3x3x3 cube"
+      "id": "fake-proof",
+      "title": "Flaw in a 2=1 proof",
+      "dimension": "math"
     },
     {
-      "id": "rooks",
-      "title": "Non-attacking rooks"
+      "id": "prob-tuesday",
+      "title": "Boy-girl-Tuesday",
+      "dimension": "probability"
     },
     {
       "id": "monty",
-      "title": "Monty Hall"
+      "title": "Monty Hall",
+      "dimension": "probability"
+    },
+    {
+      "id": "cube-2faces",
+      "title": "Painted 3x3x3 cube",
+      "dimension": "spatial"
+    },
+    {
+      "id": "rooks",
+      "title": "Non-attacking rooks",
+      "dimension": "spatial"
+    },
+    {
+      "id": "fermi-pingpong",
+      "title": "Ping-pong balls in a 737",
+      "dimension": "estimation"
+    },
+    {
+      "id": "estimate-library",
+      "title": "Weight of books in a library",
+      "dimension": "estimation"
+    },
+    {
+      "id": "know-pi",
+      "title": "Digits of pi",
+      "dimension": "knowledge"
+    },
+    {
+      "id": "know-relativity",
+      "title": "General relativity",
+      "dimension": "knowledge"
     }
   ]
 }
