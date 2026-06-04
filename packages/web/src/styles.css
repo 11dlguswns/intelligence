@@ -226,6 +226,13 @@ body {
 .sc-u { font-size: 13px; color: var(--muted); margin-left: 2px; }
 .sc-base { display: block; font-size: 11.5px; color: var(--faint); margin-top: 1px; }
 
+/* ---- live / auto-refresh ---- */
+.live { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--accent-dark); background: rgba(204, 120, 92, 0.1); border: 1px solid rgba(204, 120, 92, 0.32); border-radius: 999px; padding: 5px 11px; font-variant-numeric: tabular-nums; }
+.live-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.6); } }
+.scards { animation: flashin 0.5s ease; }
+@keyframes flashin { from { opacity: 0.2; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
 /* ---- panels (charts) ---- */
 .panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .card {

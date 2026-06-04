@@ -17,6 +17,15 @@ const STATUS: Record<Status, { label: string; cls: string; icon: string }> = {
 const RANK: Record<Status, number> = { degraded: 3, warn: 2, baselining: 1, normal: 0, above: 0 };
 const secs = (ms: number | null | undefined) => (ms == null ? '–' : (ms / 1000).toFixed(1));
 
+function ago(updatedAt: string | null | undefined, nowTs: number): string {
+  if (!updatedAt) return '—';
+  const d = Math.max(0, Math.floor((nowTs - new Date(updatedAt).getTime()) / 1000));
+  if (d < 60) return `${d}초 전`;
+  if (d < 3600) return `${Math.floor(d / 60)}분 전`;
+  if (d < 86400) return `${Math.floor(d / 3600)}시간 전`;
+  return `${Math.floor(d / 86400)}일 전`;
+}
+
 function phrase(e: HistoryModelEntry, pct: number | null): string {
   if (!e.baseline.locked) return '기준 만드는 중';
   const accDrop = e.condition.accDelta != null && e.condition.accDelta <= -0.07;
@@ -34,6 +43,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string[]>([]);
   const [details, setDetails] = useState(false);
+  const [nowTs, setNowTs] = useState(() => Date.now());
 
   useEffect(() => {
     (async () => {
@@ -51,6 +61,31 @@ export default function App() {
       setLoading(false);
     })();
   }, []);
+
+  // live clock — the always-changing element (proves the page is alive)
+  useEffect(() => {
+    const t = setInterval(() => setNowTs(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  // auto-refresh — pick up newly published measurements without a manual reload
+  useEffect(() => {
+    const t = setInterval(async () => {
+      const h = await loadJson<History>('history.json');
+      if (h && h.updatedAt !== history?.updatedAt) {
+        const [l, m, b] = await Promise.all([
+          loadJson<RunDetail>('latest.json'),
+          loadJson<Meta>('meta.json'),
+          loadJson<Baselines>('baselines.json'),
+        ]);
+        setHistory(h);
+        if (l) setLatest(l);
+        if (m) setMeta(m);
+        if (b) setBaselines(b);
+      }
+    }, 25000);
+    return () => clearInterval(t);
+  }, [history?.updatedAt]);
 
   if (loading) return <div className="state">불러오는 중…</div>;
 
@@ -92,6 +127,9 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
           <span className={`vchip ${vchip.cls}`}>{vchip.icon} {worst === 'degraded' ? '저하' : worst === 'warn' ? '주의' : worst === 'baselining' ? '측정중' : '정상'}</span>
         </div>
         <div className="bar-right">
+          <span className="live" title="페이지는 25초마다 자동 새로고침되어 새 측정을 가져옵니다.">
+            <span className="live-dot" />LIVE · 측정 {ago(history.updatedAt, nowTs)}
+          </span>
           <span className={`peak-badge ${peak.peak ? 'on' : ''}`} title="과거 피크창: 평일 5–11 AM PT(붐비는 시간). Pro/Max는 2026-05-06 해제됨.">
             {peak.peak ? '🟠 붐빔' : '🟢 한산'} · {peak.clock}
           </span>
@@ -111,7 +149,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       </header>
 
       <div className={`stage ${details ? '' : 'centered'}`}>
-        <div className="scards">
+        <div className="scards" key={history.updatedAt ?? 'x'}>
           {entries.map(({ m, e }, i) => {
             const st = STATUS[e.condition.status] ?? STATUS.baselining;
             const ratio = e.condition.latencyRatio;
