@@ -1,53 +1,50 @@
 {
-  "updatedAt": "2026-06-05T06:46:54.992Z",
+  "updatedAt": "2026-06-05T09:51:25.710Z",
   "models": [
     "claude-opus-4-8",
     "claude-sonnet-4-6",
     "claude-haiku-4-5-20251001"
   ],
   "questions": [
-    "knaves",
-    "ordering",
-    "factory",
-    "linsys",
-    "urn",
-    "ev",
-    "cube",
-    "gridpath",
-    "countdiv",
-    "coins",
-    "collatz",
-    "modexp"
+    "reasoning",
+    "math",
+    "probability",
+    "spatial",
+    "combinatorics",
+    "process"
   ],
   "runs": [
     {
-      "runId": "2026-06-05T06-12-11-100Z-7ozv",
-      "startedAt": "2026-06-05T06:12:11.102Z",
+      "runId": "2026-06-05T09-17-19-613Z-4ue2",
+      "startedAt": "2026-06-05T09:17:19.614Z",
       "profile": "pure",
       "answerEffort": "low",
       "byModel": {
         "claude-opus-4-8": {
           "requested": "opus",
-          "qualityScore": 100,
-          "avgTtftMs": 4057,
+          "qualityScore": 95.3,
+          "objHealth": 100,
+          "avgTtftMs": 5344,
           "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
+            "reasoning": 95,
+            "math": 90,
+            "probability": 100,
+            "spatial": 92,
+            "combinatorics": 95,
+            "process": 100
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
           },
           "baseline": {
-            "qMedian": 100,
+            "qMedian": 95.3,
             "qStd": 0,
-            "ttftMedian": 4057,
+            "ttftMedian": 5344,
             "locked": false,
             "n": 1
           },
@@ -59,26 +56,29 @@
         },
         "claude-sonnet-4-6": {
           "requested": "sonnet",
-          "qualityScore": 91.7,
-          "avgTtftMs": 5188,
+          "qualityScore": 94,
+          "objHealth": 100,
+          "avgTtftMs": 7100,
           "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 0
+            "reasoning": 97,
+            "math": 90,
+            "probability": 88,
+            "spatial": 99,
+            "combinatorics": 100,
+            "process": 90
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
           },
           "baseline": {
-            "qMedian": 91.7,
+            "qMedian": 94,
             "qStd": 0,
-            "ttftMedian": 5188,
+            "ttftMedian": 7100,
             "locked": false,
             "n": 1
           },
@@ -90,26 +90,29 @@
         },
         "claude-haiku-4-5-20251001": {
           "requested": "haiku",
-          "qualityScore": 100,
-          "avgTtftMs": 14952,
+          "qualityScore": 98.8,
+          "objHealth": 100,
+          "avgTtftMs": 10424,
           "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 96,
+            "combinatorics": 100,
+            "process": 97
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
           },
           "baseline": {
-            "qMedian": 100,
+            "qMedian": 98.8,
             "qStd": 0,
-            "ttftMedian": 14952,
+            "ttftMedian": 10424,
             "locked": false,
             "n": 1
           },
@@ -122,33 +125,36 @@
       }
     },
     {
-      "runId": "2026-06-05T06-19-04-732Z-02ct",
-      "startedAt": "2026-06-05T06:19:04.735Z",
+      "runId": "2026-06-05T09-29-02-348Z-i62f",
+      "startedAt": "2026-06-05T09:29:02.349Z",
       "profile": "pure",
       "answerEffort": "low",
       "byModel": {
         "claude-opus-4-8": {
           "requested": "opus",
-          "qualityScore": 100,
-          "avgTtftMs": 3911,
+          "qualityScore": 96.7,
+          "objHealth": 100,
+          "avgTtftMs": 5073,
           "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
+            "reasoning": 95,
+            "math": 95,
+            "probability": 100,
+            "spatial": 95,
+            "combinatorics": 95,
+            "process": 100
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
           },
           "baseline": {
-            "qMedian": 100,
-            "qStd": 0,
-            "ttftMedian": 3911,
+            "qMedian": 95.3,
+            "qStd": 0.7,
+            "ttftMedian": 5073,
             "locked": false,
             "n": 2
           },
@@ -160,26 +166,29 @@
         },
         "claude-sonnet-4-6": {
           "requested": "sonnet",
-          "qualityScore": 100,
-          "avgTtftMs": 5255,
+          "qualityScore": 95.8,
+          "objHealth": 100,
+          "avgTtftMs": 6252,
           "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
+            "reasoning": 98,
+            "math": 90,
+            "probability": 98,
+            "spatial": 97,
+            "combinatorics": 97,
+            "process": 95
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
           },
           "baseline": {
-            "qMedian": 91.7,
-            "qStd": 4.1,
-            "ttftMedian": 5188,
+            "qMedian": 94,
+            "qStd": 0.9,
+            "ttftMedian": 6252,
             "locked": false,
             "n": 2
           },
@@ -191,26 +200,29 @@
         },
         "claude-haiku-4-5-20251001": {
           "requested": "haiku",
-          "qualityScore": 100,
-          "avgTtftMs": 15044,
+          "qualityScore": 98.3,
+          "objHealth": 100,
+          "avgTtftMs": 12874,
           "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
+            "reasoning": 97,
+            "math": 100,
+            "probability": 100,
+            "spatial": 96,
+            "combinatorics": 97,
+            "process": 100
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
           },
           "baseline": {
-            "qMedian": 100,
-            "qStd": 0,
-            "ttftMedian": 14952,
+            "qMedian": 98.3,
+            "qStd": 0.3,
+            "ttftMedian": 10424,
             "locked": false,
             "n": 2
           },
@@ -223,203 +235,111 @@
       }
     },
     {
-      "runId": "2026-06-05T06-25-50-816Z-10qr",
-      "startedAt": "2026-06-05T06:25:50.818Z",
+      "runId": "2026-06-05T09-40-59-779Z-jszn",
+      "startedAt": "2026-06-05T09:40:59.781Z",
       "profile": "pure",
       "answerEffort": "low",
       "byModel": {
         "claude-opus-4-8": {
           "requested": "opus",
-          "qualityScore": 100,
-          "avgTtftMs": 4924,
+          "qualityScore": 93.7,
+          "objHealth": 100,
+          "avgTtftMs": 4435,
           "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
+            "reasoning": 97,
+            "math": 90,
+            "probability": 100,
+            "spatial": 90,
+            "combinatorics": 97,
+            "process": 88
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
           },
           "baseline": {
-            "qMedian": 100,
-            "qStd": 0,
-            "ttftMedian": 4057,
+            "qMedian": 95.3,
+            "qStd": 1.2,
+            "ttftMedian": 5073,
             "locked": true,
             "n": 3
           },
           "condition": {
             "status": "normal",
-            "qDelta": 0,
-            "latencyRatio": 1.21
+            "qDelta": -1.6,
+            "latencyRatio": 0.87
           }
         },
         "claude-sonnet-4-6": {
           "requested": "sonnet",
-          "qualityScore": 100,
-          "avgTtftMs": 6573,
+          "qualityScore": 93.8,
+          "objHealth": 100,
+          "avgTtftMs": 5714,
           "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
+            "reasoning": 95,
+            "math": 95,
+            "probability": 90,
+            "spatial": 95,
+            "combinatorics": 100,
+            "process": 88
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
           },
           "baseline": {
-            "qMedian": 100,
-            "qStd": 3.9,
-            "ttftMedian": 5255,
+            "qMedian": 94,
+            "qStd": 0.9,
+            "ttftMedian": 6252,
             "locked": true,
             "n": 3
           },
           "condition": {
             "status": "normal",
-            "qDelta": 0,
-            "latencyRatio": 1.25
+            "qDelta": -0.2,
+            "latencyRatio": 0.91
           }
         },
         "claude-haiku-4-5-20251001": {
           "requested": "haiku",
-          "qualityScore": 100,
-          "avgTtftMs": 16029,
+          "qualityScore": 99.2,
+          "objHealth": 100,
+          "avgTtftMs": 8709,
           "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
+            "reasoning": 97,
+            "math": 100,
+            "probability": 98,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
           },
           "baseline": {
-            "qMedian": 100,
-            "qStd": 0,
-            "ttftMedian": 15044,
+            "qMedian": 98.8,
+            "qStd": 0.4,
+            "ttftMedian": 10424,
             "locked": true,
             "n": 3
           },
           "condition": {
             "status": "normal",
-            "qDelta": 0,
-            "latencyRatio": 1.07
-          }
-        }
-      }
-    },
-    {
-      "runId": "2026-06-05T06-37-23-832Z-ayne",
-      "startedAt": "2026-06-05T06:37:23.833Z",
-      "profile": "pure",
-      "answerEffort": "low",
-      "byModel": {
-        "claude-opus-4-8": {
-          "requested": "opus",
-          "qualityScore": 100,
-          "avgTtftMs": 4575,
-          "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
-          },
-          "baseline": {
-            "qMedian": 100,
-            "qStd": 0,
-            "ttftMedian": 4057,
-            "locked": true,
-            "n": 3
-          },
-          "condition": {
-            "status": "normal",
-            "qDelta": 0,
-            "latencyRatio": 1.13
-          }
-        },
-        "claude-sonnet-4-6": {
-          "requested": "sonnet",
-          "qualityScore": 100,
-          "avgTtftMs": 6804,
-          "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 100,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
-          },
-          "baseline": {
-            "qMedian": 100,
-            "qStd": 3.9,
-            "ttftMedian": 5255,
-            "locked": true,
-            "n": 3
-          },
-          "condition": {
-            "status": "normal",
-            "qDelta": 0,
-            "latencyRatio": 1.29
-          }
-        },
-        "claude-haiku-4-5-20251001": {
-          "requested": "haiku",
-          "qualityScore": 91.7,
-          "avgTtftMs": 17347,
-          "byQuestion": {
-            "knaves": 100,
-            "ordering": 100,
-            "factory": 100,
-            "linsys": 100,
-            "urn": 100,
-            "ev": 100,
-            "cube": 0,
-            "gridpath": 100,
-            "countdiv": 100,
-            "coins": 100,
-            "collatz": 100,
-            "modexp": 100
-          },
-          "baseline": {
-            "qMedian": 100,
-            "qStd": 0,
-            "ttftMedian": 15044,
-            "locked": true,
-            "n": 3
-          },
-          "condition": {
-            "status": "warn",
-            "qDelta": -8.3,
-            "latencyRatio": 1.15
+            "qDelta": 0.4,
+            "latencyRatio": 0.84
           }
         }
       }

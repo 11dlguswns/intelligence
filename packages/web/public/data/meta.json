@@ -1,69 +1,45 @@
 {
-  "updatedAt": "2026-06-05T06:46:54.992Z",
+  "updatedAt": "2026-06-05T09:51:25.710Z",
   "profile": "pure",
   "answerEffort": "low",
-  "judgeModel": "code",
+  "judgeModel": "opus",
+  "scoring": "hybrid",
   "baselineRuns": 3,
   "systemPrompt": "You are solving math and logic problems. Work carefully — you may reason step by step — but you MUST end your reply with a single final line in exactly the form \"정답: <answer>\" and write nothing after it. Follow each problem's requested answer format precisely.",
+  "ladderLevels": [
+    2,
+    4,
+    6
+  ],
   "questions": [
     {
-      "id": "knaves",
+      "id": "reasoning",
       "title": "기사와 건달",
       "dimension": "reasoning"
     },
     {
-      "id": "ordering",
-      "title": "줄 세우기",
-      "dimension": "reasoning"
-    },
-    {
-      "id": "factory",
-      "title": "공장 생산",
+      "id": "math",
+      "title": "연산 사슬",
       "dimension": "math"
     },
     {
-      "id": "linsys",
-      "title": "두 수 추론",
-      "dimension": "math"
-    },
-    {
-      "id": "urn",
-      "title": "공 뽑기",
+      "id": "probability",
+      "title": "공 뽑기 확률",
       "dimension": "probability"
     },
     {
-      "id": "ev",
-      "title": "상금 기댓값",
-      "dimension": "probability"
-    },
-    {
-      "id": "cube",
-      "title": "색칠 정육면체",
-      "dimension": "spatial"
-    },
-    {
-      "id": "gridpath",
+      "id": "spatial",
       "title": "격자 경로",
       "dimension": "spatial"
     },
     {
-      "id": "countdiv",
-      "title": "배수 세기",
-      "dimension": "combinatorics"
-    },
-    {
-      "id": "coins",
+      "id": "combinatorics",
       "title": "동전 교환",
       "dimension": "combinatorics"
     },
     {
-      "id": "collatz",
-      "title": "반복 규칙",
-      "dimension": "process"
-    },
-    {
-      "id": "modexp",
-      "title": "반복 나머지",
+      "id": "process",
+      "title": "반복 모듈러",
       "dimension": "process"
     }
   ]
