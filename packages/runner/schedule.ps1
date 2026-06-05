@@ -14,7 +14,7 @@
 
 param(
   [string]$Models = "opus,sonnet,haiku",
-  [int]$IntervalMinutes = 60,
+  [int]$IntervalMinutes = 120,
   [string]$Time = "09:00",
   [string]$TaskName = "ClaudeIntelligenceMonitor"
 )
@@ -42,7 +42,8 @@ if ($IntervalMinutes -gt 0) {
   $cadence = "daily at $Time"
 }
 
-$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -MultipleInstances IgnoreNew
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -MultipleInstances IgnoreNew `
+  -WakeToRun -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 30)
 
 Register-ScheduledTask `
   -TaskName $TaskName `
