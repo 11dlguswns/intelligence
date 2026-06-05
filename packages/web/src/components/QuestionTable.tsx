@@ -52,6 +52,7 @@ export function QuestionTable({ latest, models }: { latest: RunDetail; models: s
                   <tr className="qdetail">
                     <td colSpan={present.length + 1}>
                       <div className="qprompt-mono">{row.prompt}</div>
+                      {row.correct != null && <div className="qcorrect">✓ 정답: <b>{row.correct}</b></div>}
                       <div className="qsamples">
                         {present.map((m) => {
                           const q = byModel.get(m)?.questions.find((x) => x.id === row.id);

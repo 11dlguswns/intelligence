@@ -1,75 +1,70 @@
 {
-  "updatedAt": "2026-06-05T04:34:24.213Z",
+  "updatedAt": "2026-06-05T06:33:23.867Z",
   "profile": "pure",
   "answerEffort": "low",
-  "judgeModel": "opus",
+  "judgeModel": "code",
   "baselineRuns": 3,
-  "systemPrompt": "You are taking a short test. Read each question carefully and respond exactly as instructed, with no extra commentary, explanation, or formatting.",
+  "systemPrompt": "You are solving math and logic problems. Work carefully — you may reason step by step — but you MUST end your reply with a single final line in exactly the form \"정답: <answer>\" and write nothing after it. Follow each problem's requested answer format precisely.",
   "questions": [
     {
-      "id": "weigh12",
-      "title": "12-ball weighing",
-      "dimension": "reasoning"
-    },
-    {
       "id": "knaves",
-      "title": "Knights and knaves",
+      "title": "기사와 건달",
       "dimension": "reasoning"
     },
     {
-      "id": "pct-trap",
-      "title": "Percent increase/discount",
+      "id": "ordering",
+      "title": "줄 세우기",
+      "dimension": "reasoning"
+    },
+    {
+      "id": "factory",
+      "title": "공장 생산",
       "dimension": "math"
     },
     {
-      "id": "hens-eggs",
-      "title": "Hens and eggs rate",
+      "id": "linsys",
+      "title": "두 수 추론",
       "dimension": "math"
     },
     {
-      "id": "fake-proof",
-      "title": "Flaw in a 2=1 proof",
-      "dimension": "math"
-    },
-    {
-      "id": "prob-tuesday",
-      "title": "Boy-girl-Tuesday",
+      "id": "urn",
+      "title": "공 뽑기",
       "dimension": "probability"
     },
     {
-      "id": "monty",
-      "title": "Monty Hall",
+      "id": "ev",
+      "title": "상금 기댓값",
       "dimension": "probability"
     },
     {
-      "id": "cube-2faces",
-      "title": "Painted 3x3x3 cube",
+      "id": "cube",
+      "title": "색칠 정육면체",
       "dimension": "spatial"
     },
     {
-      "id": "rooks",
-      "title": "Non-attacking rooks",
+      "id": "gridpath",
+      "title": "격자 경로",
       "dimension": "spatial"
     },
     {
-      "id": "fermi-pingpong",
-      "title": "Ping-pong balls in a 737",
-      "dimension": "estimation"
+      "id": "countdiv",
+      "title": "배수 세기",
+      "dimension": "combinatorics"
     },
     {
-      "id": "estimate-library",
-      "title": "Weight of books in a library",
-      "dimension": "estimation"
+      "id": "coins",
+      "title": "동전 교환",
+      "dimension": "combinatorics"
     },
     {
-      "id": "know-pi",
-      "title": "Digits of pi",
-      "dimension": "knowledge"
+      "id": "collatz",
+      "title": "반복 규칙",
+      "dimension": "process"
     },
     {
-      "id": "know-relativity",
-      "title": "General relativity",
-      "dimension": "knowledge"
+      "id": "modexp",
+      "title": "반복 나머지",
+      "dimension": "process"
     }
   ]
 }

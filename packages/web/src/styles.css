@@ -315,7 +315,8 @@ html, body { height: 100%; overflow: hidden; }
 .qdetail td { padding: 0 10px 14px; background: var(--bg-2); }
 .qsamples { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; padding-top: 12px; }
 .qsample-head { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
-.qprompt-mono { font-family: var(--mono); font-size: 11px; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; margin: 4px 0; white-space: pre-wrap; word-break: break-all; }
+.qprompt-mono { font-family: var(--mono); font-size: 11px; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; margin: 4px 0; white-space: pre-wrap; word-break: break-word; }
+.qcorrect { font-size: 12px; color: var(--ok, #1a7f4b); background: rgba(34,160,94,0.08); border: 1px solid rgba(34,160,94,0.25); border-radius: 8px; padding: 5px 9px; margin: 4px 0; }
 .qexpect { font-size: 11.5px; color: var(--muted); margin-bottom: 5px; }
 .qexpect code { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; color: var(--up); font-family: var(--mono); }
 .qsample-answers { display: flex; flex-wrap: wrap; gap: 5px; }

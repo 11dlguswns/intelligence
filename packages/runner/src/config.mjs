@@ -44,7 +44,7 @@ export const PER_CALL_TIMEOUT_MS = 120000;
 // (via --system-prompt). Applied identically to every model, so it is a constant,
 // not a confounding variable. Keep it terse to minimize token overhead.
 export const SYSTEM_PROMPT =
-  'You are taking a short test. Read each question carefully and respond exactly as instructed, with no extra commentary, explanation, or formatting.';
+  'You are solving math and logic problems. Work carefully — you may reason step by step — but you MUST end your reply with a single final line in exactly the form "정답: <answer>" and write nothing after it. Follow each problem\'s requested answer format precisely.';
 
 // ----- Condition-monitor design -----
 // We don't compare models to each other. We calibrate EACH model to a difficulty

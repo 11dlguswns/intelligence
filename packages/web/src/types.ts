@@ -45,6 +45,7 @@ export interface QuestionResult {
   dimension: string;
   title: string;
   prompt: string;
+  correct?: string; // ground-truth answer computed by code
   answer: string;
   score: number;
   ttftMs: number | null;

@@ -16,8 +16,8 @@ const STATUS: Record<Status, { label: string; cls: string; icon: string }> = {
 };
 const RANK: Record<Status, number> = { degraded: 3, warn: 2, baselining: 1, normal: 0, above: 0 };
 
-const DIM_LABEL: Record<string, string> = { reasoning: '추론', math: '수학', probability: '확률', spatial: '공간', estimation: '추정', knowledge: '지식' };
-const DIM_ORDER = ['reasoning', 'math', 'probability', 'spatial', 'estimation', 'knowledge'];
+const DIM_LABEL: Record<string, string> = { reasoning: '추론', math: '수학', probability: '확률', spatial: '공간', combinatorics: '조합', process: '절차' };
+const DIM_ORDER = ['reasoning', 'math', 'probability', 'spatial', 'combinatorics', 'process'];
 
 function ago(updatedAt: string | null | undefined, nowTs: number): string {
   if (!updatedAt) return '—';
@@ -206,7 +206,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       </div>
 
       <div className="legend-line">
-        종합 = 6개 차원(추론·수학·확률·공간·추정·지식)의 난문을 Opus 심사위원이 채점한 평균 · 각 모델 <b>최고점 대비</b> 현재 · 🟢정상 🟡주의 🔴멍청해짐
+        종합 = 매 측정마다 <b>새로 생성한 12문제</b>(추론·수학·확률·공간·조합·절차)를 풀어 <b>정답 자동 채점</b>한 평균 · 각 모델 <b>최고점 대비</b> 현재 · 🟢정상 🟡주의 🔴멍청해짐
       </div>
 
       {details && latest && (
@@ -217,7 +217,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
               <button className="ghost-btn" onClick={() => setDetails(false)}>닫기 ✕</button>
             </div>
             <div className="explain">
-              <div className="ex-item"><b>지능 점수</b> — 어려운 문제 답변을 독립된 <b>{meta?.judgeModel}</b> 심사위원이 0~100 채점(정답 레퍼런스 기반). 객관 정답은 천장이라 <b>추론 품질</b>로 잽니다.</div>
+              <div className="ex-item"><b>지능 점수</b> — 매 측정마다 <b>코드가 새로 생성</b>한 문제(숫자·조건이 매번 달라짐)를 풀게 하고, <b>정답도 코드가 계산</b>해 정확히 채점한 12문제 평균. 외운 답이 안 통해 <b>진짜 추론</b>만 측정됩니다.</div>
               <div className="ex-item"><b>최고점 대비</b> — 각 모델의 역대 최고 점수 기준, 현재가 얼마나 떨어졌는지(8점↓ 주의, 18점↓ 멍청해짐).</div>
             </div>
             <QuestionTable latest={latest} models={shown} />

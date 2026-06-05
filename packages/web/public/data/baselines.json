@@ -5,84 +5,84 @@
       "requested": "opus",
       "samples": [
         {
-          "runId": "2026-06-04T15-59-37-495Z-eppm",
-          "qualityScore": 97.4,
-          "ttftMean": 4605
+          "runId": "2026-06-05T06-12-11-100Z-7ozv",
+          "qualityScore": 100,
+          "ttftMean": 4057
         },
         {
-          "runId": "2026-06-04T16-09-26-456Z-tdu0",
-          "qualityScore": 97.9,
-          "ttftMean": 4498
+          "runId": "2026-06-05T06-19-04-732Z-02ct",
+          "qualityScore": 100,
+          "ttftMean": 3911
         },
         {
-          "runId": "2026-06-04T16-18-24-557Z-w2wd",
-          "qualityScore": 97.1,
-          "ttftMean": 5208
+          "runId": "2026-06-05T06-25-50-816Z-10qr",
+          "qualityScore": 100,
+          "ttftMean": 4924
         }
       ],
       "locked": true,
       "qualityScore": {
-        "median": 97.4,
-        "std": 0.3
+        "median": 100,
+        "std": 0
       },
       "ttftMs": {
-        "median": 4605
+        "median": 4057
       }
     },
     "claude-sonnet-4-6": {
       "requested": "sonnet",
       "samples": [
         {
-          "runId": "2026-06-04T15-59-37-495Z-eppm",
-          "qualityScore": 97.6,
-          "ttftMean": 6520
+          "runId": "2026-06-05T06-12-11-100Z-7ozv",
+          "qualityScore": 91.7,
+          "ttftMean": 5188
         },
         {
-          "runId": "2026-06-04T16-09-26-456Z-tdu0",
-          "qualityScore": 97.4,
-          "ttftMean": 5988
+          "runId": "2026-06-05T06-19-04-732Z-02ct",
+          "qualityScore": 100,
+          "ttftMean": 5255
         },
         {
-          "runId": "2026-06-04T16-18-24-557Z-w2wd",
-          "qualityScore": 96.7,
-          "ttftMean": 6395
+          "runId": "2026-06-05T06-25-50-816Z-10qr",
+          "qualityScore": 100,
+          "ttftMean": 6573
         }
       ],
       "locked": true,
       "qualityScore": {
-        "median": 97.4,
-        "std": 0.4
+        "median": 100,
+        "std": 3.9
       },
       "ttftMs": {
-        "median": 6395
+        "median": 5255
       }
     },
     "claude-haiku-4-5-20251001": {
       "requested": "haiku",
       "samples": [
         {
-          "runId": "2026-06-04T15-59-37-495Z-eppm",
-          "qualityScore": 97.2,
-          "ttftMean": 16050
+          "runId": "2026-06-05T06-12-11-100Z-7ozv",
+          "qualityScore": 100,
+          "ttftMean": 14952
         },
         {
-          "runId": "2026-06-04T16-09-26-456Z-tdu0",
-          "qualityScore": 93.3,
-          "ttftMean": 11914
+          "runId": "2026-06-05T06-19-04-732Z-02ct",
+          "qualityScore": 100,
+          "ttftMean": 15044
         },
         {
-          "runId": "2026-06-04T16-18-24-557Z-w2wd",
-          "qualityScore": 98,
-          "ttftMean": 15143
+          "runId": "2026-06-05T06-25-50-816Z-10qr",
+          "qualityScore": 100,
+          "ttftMean": 16029
         }
       ],
       "locked": true,
       "qualityScore": {
-        "median": 97.2,
-        "std": 2.1
+        "median": 100,
+        "std": 0
       },
       "ttftMs": {
-        "median": 15143
+        "median": 15044
       }
     }
   }

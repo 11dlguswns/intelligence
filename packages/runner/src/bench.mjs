@@ -1,15 +1,17 @@
 #!/usr/bin/env node
-// Intelligence-score run. For each model: answer hard open-ended questions, have an
-// independent Opus judge grade each answer 0-100, average to a 지능 점수, and compare
-// to the model's OWN baseline (a drop = it got dumber). Latency is kept as a secondary
-// signal. Objective accuracy was dropped — it is at ceiling and cannot discriminate.
+// Intelligence-score run. Every run we SYNTHESIZE fresh problem instances (random
+// parameters) and compute the ground-truth answer in code, then grade each model's
+// reply by exact comparison — no LLM judge. The score is the average over 12 problems
+// spanning 6 dimensions, tracked vs the model's OWN peak (a drop = it got dumber).
+// Fresh instances make it contamination-proof: a model can't recite a memorized answer,
+// so a weakened model visibly fails. (No judge -> lower noise and half the call volume.)
 //
 //   node src/bench.mjs [--models opus,sonnet,haiku] [--effort medium]
 
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { QUALITY_QUESTIONS, QUESTION_IDS, JUDGE_MODEL, gradeAnswer } from './quality.mjs';
+import { generateInstances, gradeInstance, formatAnswer, PROBLEM_IDS, PROBLEMS } from './problems.mjs';
 import { askClaude } from './claude.mjs';
 import {
   RUNS_DIR, HISTORY_FILE, LATEST_FILE, META_FILE, BASELINE_FILE,
@@ -75,7 +77,10 @@ async function main() {
   const baselines = readJson(BASELINE_FILE, { baselineRuns: BASELINE_RUNS, models: {} });
   baselines.baselineRuns = BASELINE_RUNS;
 
-  console.log(`\n▶ Intelligence run ${runId} — answer effort=${opts.effort} judge=${JUDGE_MODEL} models=${opts.models.join(',')}`);
+  // Synthesize this run's problems ONCE so every model faces the IDENTICAL fresh set.
+  const instances = generateInstances(runId);
+
+  console.log(`\n▶ Intelligence run ${runId} — effort=${opts.effort} · ${instances.length} freshly-generated problems · auto-graded · models=${opts.models.join(',')}`);
 
   const modelsOut = [];
   for (const requested of opts.models) {
@@ -84,17 +89,17 @@ async function main() {
     const questions = [];
     const ttfts = [];
 
-    for (const q of QUALITY_QUESTIONS) {
+    for (const q of instances) {
       const ans = askClaude(requested, q.prompt, { effort: opts.effort });
       if (ans.resolvedModel) resolved = ans.resolvedModel;
       if (ans.ttftMs != null) ttfts.push(ans.ttftMs);
-      const graded = gradeAnswer(q.prompt, q.reference, ans.result);
-      const score = graded.score == null ? 0 : graded.score;
+      const score = gradeInstance(q, ans.result);
       questions.push({
         id: q.id,
         dimension: q.dimension,
         title: q.title,
         prompt: q.prompt,
+        correct: formatAnswer(q),
         answer: (ans.result || '').slice(0, 700),
         score,
         ttftMs: ans.ttftMs,
@@ -142,14 +147,14 @@ async function main() {
 
   const finishedAt = nowIso();
   const run = {
-    runId, startedAt, finishedAt, profile: PROFILE, answerEffort: opts.effort, judgeModel: JUDGE_MODEL,
+    runId, startedAt, finishedAt, profile: PROFILE, answerEffort: opts.effort, judgeModel: 'code',
     systemPrompt: SYSTEM_PROMPT, models: modelsOut,
   };
   writeJson(path.join(RUNS_DIR, `${runId}.json`), run);
   writeJson(LATEST_FILE, run);
   writeJson(BASELINE_FILE, baselines);
 
-  const history = readJson(HISTORY_FILE, { updatedAt: null, models: [], questions: QUESTION_IDS, runs: [] });
+  const history = readJson(HISTORY_FILE, { updatedAt: null, models: [], questions: PROBLEM_IDS, runs: [] });
   const byModel = {};
   for (const m of modelsOut) {
     byModel[m.resolved] = {
@@ -159,14 +164,14 @@ async function main() {
   }
   history.runs.push({ runId, startedAt, profile: PROFILE, answerEffort: opts.effort, byModel });
   history.models = [...new Set([...(history.models || []), ...modelsOut.map((m) => m.resolved)])];
-  history.questions = QUESTION_IDS;
+  history.questions = PROBLEM_IDS;
   history.updatedAt = finishedAt;
   writeJson(HISTORY_FILE, history);
 
   writeJson(META_FILE, {
-    updatedAt: finishedAt, profile: PROFILE, answerEffort: opts.effort, judgeModel: JUDGE_MODEL,
+    updatedAt: finishedAt, profile: PROFILE, answerEffort: opts.effort, judgeModel: 'code',
     baselineRuns: baselines.baselineRuns || BASELINE_RUNS, systemPrompt: SYSTEM_PROMPT,
-    questions: QUALITY_QUESTIONS.map((q) => ({ id: q.id, title: q.title, dimension: q.dimension })),
+    questions: PROBLEMS.map((p) => ({ id: p.id, title: p.title, dimension: p.dimension })),
   });
 
   console.log(`\n✔ run ${runId} written; history holds ${history.runs.length} run(s)\n`);
