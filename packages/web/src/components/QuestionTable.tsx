@@ -20,7 +20,7 @@ export function QuestionTable({ latest, models }: { latest: RunDetail; models: s
       <table className="qtable">
         <thead>
           <tr>
-            <th>문제</th>
+            <th>차원 (어려움 단계)</th>
             {present.map((m, i) => (
               <th key={m} style={{ color: modelColor(m, i) }}>
                 {modelLabel(m)}
@@ -60,7 +60,7 @@ export function QuestionTable({ latest, models }: { latest: RunDetail; models: s
                             <div key={m} className="qsample">
                               <div className="qsample-head">
                                 <span style={{ color: modelColor(m) }}>{modelLabel(m)}</span>
-                                <span className="muted">점수 {q?.score ?? '–'}</span>
+                                <span className="muted">{q?.levelInfo ?? ''}{q?.objScore != null ? ` 객관 ${q.objScore}` : ''} · 품질 {q?.score ?? '–'}</span>
                               </div>
                               <div className="qanswer">{q?.answer || '∅'}</div>
                             </div>

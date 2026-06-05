@@ -126,8 +126,20 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
     const cur = e.qualityScore;
     const enough = all.length >= need && peakScore != null;
     const gap = enough && cur != null && peakScore != null ? Math.round((cur - peakScore) * 10) / 10 : null;
-    const status: Status = !enough ? 'baselining' : gap == null ? 'normal' : gap <= -18 ? 'degraded' : gap <= -8 ? 'warn' : 'normal';
-    return { peak: peakScore, gap, status, enough, n: all.length };
+    // objective health (the reliable degradation tripwire): current vs its own peak
+    const objAll = history.runs.map((r) => r.byModel[m]?.objHealth).filter((v): v is number => v != null);
+    const objCur = e.objHealth ?? null;
+    const objPeak = objAll.length ? Math.max(...objAll) : null;
+    const objGap = enough && objCur != null && objPeak != null ? Math.round((objCur - objPeak) * 10) / 10 : null;
+    let status: Status = 'baselining';
+    if (enough) {
+      const qBad = gap != null && gap <= -18;
+      const qWarn = gap != null && gap <= -8;
+      const oBad = objGap != null && objGap <= -15;
+      const oWarn = objGap != null && objGap <= -8;
+      status = qBad || oBad ? 'degraded' : qWarn || oWarn ? 'warn' : 'normal';
+    }
+    return { peak: peakScore, gap, status, enough, n: all.length, objCur, objPeak, objGap };
   };
 
   const dimsOf = (e: HistoryModelEntry) =>
@@ -187,10 +199,15 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                   <span className="dot" style={{ background: color }} />
                   {modelLabel(m)}
                 </span>
+                {info.objCur != null && (
+                  <span className="health-pill" title="객관 정답 사다리 통과율(난이도 가중). 자기 최고 대비 떨어지면 실제 저하 신호.">
+                    🛡 객관 {Math.round(info.objCur)}{info.objGap != null && info.objGap <= -8 ? ` (▼${Math.abs(Math.round(info.objGap))})` : ''}
+                  </span>
+                )}
                 <span className={`status-badge ${st.cls}`}>{st.icon} {st.label}</span>
               </div>
               <div className="sc-score">{Math.round(e.qualityScore)}<small>/100</small></div>
-              <div className="sc-scorelabel">종합 지능 점수 · {phrase(info.enough, info.gap, info.n, need)}{info.peak != null ? ` (최고 ${Math.round(info.peak)})` : ''}</div>
+              <div className="sc-scorelabel">추론 품질 점수 · {phrase(info.enough, info.gap, info.n, need)}{info.peak != null ? ` (최고 ${Math.round(info.peak)})` : ''}</div>
 
               <DimensionBars bars={dimsOf(e)} color={color} />
 
@@ -206,19 +223,20 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       </div>
 
       <div className="legend-line">
-        종합 = 매 측정마다 <b>새로 생성한 12문제</b>(추론·수학·확률·공간·조합·절차)를 풀어 <b>정답 자동 채점</b>한 평균 · 각 모델 <b>최고점 대비</b> 현재 · 🟢정상 🟡주의 🔴멍청해짐
+        큰 숫자·막대 = 6개 차원의 어려운 풀이를 <b>Opus 심사위원이 0~100 채점</b>한 추론 품질 · 🛡<b>객관</b> = 매번 새로 생성한 정답 사다리 통과율(저하 감지) · 각 모델 <b>최고점 대비</b> · 🟢정상 🟡주의 🔴멍청해짐
       </div>
 
       {details && latest && (
         <div className="modal-overlay" onClick={() => setDetails(false)}>
           <div className="modal" onClick={(ev) => ev.stopPropagation()}>
             <div className="modal-head">
-              <h2>문제별 점수 · 답안 (최근 측정)</h2>
+              <h2>차원별 난이도 돌파 · 답안 (최근 측정)</h2>
               <button className="ghost-btn" onClick={() => setDetails(false)}>닫기 ✕</button>
             </div>
             <div className="explain">
-              <div className="ex-item"><b>지능 점수</b> — 매 측정마다 <b>코드가 새로 생성</b>한 문제(숫자·조건이 매번 달라짐)를 풀게 하고, <b>정답도 코드가 계산</b>해 정확히 채점한 12문제 평균. 외운 답이 안 통해 <b>진짜 추론</b>만 측정됩니다.</div>
-              <div className="ex-item"><b>최고점 대비</b> — 각 모델의 역대 최고 점수 기준, 현재가 얼마나 떨어졌는지(8점↓ 주의, 18점↓ 멍청해짐).</div>
+              <div className="ex-item"><b>품질 점수 (화면의 숫자·막대)</b> — 각 차원의 어려운 문제 풀이를 독립된 <b>Opus 심사위원</b>이 0~100 채점. 정답은 코드가 계산해 심사위원에게 제공(레퍼런스 기반). 정답 여부는 다 비슷해 <b>추론의 명료성·타당성</b>으로 갈립니다.</div>
+              <div className="ex-item"><b>🛡 객관 건강도</b> — 매번 새로 생성한 문제를 쉬움·중간·어려움으로 풀려 통과율을 잰 값(난이도 가중). 암기 불가·코드 채점이라 <b>가장 정직한 저하 신호</b>입니다(평소 풀던 걸 못 풀면 하락). 아래는 가장 어려운 단계의 문제와 모델별 돌파 현황(L2·L4·L6).</div>
+              <div className="ex-item"><b>최고점 대비</b> — 품질 또는 객관 건강도가 자기 역대 최고보다 떨어지면 🟡주의·🔴멍청해짐.</div>
             </div>
             <QuestionTable latest={latest} models={shown} />
           </div>

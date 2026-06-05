@@ -1,17 +1,18 @@
 #!/usr/bin/env node
-// Intelligence-score run. Every run we SYNTHESIZE fresh problem instances (random
-// parameters) and compute the ground-truth answer in code, then grade each model's
-// reply by exact comparison — no LLM judge. The score is the average over 12 problems
-// spanning 6 dimensions, tracked vs the model's OWN peak (a drop = it got dumber).
-// Fresh instances make it contamination-proof: a model can't recite a memorized answer,
-// so a weakened model visibly fails. (No judge -> lower noise and half the call volume.)
+// Intelligence-score run. Every run SYNTHESIZES a fresh DIFFICULTY LADDER: each of 6
+// dimensions is probed at easy/medium/hard levels, and the dimension score is a
+// level-weighted pass rate (harder levels weigh more) — i.e. HOW FAR UP THE LADDER the
+// model got before breaking. This discriminates models that all ceiling on fixed
+// difficulty, and a weakened model breaks one level earlier. Answers are computed in code
+// and exact-graded (no LLM judge). Tracked vs each model's OWN peak (a drop = it got dumber).
 //
 //   node src/bench.mjs [--models opus,sonnet,haiku] [--effort medium]
 
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { generateInstances, gradeInstance, formatAnswer, PROBLEM_IDS, PROBLEMS } from './problems.mjs';
+import { generateLadder, gradeInstance, formatAnswer, LEVEL_WEIGHT, DIMENSIONS, DIM_TITLE } from './problems.mjs';
+import { judgeQuality, JUDGE_MODEL } from './quality.mjs';
 import { askClaude } from './claude.mjs';
 import {
   RUNS_DIR, HISTORY_FILE, LATEST_FILE, META_FILE, BASELINE_FILE,
@@ -77,10 +78,10 @@ async function main() {
   const baselines = readJson(BASELINE_FILE, { baselineRuns: BASELINE_RUNS, models: {} });
   baselines.baselineRuns = BASELINE_RUNS;
 
-  // Synthesize this run's problems ONCE so every model faces the IDENTICAL fresh set.
-  const instances = generateInstances(runId);
+  // Synthesize this run's difficulty ladder ONCE so every model faces the IDENTICAL set.
+  const ladder = generateLadder(runId);
 
-  console.log(`\n▶ Intelligence run ${runId} — effort=${opts.effort} · ${instances.length} freshly-generated problems · auto-graded · models=${opts.models.join(',')}`);
+  console.log(`\n▶ Intelligence run ${runId} — effort=${opts.effort} · ${ladder.length} dims × levels ${ladder[0].levels.map((l) => l.level).join('/')} (find-the-breaking-point) · models=${opts.models.join(',')}`);
 
   const modelsOut = [];
   for (const requested of opts.models) {
@@ -89,27 +90,64 @@ async function main() {
     const questions = [];
     const ttfts = [];
 
-    for (const q of instances) {
-      const ans = askClaude(requested, q.prompt, { effort: opts.effort });
-      if (ans.resolvedModel) resolved = ans.resolvedModel;
-      if (ans.ttftMs != null) ttfts.push(ans.ttftMs);
-      const score = gradeInstance(q, ans.result);
+    for (const dimItem of ladder) {
+      // OBJECTIVE: probe each difficulty level (level-weighted pass rate = how far up the
+      // ladder the model got = degradation-sensitive health signal, contamination-proof).
+      const levelResults = [];
+      for (const inst of dimItem.levels) {
+        const ans = askClaude(requested, inst.prompt, { effort: opts.effort });
+        if (ans.resolvedModel) resolved = ans.resolvedModel;
+        if (ans.ttftMs != null) ttfts.push(ans.ttftMs);
+        const sc = gradeInstance(inst, ans.result);
+        levelResults.push({
+          level: inst.level,
+          score: sc,
+          full: ans.result || '',
+          answer: (ans.result || '').slice(0, 500),
+          correct: formatAnswer(inst),
+          prompt: inst.prompt,
+          error: ans.error,
+        });
+        await sleep(CALL_DELAY_MS);
+      }
+      let num = 0,
+        den = 0;
+      for (const lr of levelResults) {
+        const w = LEVEL_WEIGHT[lr.level];
+        den += w;
+        num += w * lr.score;
+      }
+      const objScore = Math.round(num / den);
+      const hardest = levelResults[levelResults.length - 1];
+      // QUALITY: an independent Opus judge rates the worked answer to the HARDEST problem
+      // 0-100 (reference-guided). This separates models that all ace correctness.
+      const qRaw = judgeQuality(hardest.prompt, hardest.correct, hardest.full).score;
+      // We ALREADY know from exact grading whether the hardest answer is right. Use that to
+      // floor correct answers (judge noise must not tank a provably-correct solution) and
+      // cap wrong ones — so quality = clarity spread on top of ground-truth correctness.
+      const l6correct = hardest.score >= 60;
+      const qScore = l6correct ? Math.max(qRaw, 88) : Math.min(qRaw, 70);
+      const levelInfo = levelResults.map((lr) => `L${lr.level}${lr.score >= 60 ? '✓' : '✗'}`).join(' ');
       questions.push({
-        id: q.id,
-        dimension: q.dimension,
-        title: q.title,
-        prompt: q.prompt,
-        correct: formatAnswer(q),
-        answer: (ans.result || '').slice(0, 700),
-        score,
-        ttftMs: ans.ttftMs,
-        error: ans.error,
+        id: dimItem.dim,
+        dimension: dimItem.dim,
+        title: dimItem.title,
+        prompt: hardest.prompt,
+        correct: hardest.correct,
+        answer: hardest.answer,
+        score: qScore, // quality (display)
+        objScore, // objective ladder (health)
+        levelInfo,
+        levels: levelResults.map((lr) => ({ level: lr.level, score: lr.score })),
+        ttftMs: null,
+        error: hardest.error,
       });
-      process.stdout.write(`  ${q.id.padEnd(16)} ${String(score).padStart(3)}\n`);
       await sleep(CALL_DELAY_MS);
+      process.stdout.write(`  ${dimItem.dim.padEnd(14)} 품질 ${String(qScore).padStart(3)}  객관 ${String(objScore).padStart(3)}  (${levelInfo})\n`);
     }
 
     const qualityScore = round1(mean(questions.map((x) => x.score)));
+    const objHealth = round1(mean(questions.map((x) => x.objScore)));
     const avgTtft = ttfts.length ? Math.round(mean(ttfts)) : null;
 
     // Baseline: accumulate first BASELINE_RUNS runs, lock; center = MEDIAN (robust).
@@ -127,12 +165,13 @@ async function main() {
     }
     const cond = condition(qualityScore, avgTtft ?? 0, b);
     const baseTxt = b.locked ? `${b.qualityScore.median}` : `forming ${b.samples.length}/${baselines.baselineRuns || BASELINE_RUNS}`;
-    console.log(`  → 지능 ${qualityScore}/100  (baseline ${baseTxt})  ${cond.status}  ttft ${avgTtft ?? '–'}ms`);
+    console.log(`  → 품질 ${qualityScore}/100  객관건강도 ${objHealth}  (baseline ${baseTxt})  ${cond.status}`);
 
     modelsOut.push({
-      requested, resolved, qualityScore,
+      requested, resolved, qualityScore, objHealth,
       avgTtftMs: avgTtft,
       byQuestion: Object.fromEntries(questions.map((x) => [x.id, x.score])),
+      byObjective: Object.fromEntries(questions.map((x) => [x.id, x.objScore])),
       baseline: {
         qMedian: b.qualityScore ? b.qualityScore.median : null,
         qStd: b.qualityScore ? b.qualityScore.std : null,
@@ -147,31 +186,32 @@ async function main() {
 
   const finishedAt = nowIso();
   const run = {
-    runId, startedAt, finishedAt, profile: PROFILE, answerEffort: opts.effort, judgeModel: 'code',
+    runId, startedAt, finishedAt, profile: PROFILE, answerEffort: opts.effort, judgeModel: JUDGE_MODEL,
     systemPrompt: SYSTEM_PROMPT, models: modelsOut,
   };
   writeJson(path.join(RUNS_DIR, `${runId}.json`), run);
   writeJson(LATEST_FILE, run);
   writeJson(BASELINE_FILE, baselines);
 
-  const history = readJson(HISTORY_FILE, { updatedAt: null, models: [], questions: PROBLEM_IDS, runs: [] });
+  const history = readJson(HISTORY_FILE, { updatedAt: null, models: [], questions: DIMENSIONS, runs: [] });
   const byModel = {};
   for (const m of modelsOut) {
     byModel[m.resolved] = {
-      requested: m.requested, qualityScore: m.qualityScore, avgTtftMs: m.avgTtftMs,
-      byQuestion: m.byQuestion, baseline: m.baseline, condition: m.condition,
+      requested: m.requested, qualityScore: m.qualityScore, objHealth: m.objHealth, avgTtftMs: m.avgTtftMs,
+      byQuestion: m.byQuestion, byObjective: m.byObjective, baseline: m.baseline, condition: m.condition,
     };
   }
   history.runs.push({ runId, startedAt, profile: PROFILE, answerEffort: opts.effort, byModel });
   history.models = [...new Set([...(history.models || []), ...modelsOut.map((m) => m.resolved)])];
-  history.questions = PROBLEM_IDS;
+  history.questions = DIMENSIONS;
   history.updatedAt = finishedAt;
   writeJson(HISTORY_FILE, history);
 
   writeJson(META_FILE, {
-    updatedAt: finishedAt, profile: PROFILE, answerEffort: opts.effort, judgeModel: 'code',
+    updatedAt: finishedAt, profile: PROFILE, answerEffort: opts.effort, judgeModel: JUDGE_MODEL, scoring: 'hybrid',
     baselineRuns: baselines.baselineRuns || BASELINE_RUNS, systemPrompt: SYSTEM_PROMPT,
-    questions: PROBLEMS.map((p) => ({ id: p.id, title: p.title, dimension: p.dimension })),
+    ladderLevels: ladder[0].levels.map((l) => l.level),
+    questions: DIMENSIONS.map((d) => ({ id: d, title: DIM_TITLE[d], dimension: d })),
   });
 
   console.log(`\n✔ run ${runId} written; history holds ${history.runs.length} run(s)\n`);
