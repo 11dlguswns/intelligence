@@ -42,10 +42,12 @@ if ($IntervalMinutes -gt 0) {
   $cadence = "daily at $Time"
 }
 
-# MultipleInstances=StopExisting: if a prior run got stuck (e.g. PC slept mid-measure and
-# left a zombie marked "running"), the next trigger KILLS it and starts fresh — instead of
-# IgnoreNew, which let one stuck instance silently block all future runs (caused a 3-day gap).
-$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -MultipleInstances StopExisting `
+# MultipleInstances=Parallel: if a prior run got stuck "running" (PC slept mid-measure and
+# left a zombie), the next trigger still starts a NEW measurement independently — instead of
+# IgnoreNew, where one stuck instance silently blocked ALL future runs (caused a 3-day gap).
+# (PowerShell 5.1 only allows Parallel/Queue/IgnoreNew — no StopExisting.) ExecutionTimeLimit
+# caps each instance at 25min so zombies are reaped once wall-clock passes.
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -MultipleInstances Parallel `
   -WakeToRun -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 25)
 
 Register-ScheduledTask `
