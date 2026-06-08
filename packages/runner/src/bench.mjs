@@ -89,6 +89,7 @@ async function main() {
     let resolved = requested;
     const questions = [];
     const ttfts = [];
+    let failedDims = 0;
 
     for (const dimItem of ladder) {
       // OBJECTIVE: probe each difficulty level (level-weighted pass rate = how far up the
@@ -98,10 +99,15 @@ async function main() {
         const ans = askClaude(requested, inst.prompt, { effort: opts.effort });
         if (ans.resolvedModel) resolved = ans.resolvedModel;
         if (ans.ttftMs != null) ttfts.push(ans.ttftMs);
+        // A call that errored with an empty answer was NOT measured (server rate-limit /
+        // overload after retries) — distinct from a real wrong answer. Mark it so it is
+        // EXCLUDED from scoring rather than counted as 0 (which would fake a degradation).
+        const failed = !!ans.error && !(ans.result && ans.result.trim());
         const sc = gradeInstance(inst, ans.result);
         levelResults.push({
           level: inst.level,
           score: sc,
+          measured: !failed,
           full: ans.result || '',
           answer: (ans.result || '').slice(0, 500),
           correct: formatAnswer(inst),
@@ -110,24 +116,30 @@ async function main() {
         });
         await sleep(CALL_DELAY_MS);
       }
-      let num = 0,
-        den = 0;
-      for (const lr of levelResults) {
-        const w = LEVEL_WEIGHT[lr.level];
-        den += w;
-        num += w * lr.score;
+      const measured = levelResults.filter((lr) => lr.measured);
+      const dimMeasured = measured.length > 0;
+      let objScore = null;
+      if (dimMeasured) {
+        let num = 0,
+          den = 0;
+        for (const lr of measured) {
+          const w = LEVEL_WEIGHT[lr.level];
+          den += w;
+          num += w * lr.score;
+        }
+        objScore = Math.round(num / den);
       }
-      const objScore = Math.round(num / den);
-      const hardest = levelResults[levelResults.length - 1];
-      // QUALITY: an independent Opus judge rates the worked answer to the HARDEST problem
-      // 0-100 (reference-guided). This separates models that all ace correctness.
-      const qRaw = judgeQuality(hardest.prompt, hardest.correct, hardest.full).score;
-      // We ALREADY know from exact grading whether the hardest answer is right. Use that to
-      // floor correct answers (judge noise must not tank a provably-correct solution) and
-      // cap wrong ones — so quality = clarity spread on top of ground-truth correctness.
-      const l6correct = hardest.score >= 60;
-      const qScore = l6correct ? Math.max(qRaw, 88) : Math.min(qRaw, 70);
-      const levelInfo = levelResults.map((lr) => `L${lr.level}${lr.score >= 60 ? '✓' : '✗'}`).join(' ');
+      // Judge the hardest MEASURED answer (skip if nothing was measured this dimension).
+      const hardest = dimMeasured ? measured[measured.length - 1] : levelResults[levelResults.length - 1];
+      let qScore = null;
+      if (dimMeasured) {
+        const qRaw = judgeQuality(hardest.prompt, hardest.correct, hardest.full).score;
+        // Ground-truth correctness floors/caps the judge so its noise can't invert ranking.
+        const ok = hardest.score >= 60;
+        qScore = ok ? Math.max(qRaw, 88) : Math.min(qRaw, 70);
+      }
+      const levelInfo = levelResults.map((lr) => (lr.measured ? `L${lr.level}${lr.score >= 60 ? '✓' : '✗'}` : `L${lr.level}⚠`)).join(' ');
+      if (!dimMeasured) failedDims++;
       questions.push({
         id: dimItem.dim,
         dimension: dimItem.dim,
@@ -135,27 +147,36 @@ async function main() {
         prompt: hardest.prompt,
         correct: hardest.correct,
         answer: hardest.answer,
-        score: qScore, // quality (display)
-        objScore, // objective ladder (health)
+        score: qScore, // quality (display); null if unmeasured
+        objScore, // objective ladder (health); null if unmeasured
+        measured: dimMeasured,
         levelInfo,
-        levels: levelResults.map((lr) => ({ level: lr.level, score: lr.score })),
+        levels: levelResults.map((lr) => ({ level: lr.level, score: lr.measured ? lr.score : null })),
         ttftMs: null,
         error: hardest.error,
       });
       await sleep(CALL_DELAY_MS);
-      process.stdout.write(`  ${dimItem.dim.padEnd(14)} 품질 ${String(qScore).padStart(3)}  객관 ${String(objScore).padStart(3)}  (${levelInfo})\n`);
+      const qTxt = qScore == null ? ' ⚠ ' : String(qScore).padStart(3);
+      const oTxt = objScore == null ? ' ⚠ ' : String(objScore).padStart(3);
+      process.stdout.write(`  ${dimItem.dim.padEnd(14)} 품질 ${qTxt}  객관 ${oTxt}  (${levelInfo})\n`);
     }
 
-    const qualityScore = round1(mean(questions.map((x) => x.score)));
-    const objHealth = round1(mean(questions.map((x) => x.objScore)));
+    // Average over MEASURED dimensions only (unmeasured = null, excluded — never counted as 0).
+    const qVals = questions.map((x) => x.score).filter((v) => v != null);
+    const oVals = questions.map((x) => x.objScore).filter((v) => v != null);
+    const qualityScore = qVals.length ? round1(mean(qVals)) : null;
+    const objHealth = oVals.length ? round1(mean(oVals)) : null;
     const avgTtft = ttfts.length ? Math.round(mean(ttfts)) : null;
+    const incomplete = failedDims > 0 || qualityScore == null;
 
     // Baseline: accumulate first BASELINE_RUNS runs, lock; center = MEDIAN (robust).
+    // A run with ANY unmeasured dimension is NOT added to the baseline — a rate-limited
+    // partial run must not lower the peak/baseline and later fake a recovery or a drop.
     const b =
       baselines.models[resolved] ||
       (baselines.models[resolved] = { requested, samples: [], locked: false });
     b.requested = requested;
-    if (!b.locked) {
+    if (!b.locked && !incomplete) {
       b.samples.push({ runId, qualityScore, ttftMean: avgTtft });
       const qs = b.samples.map((s) => s.qualityScore);
       const tt = b.samples.map((s) => s.ttftMean).filter((x) => x != null);
@@ -163,12 +184,16 @@ async function main() {
       b.ttftMs = { median: tt.length ? Math.round(median(tt)) : null };
       if (b.samples.length >= BASELINE_RUNS) b.locked = true;
     }
-    const cond = condition(qualityScore, avgTtft ?? 0, b);
+    // An incomplete run can't be judged for degradation — report it as such, never 'degraded'.
+    const cond = incomplete
+      ? { status: 'incomplete', qDelta: null, latencyRatio: null }
+      : condition(qualityScore, avgTtft ?? 0, b);
     const baseTxt = b.locked ? `${b.qualityScore.median}` : `forming ${b.samples.length}/${baselines.baselineRuns || BASELINE_RUNS}`;
-    console.log(`  → 품질 ${qualityScore}/100  객관건강도 ${objHealth}  (baseline ${baseTxt})  ${cond.status}`);
+    const warn = incomplete ? `  ⚠ ${failedDims}개 차원 측정실패(레이트리밋) — 집계제외` : '';
+    console.log(`  → 품질 ${qualityScore ?? '–'}/100  객관건강도 ${objHealth ?? '–'}  (baseline ${baseTxt})  ${cond.status}${warn}`);
 
     modelsOut.push({
-      requested, resolved, qualityScore, objHealth,
+      requested, resolved, qualityScore, objHealth, incomplete, failedDims,
       avgTtftMs: avgTtft,
       byQuestion: Object.fromEntries(questions.map((x) => [x.id, x.score])),
       byObjective: Object.fromEntries(questions.map((x) => [x.id, x.objScore])),
@@ -197,7 +222,8 @@ async function main() {
   const byModel = {};
   for (const m of modelsOut) {
     byModel[m.resolved] = {
-      requested: m.requested, qualityScore: m.qualityScore, objHealth: m.objHealth, avgTtftMs: m.avgTtftMs,
+      requested: m.requested, qualityScore: m.qualityScore, objHealth: m.objHealth,
+      incomplete: m.incomplete, failedDims: m.failedDims, avgTtftMs: m.avgTtftMs,
       byQuestion: m.byQuestion, byObjective: m.byObjective, baseline: m.baseline, condition: m.condition,
     };
   }

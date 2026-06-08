@@ -6,6 +6,12 @@ import { SYSTEM_PROMPT, DEFAULT_EFFORT, PER_CALL_TIMEOUT_MS } from './config.mjs
 
 let _bin = null;
 
+// A transient SERVER-side limit ("not your usage limit") or overload — retryable. We must
+// NOT score these as 0, or a momentary rate-limit reads as the model "getting dumber".
+const RETRYABLE = /rate.?limit|temporarily limiting|overloaded|529|503|502|timeout|ETIMEDOUT|ECONNRESET/i;
+const RETRY_BACKOFF_MS = [4000, 12000, 30000]; // up to 3 retries, exponential-ish
+const sleepSync = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+
 /** Resolve the `claude` executable once (honour CLAUDE_BIN, else PATH lookup). */
 export function resolveClaudeBin() {
   if (_bin) return _bin;
@@ -49,6 +55,22 @@ function pickResolvedModel(json, requested) {
  *            error:string|null}}
  */
 export function askClaude(model, prompt, { effort = DEFAULT_EFFORT } = {}) {
+  let last = null;
+  for (let attempt = 0; attempt <= RETRY_BACKOFF_MS.length; attempt++) {
+    const r = _askOnce(model, prompt, effort);
+    // success, or a NON-retryable failure (e.g. genuinely wrong/empty for another reason)
+    if (r.ok || !r.error || !RETRYABLE.test(r.error)) return r;
+    last = r;
+    if (attempt < RETRY_BACKOFF_MS.length) {
+      const wait = RETRY_BACKOFF_MS[attempt];
+      process.stderr.write(`    ⟳ ${model} rate-limited, retry ${attempt + 1}/${RETRY_BACKOFF_MS.length} in ${wait / 1000}s\n`);
+      sleepSync(wait);
+    }
+  }
+  return { ...last, retriesExhausted: true };
+}
+
+function _askOnce(model, prompt, effort) {
   const bin = resolveClaudeBin();
   const args = [
     '-p',

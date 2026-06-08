@@ -1,6 +1,6 @@
 // Mirrors the intelligence-score JSON the runner writes into public/data/.
 
-export type Status = 'normal' | 'warn' | 'degraded' | 'above' | 'baselining';
+export type Status = 'normal' | 'warn' | 'degraded' | 'above' | 'baselining' | 'incomplete';
 
 export interface ConditionInfo {
   status: Status;
@@ -18,8 +18,10 @@ export interface BaselineRef {
 
 export interface HistoryModelEntry {
   requested: string;
-  qualityScore: number; // judge reasoning-quality (display)
-  objHealth?: number; // objective ladder pass rate (degradation tripwire)
+  qualityScore: number | null; // judge reasoning-quality (display); null if unmeasured
+  objHealth?: number | null; // objective ladder pass rate (degradation tripwire)
+  incomplete?: boolean; // run had rate-limited/unmeasured dimensions
+  failedDims?: number;
   avgTtftMs: number | null;
   byQuestion: Record<string, number>; // per-dimension quality
   byObjective?: Record<string, number>; // per-dimension objective ladder score
@@ -49,8 +51,8 @@ export interface QuestionResult {
   prompt: string;
   correct?: string; // ground-truth answer for the hardest level attempted
   answer: string;
-  score: number; // judge reasoning-quality 0..100 (display)
-  objScore?: number; // objective level-weighted ladder score 0..100
+  score: number | null; // judge reasoning-quality 0..100 (display); null if unmeasured
+  objScore?: number | null; // objective level-weighted ladder score 0..100
   levelInfo?: string; // e.g. "L2✓ L4✓ L6✗"
   levels?: { level: number; score: number }[];
   ttftMs: number | null;

@@ -40,7 +40,7 @@ export function QuestionTable({ latest, models }: { latest: RunDetail; models: s
                   </td>
                   {present.map((m) => {
                     const q = byModel.get(m)?.questions.find((x) => x.id === row.id);
-                    if (!q) return <td key={m}>–</td>;
+                    if (!q || q.score == null) return <td key={m} className="scorecell"><span className="qpct">⚠</span></td>;
                     return (
                       <td key={m} className={`scorecell ${cls(q.score)}`}>
                         <span className="qpct">{q.score}</span>

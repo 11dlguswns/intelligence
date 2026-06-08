@@ -42,8 +42,11 @@ if ($IntervalMinutes -gt 0) {
   $cadence = "daily at $Time"
 }
 
-$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -MultipleInstances IgnoreNew `
-  -WakeToRun -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 30)
+# MultipleInstances=StopExisting: if a prior run got stuck (e.g. PC slept mid-measure and
+# left a zombie marked "running"), the next trigger KILLS it and starts fresh — instead of
+# IgnoreNew, which let one stuck instance silently block all future runs (caused a 3-day gap).
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -MultipleInstances StopExisting `
+  -WakeToRun -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 25)
 
 Register-ScheduledTask `
   -TaskName $TaskName `

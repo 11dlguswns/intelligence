@@ -13,8 +13,9 @@ const STATUS: Record<Status, { label: string; cls: string; icon: string }> = {
   warn: { label: '주의', cls: 'st-warn', icon: '🟡' },
   degraded: { label: '멍청해짐', cls: 'st-degraded', icon: '🔴' },
   baselining: { label: '측정중', cls: 'st-base', icon: '⚪' },
+  incomplete: { label: '측정실패', cls: 'st-base', icon: '⚠️' },
 };
-const RANK: Record<Status, number> = { degraded: 3, warn: 2, baselining: 1, normal: 0, above: 0 };
+const RANK: Record<Status, number> = { degraded: 3, warn: 2, baselining: 1, incomplete: 1, normal: 0, above: 0 };
 
 const DIM_LABEL: Record<string, string> = { reasoning: '추론', math: '수학', probability: '확률', spatial: '공간', combinatorics: '조합', process: '절차' };
 const DIM_ORDER = ['reasoning', 'math', 'probability', 'spatial', 'combinatorics', 'process'];
@@ -107,11 +108,16 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
     setSelected((s) => (s.includes(m) ? s.filter((x) => x !== m) : [...s, m]));
 
   const latestOf = (m: string): { e: HistoryModelEntry; at: string } | null => {
+    // Prefer the most recent COMPLETE reading; a rate-limited partial run shouldn't
+    // replace a good card. Fall back to the latest entry only if none are complete.
+    let fallback: { e: HistoryModelEntry; at: string } | null = null;
     for (let i = history.runs.length - 1; i >= 0; i--) {
       const e = history.runs[i].byModel[m];
-      if (e) return { e, at: history.runs[i].startedAt };
+      if (!e) continue;
+      if (!fallback) fallback = { e, at: history.runs[i].startedAt };
+      if (!e.incomplete && e.qualityScore != null) return { e, at: history.runs[i].startedAt };
     }
-    return null;
+    return fallback;
   };
   const entries = shown
     .map((m) => {
@@ -121,18 +127,22 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
     .filter(Boolean) as { m: string; e: HistoryModelEntry; at: string }[];
 
   const cardInfo = (m: string, e: HistoryModelEntry) => {
-    const all = history.runs.map((r) => r.byModel[m]?.qualityScore).filter((v): v is number => v != null);
+    // Peak/baseline use COMPLETE runs only (an unmeasured dimension would distort them).
+    const complete = history.runs.map((r) => r.byModel[m]).filter((x) => x && !x.incomplete);
+    const all = complete.map((x) => x!.qualityScore).filter((v): v is number => v != null);
     const peakScore = all.length ? Math.max(...all) : null;
     const cur = e.qualityScore;
     const enough = all.length >= need && peakScore != null;
     const gap = enough && cur != null && peakScore != null ? Math.round((cur - peakScore) * 10) / 10 : null;
     // objective health (the reliable degradation tripwire): current vs its own peak
-    const objAll = history.runs.map((r) => r.byModel[m]?.objHealth).filter((v): v is number => v != null);
+    const objAll = complete.map((x) => x!.objHealth).filter((v): v is number => v != null);
     const objCur = e.objHealth ?? null;
     const objPeak = objAll.length ? Math.max(...objAll) : null;
     const objGap = enough && objCur != null && objPeak != null ? Math.round((objCur - objPeak) * 10) / 10 : null;
     let status: Status = 'baselining';
-    if (enough) {
+    if (e.incomplete || cur == null) {
+      status = 'incomplete';
+    } else if (enough) {
       const qBad = gap != null && gap <= -18;
       const qWarn = gap != null && gap <= -8;
       const oBad = objGap != null && objGap <= -15;
@@ -162,7 +172,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
         <div className="brand-min">
           <div className="logo sm" aria-hidden />
           <b>Claude 지능 — 최고 실력 대비</b>
-          <span className={`vchip ${vchip.cls}`}>{vchip.icon} {worst === 'degraded' ? '멍청해짐' : worst === 'warn' ? '주의' : worst === 'baselining' ? '측정중' : '정상'}</span>
+          <span className={`vchip ${vchip.cls}`}>{vchip.icon} {worst === 'degraded' ? '멍청해짐' : worst === 'warn' ? '주의' : worst === 'baselining' ? '측정중' : worst === 'incomplete' ? '측정실패' : '정상'}</span>
         </div>
         <div className="bar-right">
           <span className="live" title="25초마다 자동 새로고침. 매시간 새 측정이 반영됩니다.">
@@ -191,7 +201,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
           const info = cardInfo(m, e);
           const st = STATUS[info.status] ?? STATUS.baselining;
           const color = modelColor(m, i);
-          const series = history.runs.map((r) => r.byModel[m]?.qualityScore).filter((v): v is number => v != null).slice(-24);
+          const series = history.runs.map((r) => r.byModel[m]).filter((x) => x && !x.incomplete).map((x) => x!.qualityScore).filter((v): v is number => v != null).slice(-24);
           return (
             <div className={`scard tall ${st.cls}`} key={m}>
               <div className="sc-top">
@@ -206,8 +216,8 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                 )}
                 <span className={`status-badge ${st.cls}`}>{st.icon} {st.label}</span>
               </div>
-              <div className="sc-score">{Math.round(e.qualityScore)}<small>/100</small></div>
-              <div className="sc-scorelabel">추론 품질 점수 · {phrase(info.enough, info.gap, info.n, need)}{info.peak != null ? ` (최고 ${Math.round(info.peak)})` : ''}</div>
+              <div className="sc-score">{e.qualityScore != null ? Math.round(e.qualityScore) : '–'}<small>/100</small></div>
+              <div className="sc-scorelabel">{info.status === 'incomplete' ? '⚠️ 일부 차원 측정 실패(서버 레이트리밋) · 직전 정상값 표시' : `추론 품질 점수 · ${phrase(info.enough, info.gap, info.n, need)}${info.peak != null ? ` (최고 ${Math.round(info.peak)})` : ''}`}</div>
 
               <DimensionBars bars={dimsOf(e)} color={color} />
 
