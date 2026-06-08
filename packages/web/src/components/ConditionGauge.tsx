@@ -35,7 +35,7 @@ export function ConditionGauge({ lo, hi, med, sd, cur, color, belowBand }: Props
       <div className="cond-track">
         <div className="cond-band" style={{ left: `${bandL}%`, width: `${Math.max(bandR - bandL, 1)}%` }} />
         <div className="cond-mid" style={{ left: `${pct(med)}%` }} />
-        <div className="cond-mark" style={{ left: `${curX}%`, background: markCol, borderColor: markCol }} />
+        <div className="cond-mark" style={{ left: `${curX}%`, background: markCol, borderColor: markCol, boxShadow: `0 0 0 3px var(--bg), 0 0 11px -1px ${markCol}` }} />
       </div>
       <div className="cond-ends">
         <span>{Math.round(lo)}</span>

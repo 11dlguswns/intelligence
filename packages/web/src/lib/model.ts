@@ -1,11 +1,12 @@
 // Friendly labels + stable colors for model ids like "claude-haiku-4-5-20251001".
 
+// Brightened for the dark theme so dots/bars/lines pop against near-black surfaces.
 const PALETTE: Record<string, string> = {
-  Opus: '#cc785c', // Claude coral
-  Sonnet: '#5b76b0', // muted blue
-  Haiku: '#3e8b6a', // green
+  Opus: '#ef9a78', // Claude coral
+  Sonnet: '#8aa0e8', // periwinkle blue
+  Haiku: '#52c896', // emerald
 };
-const FALLBACK = ['#cc785c', '#5b76b0', '#3e8b6a', '#c8893a', '#8a63a8', '#4a9aa8'];
+const FALLBACK = ['#ef9a78', '#8aa0e8', '#52c896', '#e3ad48', '#b98ad6', '#54bcc9'];
 
 export function modelFamily(id: string): string {
   const m = id.match(/(opus|sonnet|haiku)/i);

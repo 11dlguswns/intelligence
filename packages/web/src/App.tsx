@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import type { History, RunDetail, Meta, Baselines, Status, HistoryModelEntry } from './types';
 import { loadJson } from './lib/data';
 import { modelColor, modelLabel } from './lib/model';
@@ -231,7 +231,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
           const color = modelColor(m, i);
           const series = history.runs.map((r) => r.byModel[m]).filter((x) => x && !x.incomplete).map((x) => x!.qualityScore).filter((v): v is number => v != null).slice(-24);
           return (
-            <div className={`scard tall ${st.cls}`} key={m}>
+            <div className={`scard tall ${st.cls}`} key={m} style={{ '--mc': color } as CSSProperties}>
               <div className="sc-top">
                 <span className="sc-model" style={{ color }}>
                   <span className="dot" style={{ background: color }} />

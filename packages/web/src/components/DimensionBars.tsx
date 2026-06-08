@@ -20,7 +20,11 @@ export function DimensionBars({ bars, color }: { bars: Bar[]; color: string }) {
             <span className="dbar-track">
               <span
                 className="dbar-fill"
-                style={{ width: `${w}%`, background: color, opacity: b.varies ? 1 : 0.4 }}
+                style={{
+                  width: `${w}%`,
+                  background: `linear-gradient(90deg, ${color}aa, ${color})`,
+                  opacity: b.varies ? 1 : 0.38,
+                }}
               />
             </span>
             <span className="dbar-val">
