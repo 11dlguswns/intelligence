@@ -1,61 +1,73 @@
-// Tiny, dependency-free SVG sparkline: shows how a model's response time is trending
-// (the "rate of change") in a compact strip. Updates live as auto-refresh adds points.
+// Smooth trend sparkline: Catmull-Rom → cubic-bezier curve (no jagged segments),
+// soft gradient area, faint dashed baseline (the model's 평소), and a glowing dot at
+// the latest point. Fills its container responsively.
 
 interface Props {
   values: number[];
   color: string;
   baseline?: number | null;
-  height?: number;
 }
 
-export function Sparkline({ values, color, baseline, height = 44 }: Props) {
+const W = 100;
+const H = 100;
+const INSET = 3; // keep the end dot inside the box
+
+function smoothPath(p: ReadonlyArray<readonly [number, number]>): string {
+  if (p.length < 2) return '';
+  let d = `M ${p[0][0].toFixed(2)},${p[0][1].toFixed(2)}`;
+  for (let i = 0; i < p.length - 1; i++) {
+    const p0 = p[i - 1] ?? p[i];
+    const p1 = p[i];
+    const p2 = p[i + 1];
+    const p3 = p[i + 2] ?? p2;
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C ${c1x.toFixed(2)},${c1y.toFixed(2)} ${c2x.toFixed(2)},${c2y.toFixed(2)} ${p2[0].toFixed(2)},${p2[1].toFixed(2)}`;
+  }
+  return d;
+}
+
+export function Sparkline({ values, color, baseline }: Props) {
   if (values.length < 2) return <div className="spark-empty">추세 쌓는 중…</div>;
 
-  const W = 240;
-  const H = 46;
   const all = baseline != null ? [...values, baseline] : values;
   const min = Math.min(...all);
   const max = Math.max(...all);
-  const pad = (max - min) * 0.18 || 1;
+  const pad = (max - min) * 0.22 || 1;
   const lo = min - pad;
   const hi = max + pad;
-  const X = (i: number) => (i / (values.length - 1)) * W;
+  const n = values.length;
+  const X = (i: number) => INSET + (i / (n - 1)) * (W - 2 * INSET);
   const Y = (v: number) => H - ((v - lo) / (hi - lo)) * H;
 
-  const line = values.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-  const area = `M0,${H} ` + values.map((v, i) => `L${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ') + ` L${W},${H} Z`;
+  const pts = values.map((v, i) => [X(i), Y(v)] as const);
+  const line = smoothPath(pts);
+  const area = `${line} L ${pts[n - 1][0].toFixed(2)},${H} L ${pts[0][0].toFixed(2)},${H} Z`;
   const gid = `spk-${color.replace('#', '')}`;
+  const last = pts[n - 1];
+  const baseY = baseline != null ? Y(baseline) : null;
 
   return (
-    <svg className="spark" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: '100%', display: 'block' }} aria-hidden>
-      <defs>
-        <linearGradient id={gid} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.2" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      {baseline != null && (
-        <line
-          x1="0"
-          x2={W}
-          y1={Y(baseline).toFixed(1)}
-          y2={Y(baseline).toFixed(1)}
-          stroke="var(--faint)"
-          strokeDasharray="3 3"
-          strokeWidth="1"
-          vectorEffect="non-scaling-stroke"
-        />
-      )}
-      <path d={area} fill={`url(#${gid})`} />
-      <polyline
-        points={line}
-        fill="none"
-        stroke={color}
-        strokeWidth="2.25"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
+    <>
+      <svg className="spark" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden>
+        <defs>
+          <linearGradient id={gid} x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {baseY != null && (
+          <line x1="0" x2={W} y1={baseY.toFixed(1)} y2={baseY.toFixed(1)} stroke="var(--faint)" strokeOpacity="0.55" strokeDasharray="2 3" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+        )}
+        <path d={area} fill={`url(#${gid})`} />
+        <path d={line} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+      </svg>
+      <span
+        className="spark-dot"
+        style={{ left: `${last[0]}%`, top: `${last[1]}%`, background: color, boxShadow: `0 0 0 3px var(--panel), 0 0 9px ${color}` }}
       />
-    </svg>
+    </>
   );
 }
