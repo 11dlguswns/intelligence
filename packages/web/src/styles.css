@@ -275,12 +275,13 @@ html, body { height: 100%; overflow: hidden; }
 .dims-head { display: flex; align-items: baseline; justify-content: space-between; margin: 14px 0 2px; font-size: 11.5px; font-weight: 700; color: var(--muted); }
 .dims-head span { font-size: 9.5px; font-weight: 600; color: var(--faint); }
 .dbars { display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: space-around; }
-.dbar { display: grid; grid-template-columns: 36px 1fr 44px; align-items: center; gap: 10px; }
+.dbar { display: grid; grid-template-columns: 36px 1fr 42px; align-items: center; gap: 10px; }
 .dbar-label { font-size: 12.5px; color: var(--muted); }
 .dbar-track { height: 10px; background: var(--bg-2); border-radius: 999px; overflow: hidden; box-shadow: inset 0 1px 1.5px rgba(0,0,0,0.04); }
 .dbar-fill { display: block; height: 100%; border-radius: 999px; transition: width 0.5s ease; }
-.dbar-val { font-family: var(--mono); font-size: 13px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); display: inline-flex; align-items: baseline; justify-content: flex-end; gap: 3px; }
-.dbar-abs { font-size: 9px; font-weight: 600; font-style: normal; color: var(--faint); }
+.dbar-val { display: inline-flex; flex-direction: column; align-items: flex-end; line-height: 1.05; }
+.dbar-val b { font-family: var(--mono); font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); }
+.dbar-abs { font-size: 8.5px; font-weight: 600; font-style: normal; color: var(--faint); white-space: nowrap; }
 
 .sc-trend { flex: none; height: 116px; display: flex; flex-direction: column; margin-top: 10px; }
 .sc-trend-head { font-size: 11px; color: var(--faint); display: flex; justify-content: space-between; }

@@ -23,8 +23,8 @@ export function DimensionBars({ bars, color }: { bars: Bar[]; color: string }) {
               />
             </span>
             <span className="dbar-val">
-              {b.cond ?? '–'}
-              {b.abs != null && <i className="dbar-abs">{b.abs}</i>}
+              <b>{b.cond ?? '–'}</b>
+              {b.abs != null && <i className="dbar-abs">절대 {b.abs}</i>}
             </span>
           </div>
         );
