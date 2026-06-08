@@ -181,7 +181,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       <header className="bar">
         <div className="brand-min">
           <div className="logo sm" aria-hidden />
-          <b>Claude 지능 — 최고 실력 대비</b>
+          <b>Claude 컨디션 — 평소 대비 지금</b>
           <span className={`vchip ${vchip.cls}`}>{vchip.icon} {worst === 'degraded' ? '멍청해짐' : worst === 'warn' ? '주의' : worst === 'baselining' ? '측정중' : worst === 'incomplete' ? '측정실패' : '정상'}</span>
         </div>
         <div className="bar-right">
@@ -227,18 +227,18 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                 <span className={`status-badge ${st.cls}`}>{st.icon} {st.label}</span>
               </div>
               <div className="sc-scorerow">
-                <div className="sc-score">{e.qualityScore != null ? Math.round(e.qualityScore) : '–'}<small>/100</small></div>
-                {info.condIndex != null && info.enough && info.status !== 'incomplete' && (
-                  <span className={`cond-chip ${st.cls}`} title="그 모델의 관측 최저=0, 최고=100으로 정규화한 '지금 컨디션'. 절대 점수는 좁아서 둔감하니, 자기 범위로 펴서 작은 변화를 키워 봅니다.">
-                    <b>컨디션 {info.condIndex}</b>
-                    <small>자기 범위 기준</small>
-                  </span>
+                {info.status === 'incomplete' ? (
+                  <div className="sc-score">–<small>측정실패</small></div>
+                ) : !info.enough || info.condIndex == null ? (
+                  <div className="sc-score">{info.n}<small>/{need} 측정중</small></div>
+                ) : (
+                  <div className="sc-score">{info.condIndex}<small>컨디션</small></div>
                 )}
               </div>
               <div className="sc-scorelabel">{
                 info.status === 'incomplete' ? '⚠️ 일부 차원 측정 실패(서버 레이트리밋) · 직전 정상값 표시'
-                : !info.enough ? `범위 잡는 중 (${info.n}/${need}) · 절대 ${info.cur != null ? Math.round(info.cur) : '–'}점`
-                : `절대 ${info.cur != null ? Math.round(info.cur) : '–'}점 · 자기 변동폭(${info.lo}~${info.hi}) 안에서 ${info.belowBand ? '낮은 쪽' : '정상 범위'}`
+                : !info.enough ? `평소 범위 잡는 중 · 자기 컨디션은 ${need}회부터`
+                : `자기 평소 범위에서 ${info.belowBand ? '낮은 쪽(정상 노이즈)' : '정상'} · 모델끼리 비교 아님`
               }</div>
 
               {info.enough && info.lo != null && info.hi != null && info.med != null && info.cur != null && (
@@ -259,7 +259,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       </div>
 
       <div className="legend-line">
-        큰 숫자 = 추론 품질(절대 0~100) · <b>컨디션</b> = 그 모델의 <b>관측 최저=0·최고=100</b>으로 펴서 본 지금 위치(초록 띠=평소 변동폭) · 🛡<b>객관</b> = 정답 사다리 통과율 · 평소 변동폭을 벗어나 떨어지면 🟡주의 🔴멍청해짐
+        이 사이트는 <b>성능 순위가 아니라 컨디션</b>을 봅니다 · 큰 숫자 <b>컨디션</b> = 그 모델의 <b>관측 최저=0·최고=100</b>으로 펴서 본 지금 위치(초록 띠=평소 변동폭, 게이지 양끝=절대 점수) · 🛡<b>객관</b> = 정답 사다리 통과율 · <b>모델끼리 비교 X</b> · 평소 변동폭 아래로 떨어지면 🟡주의 🔴멍청해짐
       </div>
 
       {details && latest && (
@@ -270,9 +270,9 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
               <button className="ghost-btn" onClick={() => setDetails(false)}>닫기 ✕</button>
             </div>
             <div className="explain">
-              <div className="ex-item"><b>품질 점수 (화면의 숫자·막대)</b> — 각 차원의 어려운 문제 풀이를 독립된 <b>Opus 심사위원</b>이 0~100 채점. 정답은 코드가 계산해 심사위원에게 제공(레퍼런스 기반). 정답 여부는 다 비슷해 <b>추론의 명료성·타당성</b>으로 갈립니다.</div>
-              <div className="ex-item"><b>🛡 객관 건강도</b> — 매번 새로 생성한 문제를 쉬움·중간·어려움으로 풀려 통과율을 잰 값(난이도 가중). 암기 불가·코드 채점이라 <b>가장 정직한 저하 신호</b>입니다(평소 풀던 걸 못 풀면 하락). 아래는 가장 어려운 단계의 문제와 모델별 돌파 현황(L2·L4·L6).</div>
-              <div className="ex-item"><b>컨디션 (자기 범위 기준)</b> — 절대 점수(0~100)는 늘 맞히는 문제에 가려 둔감합니다. 그래서 <b>그 모델이 관측된 가장 낮을 때=0, 가장 높을 때=100</b>으로 범위를 펴서 지금 위치를 봅니다(작은 변화도 크게 보임). 게이지의 <b>초록 띠 = 평소 변동폭</b>(노이즈 범위)이라, 띠 안이면 정상·노이즈, 띠 아래로 벗어나면(평소보다 2σ↓ 주의·3σ↓ 멍청해짐) 진짜 저하입니다. 표본이 적을 땐 범위가 노이즈라 잠정값입니다.</div>
+              <div className="ex-item"><b>이 사이트가 재는 것 = 컨디션</b> — "어느 모델이 더 똑똑한가"(성능 순위)가 <b>아니라</b>, 각 모델이 <b>평소의 자기 자신 대비</b> 지금 잘하고 있는지를 봅니다. 그래서 카드의 큰 숫자는 절대 실력이 아니라 <b>컨디션</b>입니다.</div>
+              <div className="ex-item"><b>컨디션 (자기 범위 기준)</b> — 그 모델이 관측된 <b>가장 낮을 때=0, 가장 높을 때=100</b>으로 범위를 펴서 지금 위치를 봅니다(절대 점수는 늘 맞히는 문제에 가려 둔감하므로). 게이지 <b>초록 띠=평소 변동폭</b>: 띠 안이면 정상·노이즈, 띠 아래로 벗어나면(2σ↓ 주의·3σ↓ 멍청해짐) 진짜 저하. <b>모델끼리 비교는 의미 없습니다</b>(각자 자기 기준). 표본 적을 땐 잠정값.</div>
+              <div className="ex-item"><b>측정 방식 + 🛡 객관 건강도</b> — 매번 새로 생성한 문제(암기 불가)를 6차원·난이도별로 풀려, 정답은 코드가 계산하고 추론 품질은 Opus 심사위원이 0~100 채점. 🛡객관 = 정답 사다리 통과율(코드 채점이라 가장 정직한 저하 신호). 막대=오늘 차원별 측정, 아래는 가장 어려운 단계 문제·답안(L2·L4·L6).</div>
             </div>
             <QuestionTable latest={latest} models={shown} />
           </div>
