@@ -29,12 +29,6 @@ function ago(updatedAt: string | null | undefined, nowTs: number): string {
   return `${Math.floor(d / 86400)}일 전`;
 }
 
-function phrase(enough: boolean, gap: number | null, n: number, need: number): string {
-  if (!enough) return `최고점 쌓는 중 (${n}/${need})`;
-  if (gap == null || gap >= -2) return '최고 실력';
-  return `최고점보다 ${Math.abs(gap)}점 낮음`;
-}
-
 export default function App() {
   const [history, setHistory] = useState<History | null>(null);
   const [latest, setLatest] = useState<RunDetail | null>(null);
@@ -127,29 +121,29 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
     .filter(Boolean) as { m: string; e: HistoryModelEntry; at: string }[];
 
   const cardInfo = (m: string, e: HistoryModelEntry) => {
-    // Peak/baseline use COMPLETE runs only (an unmeasured dimension would distort them).
-    const complete = history.runs.map((r) => r.byModel[m]).filter((x) => x && !x.incomplete);
-    const all = complete.map((x) => x!.qualityScore).filter((v): v is number => v != null);
-    const peakScore = all.length ? Math.max(...all) : null;
     const cur = e.qualityScore;
-    const enough = all.length >= need && peakScore != null;
-    const gap = enough && cur != null && peakScore != null ? Math.round((cur - peakScore) * 10) / 10 : null;
-    // objective health (the reliable degradation tripwire): current vs its own peak
-    const objAll = complete.map((x) => x!.objHealth).filter((v): v is number => v != null);
+    // "평소" = this model's locked baseline median (stable reference). Condition is read as
+    // the DEVIATION from平소 — small swings show up, instead of being lost in an absolute
+    // score dominated by always-solved problems. Baseline uses complete runs only.
+    const usual = e.baseline?.locked ? e.baseline.qMedian ?? null : null;
+    const dev = usual != null && cur != null ? Math.round((cur - usual) * 10) / 10 : null;
     const objCur = e.objHealth ?? null;
-    const objPeak = objAll.length ? Math.max(...objAll) : null;
-    const objGap = enough && objCur != null && objPeak != null ? Math.round((objCur - objPeak) * 10) / 10 : null;
+    const objDrop = objCur != null ? Math.round((objCur - 100) * 10) / 10 : null; // vs absolute 100
+    const complete = history.runs.map((r) => r.byModel[m]).filter((x) => x && !x.incomplete);
+    const n = complete.filter((x) => x!.qualityScore != null).length;
     let status: Status = 'baselining';
     if (e.incomplete || cur == null) {
       status = 'incomplete';
-    } else if (enough) {
-      const qBad = gap != null && gap <= -18;
-      const qWarn = gap != null && gap <= -8;
-      const oBad = objGap != null && objGap <= -15;
-      const oWarn = objGap != null && objGap <= -8;
+    } else if (usual == null) {
+      status = 'baselining';
+    } else {
+      const qBad = dev != null && dev <= -15;
+      const qWarn = dev != null && dev <= -7;
+      const oBad = objDrop != null && objDrop <= -20;
+      const oWarn = objDrop != null && objDrop <= -8;
       status = qBad || oBad ? 'degraded' : qWarn || oWarn ? 'warn' : 'normal';
     }
-    return { peak: peakScore, gap, status, enough, n: all.length, objCur, objPeak, objGap };
+    return { usual, dev, status, locked: usual != null, n, objCur, objDrop };
   };
 
   const dimsOf = (e: HistoryModelEntry) =>
@@ -210,21 +204,33 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                   {modelLabel(m)}
                 </span>
                 {info.objCur != null && (
-                  <span className="health-pill" title="객관 정답 사다리 통과율(난이도 가중). 자기 최고 대비 떨어지면 실제 저하 신호.">
-                    🛡 객관 {Math.round(info.objCur)}{info.objGap != null && info.objGap <= -8 ? ` (▼${Math.abs(Math.round(info.objGap))})` : ''}
+                  <span className="health-pill" title="객관 정답 사다리 통과율(난이도 가중). 100=모든 난이도 통과, 떨어지면 실제 저하.">
+                    🛡 객관 {Math.round(info.objCur)}{info.objDrop != null && info.objDrop <= -8 ? ` (▼${Math.abs(Math.round(info.objDrop))})` : ''}
                   </span>
                 )}
                 <span className={`status-badge ${st.cls}`}>{st.icon} {st.label}</span>
               </div>
-              <div className="sc-score">{e.qualityScore != null ? Math.round(e.qualityScore) : '–'}<small>/100</small></div>
-              <div className="sc-scorelabel">{info.status === 'incomplete' ? '⚠️ 일부 차원 측정 실패(서버 레이트리밋) · 직전 정상값 표시' : `추론 품질 점수 · ${phrase(info.enough, info.gap, info.n, need)}${info.peak != null ? ` (최고 ${Math.round(info.peak)})` : ''}`}</div>
+              <div className="sc-scorerow">
+                <div className="sc-score">{e.qualityScore != null ? Math.round(e.qualityScore) : '–'}<small>/100</small></div>
+                {info.dev != null && (
+                  <span className={`dev-chip ${info.dev >= -1 ? 'dev-ok' : info.dev <= -7 ? 'dev-down' : 'dev-mild'}`} title="그 모델의 '평소(기준 중앙값)' 대비 지금 컨디션. +면 평소보다 좋음, −면 낮음.">
+                    <b>{info.dev > 0 ? '▲' : info.dev < 0 ? '▼' : '＝'}{Math.abs(info.dev).toFixed(1)}</b>
+                    <small>평소 대비</small>
+                  </span>
+                )}
+              </div>
+              <div className="sc-scorelabel">{
+                info.status === 'incomplete' ? '⚠️ 일부 차원 측정 실패(서버 레이트리밋) · 직전 정상값 표시'
+                : info.locked ? `평소 ${Math.round(info.usual!)}점 · ${info.dev == null ? '' : info.dev > 0 ? `오늘 +${info.dev.toFixed(1)} 더 좋음` : info.dev < 0 ? `오늘 ${info.dev.toFixed(1)} 낮음` : '평소와 동일'}`
+                : `평소 기준 잡는 중 (${info.n}/${need})`
+              }</div>
 
               <DimensionBars bars={dimsOf(e)} color={color} />
 
               <div className="sc-trend">
                 <div className="sc-trend-head">시간별 추이 <span>{ago(at, nowTs)}</span></div>
                 <div className="sc-trend-chart">
-                  <Sparkline values={series} color={color} baseline={info.peak} />
+                  <Sparkline values={series} color={color} baseline={info.usual} />
                 </div>
               </div>
             </div>
@@ -233,7 +239,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       </div>
 
       <div className="legend-line">
-        큰 숫자·막대 = 6개 차원의 어려운 풀이를 <b>Opus 심사위원이 0~100 채점</b>한 추론 품질 · 🛡<b>객관</b> = 매번 새로 생성한 정답 사다리 통과율(저하 감지) · 각 모델 <b>최고점 대비</b> · 🟢정상 🟡주의 🔴멍청해짐
+        큰 숫자 = 추론 품질(Opus 심사위원 0~100) · <b>평소 대비 ▲▼</b> = 그 모델의 평소(기준 중앙값) 대비 지금 컨디션 · 🛡<b>객관</b> = 정답 사다리 통과율(100=다 통과) · 평소보다 떨어지면 🟡주의 🔴멍청해짐
       </div>
 
       {details && latest && (
@@ -246,7 +252,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
             <div className="explain">
               <div className="ex-item"><b>품질 점수 (화면의 숫자·막대)</b> — 각 차원의 어려운 문제 풀이를 독립된 <b>Opus 심사위원</b>이 0~100 채점. 정답은 코드가 계산해 심사위원에게 제공(레퍼런스 기반). 정답 여부는 다 비슷해 <b>추론의 명료성·타당성</b>으로 갈립니다.</div>
               <div className="ex-item"><b>🛡 객관 건강도</b> — 매번 새로 생성한 문제를 쉬움·중간·어려움으로 풀려 통과율을 잰 값(난이도 가중). 암기 불가·코드 채점이라 <b>가장 정직한 저하 신호</b>입니다(평소 풀던 걸 못 풀면 하락). 아래는 가장 어려운 단계의 문제와 모델별 돌파 현황(L2·L4·L6).</div>
-              <div className="ex-item"><b>최고점 대비</b> — 품질 또는 객관 건강도가 자기 역대 최고보다 떨어지면 🟡주의·🔴멍청해짐.</div>
+              <div className="ex-item"><b>평소 대비 ▲▼</b> — 점수 자체는 절대값(0~100)이라 늘 잘 푸는 문제에 가려 둔감합니다. 그래서 컨디션은 <b>그 모델의 평소(처음 측정들의 중앙값) 대비 편차</b>로 봅니다. 작은 변화도 드러나고, 평소보다 7점↓ 주의·15점↓ 멍청해짐. 객관 건강도가 떨어져도 저하로 봅니다.</div>
             </div>
             <QuestionTable latest={latest} models={shown} />
           </div>
