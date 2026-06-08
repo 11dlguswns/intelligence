@@ -2,10 +2,8 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import type { History, RunDetail, Meta, Baselines, Status, HistoryModelEntry } from './types';
 import { loadJson } from './lib/data';
 import { modelColor, modelLabel } from './lib/model';
-import { currentPeak } from './lib/peak';
 import { Sparkline } from './components/Sparkline';
 import { DimensionBars } from './components/DimensionBars';
-import { ConditionGauge } from './components/ConditionGauge';
 import { QuestionTable } from './components/QuestionTable';
 
 const STATUS: Record<Status, { label: string; cls: string; icon: string }> = {
@@ -101,7 +99,6 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
 
   const allModels = history.models;
   const shown = selected.length ? selected : allModels;
-  const peak = currentPeak();
   const need = meta?.baselineRuns ?? 3;
 
   const toggle = (m: string) =>
@@ -203,11 +200,8 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
           <span className={`vchip ${vchip.cls}`}>{vchip.icon} {worst === 'degraded' ? '멍청해짐' : worst === 'warn' ? '주의' : worst === 'baselining' ? '측정중' : worst === 'incomplete' ? '측정실패' : '정상'}</span>
         </div>
         <div className="bar-right">
-          <span className="live" title="25초마다 자동 새로고침. 매시간 새 측정이 반영됩니다.">
-            <span className="live-dot" />LIVE · 측정 {ago(history.updatedAt, nowTs)}
-          </span>
-          <span className={`peak-badge ${peak.peak ? 'on' : ''}`} title="과거 피크창: 평일 5–11 AM PT.">
-            {peak.peak ? '🟠 붐빔' : '🟢 한산'} · {peak.clock}
+          <span className="live" title="25초마다 자동 새로고침. 새 측정이 자동 반영됩니다.">
+            <span className="live-dot" />측정 {ago(history.updatedAt, nowTs)}
           </span>
           <div className="chips inline">
             {allModels.map((m, i) => {
@@ -225,60 +219,45 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       </header>
 
       <div className="cards3" key={history.updatedAt ?? 'x'}>
-        {entries.map(({ m, e, at }, i) => {
+        {entries.map(({ m, e }, i) => {
           const info = cardInfo(m, e);
           const st = STATUS[info.status] ?? STATUS.baselining;
           const color = modelColor(m, i);
           const series = history.runs.map((r) => r.byModel[m]).filter((x) => x && !x.incomplete).map((x) => x!.qualityScore).filter((v): v is number => v != null).slice(-24);
+          const showObj = info.objCur != null && info.objCur < 99.5;
           return (
-            <div className={`scard tall ${st.cls}`} key={m} style={{ '--mc': color } as CSSProperties}>
-              <div className="sc-top">
-                <span className="sc-model" style={{ color }}>
-                  <span className="dot" style={{ background: color }} />
-                  {modelLabel(m)}
+            <div className={`card2 ${st.cls}`} key={m} style={{ '--mc': color } as CSSProperties}>
+              <div className="c2-top">
+                <span className="c2-model"><span className="dot" style={{ background: color }} />{modelLabel(m)}</span>
+                <span className="c2-flags">
+                  {showObj && <span className="c2-obj" title="객관 정답 사다리 통과율 — 떨어지면 실제 저하">객관 ▼{Math.abs(Math.round(info.objDrop ?? 0))}</span>}
+                  <span className={`c2-status ${st.cls}`}><span className="c2-sdot" />{st.label}</span>
                 </span>
-                {info.objCur != null && (
-                  <span className="health-pill" title="객관 정답 사다리 통과율(난이도 가중). 100=모든 난이도 통과, 떨어지면 실제 저하.">
-                    🛡 객관 {Math.round(info.objCur)}{info.objDrop != null && info.objDrop <= -8 ? ` (▼${Math.abs(Math.round(info.objDrop))})` : ''}
-                  </span>
-                )}
-                <span className={`status-badge ${st.cls}`}>{st.icon} {st.label}</span>
               </div>
-              <div className="sc-scorerow">
+
+              <div className="c2-hero">
                 {info.status === 'incomplete' ? (
-                  <div className="sc-score">–<small>측정실패</small></div>
+                  <><div className="c2-num is-muted">—</div><div className="c2-state">측정 실패 · 직전 정상값</div></>
                 ) : !info.enough || info.condIndex == null ? (
-                  <div className="sc-score">{info.n}<small>/{need} 측정중</small></div>
+                  <><div className="c2-num is-muted">{info.n}<span className="c2-of">/{need}</span></div><div className="c2-state">평소 범위 잡는 중</div></>
                 ) : (
-                  <div className="sc-score">{info.condIndex}<small>컨디션</small></div>
+                  <>
+                    <div className="c2-num" title={info.med != null ? `평소 ${Math.round(info.med)}점 · 범위 ${info.lo}~${info.hi} (절대)` : undefined}>{info.condIndex}</div>
+                    <div className="c2-state">컨디션 · {info.belowBand ? '평소보다 낮은 편' : '평소 수준'}</div>
+                  </>
                 )}
               </div>
-              <div className="sc-scorelabel">{
-                info.status === 'incomplete' ? '⚠️ 일부 차원 측정 실패(서버 레이트리밋) · 직전 정상값 표시'
-                : !info.enough ? `평소 범위 잡는 중 · 자기 컨디션은 ${need}회부터`
-                : `지금 ${info.belowBand ? '평소보다 낮은 편' : '평소 수준'} · 모델끼리 비교 아님`
-              }</div>
 
-              {info.enough && info.lo != null && info.hi != null && info.med != null && info.cur != null && (
-                <ConditionGauge lo={info.lo} hi={info.hi} med={info.med} sd={info.sd} cur={info.cur} color={color} belowBand={info.belowBand} />
-              )}
+              <div className="c2-spark"><Sparkline values={series} color={color} baseline={info.med} /></div>
 
-              <div className="dims-head">능력별 컨디션 <span>각자 자기 범위 · 막대 끝=평소 최고</span></div>
               <DimensionBars bars={dimsOf(m, e)} color={color} />
-
-              <div className="sc-trend">
-                <div className="sc-trend-head">시간별 추이 <span>{ago(at, nowTs)}</span></div>
-                <div className="sc-trend-chart">
-                  <Sparkline values={series} color={color} baseline={info.med} />
-                </div>
-              </div>
             </div>
           );
         })}
       </div>
 
       <div className="legend-line">
-        이 사이트는 <b>성능 순위가 아니라 컨디션</b>을 봅니다 · 큰 숫자·능력 막대 모두 <b>그 모델의 관측 최저=0·최고=100</b>으로 펴서 본 지금 위치(작은 변화도 크게) · 게이지 양끝=절대 점수 · 🛡<b>객관</b>=정답 사다리 통과율 · <b>모델·능력끼리 비교 X</b> · 평소 범위 아래로 떨어지면 🟡주의 🔴멍청해짐 · 세부 6항목은 "자세히"
+        성능 순위가 아니라 <b>컨디션</b> — 각 모델의 관측 최저=0·최고=100으로 본 지금 위치 · 모델끼리 비교 X · 자세한 설명은 <b>자세히</b>
       </div>
 
       {details && latest && (

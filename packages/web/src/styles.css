@@ -27,10 +27,7 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; overflow: hidden; }
 body {
-  background:
-    radial-gradient(1100px 560px at 50% -260px, rgba(239, 154, 120, 0.07), transparent 70%),
-    radial-gradient(900px 600px at 100% 110%, rgba(138, 160, 232, 0.05), transparent 70%),
-    var(--bg);
+  background: radial-gradient(1200px 720px at 50% -340px, #131418, var(--bg));
   color: var(--ink);
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
@@ -106,79 +103,48 @@ body {
 .vchip.st-degraded { color: var(--down); background: rgba(233, 97, 75, 0.16); }
 .vchip.st-base { color: var(--faint); background: rgba(150, 160, 170, 0.12); }
 
-/* ---------- cards ---------- */
-.cards3 { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+/* ---------- cards (minimal: whitespace + hierarchy, no decoration) ---------- */
+.cards3 { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 
-.scard.tall {
-  position: relative; overflow: hidden; text-align: left;
+.card2 {
   display: flex; flex-direction: column; min-height: 0;
-  padding: 18px 20px;
-  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  padding: 22px 22px 20px;
+  background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 40px -22px rgba(0, 0, 0, 0.8);
+  border-radius: 18px;
 }
-/* model-color accent strip along the top */
-.scard.tall::before {
-  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--mc), transparent 75%); opacity: 0.85;
-}
-.scard.tall.st-warn { border-color: rgba(227, 173, 72, 0.34); }
-.scard.tall.st-degraded { border-color: rgba(233, 97, 75, 0.4); box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 0 0 1px rgba(233,97,75,0.12), 0 14px 40px -22px rgba(0,0,0,0.8); }
+.card2.st-warn { border-color: rgba(227, 173, 72, 0.26); }
+.card2.st-degraded { border-color: rgba(233, 97, 75, 0.32); }
 
-.sc-top { display: flex; align-items: center; gap: 7px; }
-.scard.tall .sc-model { font-size: 14.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; flex: 1; letter-spacing: -0.01em; }
-.health-pill {
-  font-size: 10px; font-weight: 700; color: var(--muted);
-  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); border-radius: 999px;
-  padding: 2px 8px; white-space: nowrap; font-variant-numeric: tabular-nums;
-}
-.status-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
-.status-badge.st-normal { color: var(--up); background: rgba(76, 195, 138, 0.13); }
-.status-badge.st-warn { color: var(--warn); background: rgba(227, 173, 72, 0.16); }
-.status-badge.st-degraded { color: var(--down); background: rgba(233, 97, 75, 0.15); }
-.status-badge.st-base { color: var(--faint); background: rgba(150, 160, 170, 0.12); }
+.c2-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.c2-model { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+.c2-flags { display: inline-flex; align-items: center; gap: 9px; }
+.c2-obj { font-size: 10.5px; font-weight: 700; color: var(--warn); }
+.c2-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.c2-status .c2-sdot { width: 7px; height: 7px; border-radius: 999px; background: currentColor; }
+.c2-status.st-normal { color: var(--up); }
+.c2-status.st-warn { color: var(--warn); }
+.c2-status.st-degraded { color: var(--down); }
+.c2-status.st-base { color: var(--faint); }
 
-/* hero condition number */
-.sc-scorerow { display: flex; align-items: flex-end; gap: 12px; margin-top: 14px; }
-.scard.tall .sc-score {
-  font-family: var(--mono); font-size: 54px; font-weight: 800; letter-spacing: -0.04em; line-height: 0.92;
-  color: var(--ink); font-variant-numeric: tabular-nums;
-  display: inline-flex; align-items: baseline; gap: 7px;
-}
-.scard.tall .sc-score small { font-size: 13px; color: var(--faint); font-weight: 700; letter-spacing: 0; }
-.scard.tall .sc-scorelabel { font-size: 11.5px; color: var(--muted); margin-top: 7px; line-height: 1.45; }
+/* hero — the condition number is the single focal point */
+.c2-hero { margin-top: 22px; }
+.c2-num { font-family: var(--mono); font-size: 62px; font-weight: 700; letter-spacing: -0.045em; line-height: 0.88; color: var(--ink); font-variant-numeric: tabular-nums; }
+.c2-num.is-muted { color: var(--faint); }
+.c2-num .c2-of { font-size: 22px; color: var(--faint); font-weight: 600; letter-spacing: -0.02em; }
+.c2-state { margin-top: 11px; font-size: 12.5px; color: var(--muted); }
 
-/* condition gauge — track = model's own observed range; shaded = normal band */
-.cond-gauge { margin: 11px 0 2px; }
-.cond-track { position: relative; height: 8px; border-radius: 6px; background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border); }
-.cond-band { position: absolute; top: 0; bottom: 0; background: rgba(76, 195, 138, 0.2); border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(76, 195, 138, 0.18); }
-.cond-mid { position: absolute; top: -2px; bottom: -2px; width: 1px; background: rgba(255, 255, 255, 0.22); }
-.cond-mark {
-  position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%;
-  border: 2px solid; transform: translate(-50%, -50%);
-  box-shadow: 0 0 0 3px var(--bg), 0 0 10px -1px var(--mc);
-}
-.cond-ends { display: flex; justify-content: space-between; font-size: 9.5px; color: var(--faint); margin-top: 4px; font-variant-numeric: tabular-nums; }
-.cond-ends .cond-mid-lbl { color: var(--muted); font-weight: 600; }
+/* time trend (sparkline) — grows to fill the card's middle so it reads as data, not void */
+.c2-spark { flex: 1; min-height: 60px; margin-top: 22px; position: relative; }
+.spark { display: block; width: 100%; height: 100%; }
 
-/* ability bars */
-.dims-head { display: flex; align-items: baseline; justify-content: space-between; margin: 16px 0 4px; font-size: 11.5px; font-weight: 700; color: var(--muted); letter-spacing: -0.01em; }
-.dims-head span { font-size: 9.5px; font-weight: 600; color: var(--faint); }
-.dbars { display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: space-around; padding: 4px 0; }
-.dbar { display: grid; grid-template-columns: 58px 1fr 42px; align-items: center; gap: 12px; }
-.dbar-label { font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap; }
-.dbar-track { height: 11px; background: rgba(255, 255, 255, 0.055); border-radius: 999px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35); }
-.dbar-fill { display: block; height: 100%; border-radius: 999px; transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1); box-shadow: 0 0 10px -2px var(--mc); }
-.dbar-val { display: inline-flex; flex-direction: column; align-items: flex-end; line-height: 1.05; }
-.dbar-val b { font-family: var(--mono); font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); }
-.dbar-abs { font-size: 8.5px; font-weight: 600; font-style: normal; color: var(--faint); white-space: nowrap; }
-
-/* time trend */
-.sc-trend { flex: none; height: 110px; display: flex; flex-direction: column; margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--border); }
-.sc-trend-head { font-size: 10.5px; color: var(--faint); display: flex; justify-content: space-between; font-weight: 600; }
-.sc-trend-chart { flex: 1; position: relative; min-height: 44px; margin-top: 6px; }
-.spark { display: block; width: 100%; }
+/* ability bars — minimal: label · slim track · number. Whitespace separates, no header. */
+.c2-bars { display: flex; flex-direction: column; margin-top: 22px; gap: 15px; }
+.c2-bar { display: grid; grid-template-columns: 64px 1fr 28px; align-items: center; gap: 12px; }
+.c2-bar-label { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.c2-bar-track { height: 6px; background: rgba(255, 255, 255, 0.065); border-radius: 999px; overflow: hidden; }
+.c2-bar-fill { display: block; height: 100%; border-radius: 999px; transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+.c2-bar-val { font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
 .spark-empty { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--faint); }
 
 /* ---------- legend ---------- */

@@ -3,34 +3,25 @@ export interface Bar {
   label: string;
   hint?: string; // which sub-dimensions this group combines (tooltip)
   cond: number | null; // self-range condition 0..100 (this group's own worst→best)
-  abs: number | null; // absolute quality, shown faint for context
+  abs: number | null; // absolute quality (tooltip only)
   varies: boolean; // false = no spread yet (degenerate), rendered muted
 }
 
-// Per-dimension CONDITION bars — each normalized to that dimension's own observed range,
-// so the fill shows how this capability is doing vs its own usual, not an absolute score.
+// Minimal per-ability condition bars — label · track · number. No section header, no
+// stacked extra numbers; whitespace does the grouping (Vercel/Linear restraint).
 export function DimensionBars({ bars, color }: { bars: Bar[]; color: string }) {
   return (
-    <div className="dbars">
+    <div className="c2-bars">
       {bars.map((b) => {
         const w = Math.max(0, Math.min(100, b.cond ?? 0));
+        const title = `${b.label}${b.hint ? ` (${b.hint})` : ''}${b.abs != null ? ` · 컨디션 ${b.cond ?? '–'} · 절대 ${b.abs}점` : ''}`;
         return (
-          <div className="dbar" key={b.dim} title={`${b.label}${b.hint ? ` (${b.hint})` : ''}${b.abs != null ? ` · 컨디션 ${b.cond ?? '–'} · 절대 ${b.abs}점` : ''}`}>
-            <span className="dbar-label">{b.label}</span>
-            <span className="dbar-track">
-              <span
-                className="dbar-fill"
-                style={{
-                  width: `${w}%`,
-                  background: `linear-gradient(90deg, ${color}aa, ${color})`,
-                  opacity: b.varies ? 1 : 0.38,
-                }}
-              />
+          <div className="c2-bar" key={b.dim} title={title}>
+            <span className="c2-bar-label">{b.label}</span>
+            <span className="c2-bar-track">
+              <span className="c2-bar-fill" style={{ width: `${w}%`, background: color, opacity: b.varies ? 1 : 0.32 }} />
             </span>
-            <span className="dbar-val">
-              <b>{b.cond ?? '–'}</b>
-              {b.abs != null && <i className="dbar-abs">절대 {b.abs}</i>}
-            </span>
+            <span className="c2-bar-val">{b.cond ?? '–'}</span>
           </div>
         );
       })}
