@@ -162,12 +162,21 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
     return { cur, lo, hi, med, sd, condIndex, belowBand, status, enough, n, objCur, objDrop };
   };
 
-  const dimsOf = (e: HistoryModelEntry) =>
-    DIM_ORDER.map((d) => {
-      const ids = (meta?.questions ?? []).filter((q) => q.dimension === d).map((q) => q.id);
-      const ss = ids.map((id) => e.byQuestion[id]).filter((v): v is number => v != null);
-      return { dim: d, label: DIM_LABEL[d] ?? d, score: ss.length ? Math.round(ss.reduce((a, b) => a + b, 0) / ss.length) : null };
+  // Per-dimension condition, normalized to THAT dimension's own observed range (best=100,
+  // worst=0) for THIS model — same self-relative idea as the headline condition, applied
+  // to each capability so you can see WHICH one dipped.
+  const dimsOf = (m: string, e: HistoryModelEntry) => {
+    const completeRuns = history.runs.map((r) => r.byModel[m]).filter((x) => x && !x.incomplete) as HistoryModelEntry[];
+    return DIM_ORDER.map((d) => {
+      const series = completeRuns.map((x) => x.byQuestion?.[d]).filter((v): v is number => v != null);
+      const cur = e.byQuestion?.[d] ?? null;
+      const lo = series.length ? Math.min(...series) : null;
+      const hi = series.length ? Math.max(...series) : null;
+      const varies = lo != null && hi != null && hi > lo;
+      const cond = cur == null ? null : varies ? Math.round(((cur - lo!) / (hi! - lo!)) * 100) : 100;
+      return { dim: d, label: DIM_LABEL[d] ?? d, cond, abs: cur, varies };
     });
+  };
 
   let worst: Status = 'normal';
   for (const { m, e } of entries) {
@@ -245,7 +254,8 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                 <ConditionGauge lo={info.lo} hi={info.hi} med={info.med} sd={info.sd} cur={info.cur} color={color} belowBand={info.belowBand} />
               )}
 
-              <DimensionBars bars={dimsOf(e)} color={color} />
+              <div className="dims-head">차원별 컨디션 <span>각자 자기 범위 · 막대 끝=평소 최고</span></div>
+              <DimensionBars bars={dimsOf(m, e)} color={color} />
 
               <div className="sc-trend">
                 <div className="sc-trend-head">시간별 추이 <span>{ago(at, nowTs)}</span></div>
@@ -259,7 +269,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       </div>
 
       <div className="legend-line">
-        이 사이트는 <b>성능 순위가 아니라 컨디션</b>을 봅니다 · 큰 숫자 <b>컨디션</b> = 그 모델의 <b>관측 최저=0·최고=100</b>으로 펴서 본 지금 위치(초록 띠=평소 변동폭, 게이지 양끝=절대 점수) · 🛡<b>객관</b> = 정답 사다리 통과율 · <b>모델끼리 비교 X</b> · 평소 변동폭 아래로 떨어지면 🟡주의 🔴멍청해짐
+        이 사이트는 <b>성능 순위가 아니라 컨디션</b>을 봅니다 · 큰 숫자·차원 막대 모두 <b>그 모델의 관측 최저=0·최고=100</b>으로 펴서 본 지금 위치(작은 변화도 크게) · 게이지 양끝=절대 점수 · 🛡<b>객관</b>=정답 사다리 통과율 · <b>모델·차원끼리 비교 X</b> · 평소 범위 아래로 떨어지면 🟡주의 🔴멍청해짐
       </div>
 
       {details && latest && (
