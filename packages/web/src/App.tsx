@@ -5,6 +5,7 @@ import { modelColor, modelLabel } from './lib/model';
 import { currentPeak } from './lib/peak';
 import { Sparkline } from './components/Sparkline';
 import { DimensionBars } from './components/DimensionBars';
+import { ConditionGauge } from './components/ConditionGauge';
 import { QuestionTable } from './components/QuestionTable';
 
 const STATUS: Record<Status, { label: string; cls: string; icon: string }> = {
@@ -122,28 +123,43 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
 
   const cardInfo = (m: string, e: HistoryModelEntry) => {
     const cur = e.qualityScore;
-    // "평소" = this model's locked baseline median (stable reference). Condition is read as
-    // the DEVIATION from平소 — small swings show up, instead of being lost in an absolute
-    // score dominated by always-solved problems. Baseline uses complete runs only.
-    const usual = e.baseline?.locked ? e.baseline.qMedian ?? null : null;
-    const dev = usual != null && cur != null ? Math.round((cur - usual) * 10) / 10 : null;
+    // CONDITION = normalized to THIS model's own observed range (its worst→best = 0→100),
+    // so a tiny absolute change becomes a visible swing — exactly the "self-relative" view.
+    const series = history.runs
+      .map((r) => r.byModel[m])
+      .filter((x) => x && !x.incomplete)
+      .map((x) => x!.qualityScore)
+      .filter((v): v is number => v != null);
+    const n = series.length;
+    const lo = n ? Math.min(...series) : null;
+    const hi = n ? Math.max(...series) : null;
+    const med = n ? [...series].sort((a, b) => a - b)[Math.floor((n - 1) / 2)] : null;
+    const mean = n ? series.reduce((a, b) => a + b, 0) / n : 0;
+    const sd = n > 1 ? Math.sqrt(series.reduce((a, b) => a + (b - mean) ** 2, 0) / n) : 0;
+    // self-range condition index 0..100 (user's request: own min=0, own max=100)
+    const condIndex = lo != null && hi != null && hi > lo && cur != null
+      ? Math.round(((cur - lo) / (hi - lo)) * 100)
+      : null;
+    // robust alarm: only fire when the current score is beyond the model's NORMAL variation
+    // (z-score vs its own σ), NOT just because the normalized position is low (that's noise).
+    const z = sd > 0 && med != null && cur != null ? (cur - med) / sd : 0;
+    const belowBand = med != null && cur != null && sd > 0 && cur < med - sd;
     const objCur = e.objHealth ?? null;
-    const objDrop = objCur != null ? Math.round((objCur - 100) * 10) / 10 : null; // vs absolute 100
-    const complete = history.runs.map((r) => r.byModel[m]).filter((x) => x && !x.incomplete);
-    const n = complete.filter((x) => x!.qualityScore != null).length;
+    const objDrop = objCur != null ? Math.round((objCur - 100) * 10) / 10 : null;
+    const enough = n >= need;
     let status: Status = 'baselining';
     if (e.incomplete || cur == null) {
       status = 'incomplete';
-    } else if (usual == null) {
+    } else if (!enough) {
       status = 'baselining';
     } else {
-      const qBad = dev != null && dev <= -15;
-      const qWarn = dev != null && dev <= -7;
       const oBad = objDrop != null && objDrop <= -20;
       const oWarn = objDrop != null && objDrop <= -8;
-      status = qBad || oBad ? 'degraded' : qWarn || oWarn ? 'warn' : 'normal';
+      const cBad = z <= -3 && n >= 5; // ~3σ below its own normal = real dip
+      const cWarn = z <= -2; // ~2σ below normal
+      status = cBad || oBad ? 'degraded' : cWarn || oWarn ? 'warn' : 'normal';
     }
-    return { usual, dev, status, locked: usual != null, n, objCur, objDrop };
+    return { cur, lo, hi, med, sd, condIndex, belowBand, status, enough, n, objCur, objDrop };
   };
 
   const dimsOf = (e: HistoryModelEntry) =>
@@ -212,25 +228,29 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
               </div>
               <div className="sc-scorerow">
                 <div className="sc-score">{e.qualityScore != null ? Math.round(e.qualityScore) : '–'}<small>/100</small></div>
-                {info.dev != null && (
-                  <span className={`dev-chip ${info.dev >= -1 ? 'dev-ok' : info.dev <= -7 ? 'dev-down' : 'dev-mild'}`} title="그 모델의 '평소(기준 중앙값)' 대비 지금 컨디션. +면 평소보다 좋음, −면 낮음.">
-                    <b>{info.dev > 0 ? '▲' : info.dev < 0 ? '▼' : '＝'}{Math.abs(info.dev).toFixed(1)}</b>
-                    <small>평소 대비</small>
+                {info.condIndex != null && info.enough && info.status !== 'incomplete' && (
+                  <span className={`cond-chip ${st.cls}`} title="그 모델의 관측 최저=0, 최고=100으로 정규화한 '지금 컨디션'. 절대 점수는 좁아서 둔감하니, 자기 범위로 펴서 작은 변화를 키워 봅니다.">
+                    <b>컨디션 {info.condIndex}</b>
+                    <small>자기 범위 기준</small>
                   </span>
                 )}
               </div>
               <div className="sc-scorelabel">{
                 info.status === 'incomplete' ? '⚠️ 일부 차원 측정 실패(서버 레이트리밋) · 직전 정상값 표시'
-                : info.locked ? `평소 ${Math.round(info.usual!)}점 · ${info.dev == null ? '' : info.dev > 0 ? `오늘 +${info.dev.toFixed(1)} 더 좋음` : info.dev < 0 ? `오늘 ${info.dev.toFixed(1)} 낮음` : '평소와 동일'}`
-                : `평소 기준 잡는 중 (${info.n}/${need})`
+                : !info.enough ? `범위 잡는 중 (${info.n}/${need}) · 절대 ${info.cur != null ? Math.round(info.cur) : '–'}점`
+                : `절대 ${info.cur != null ? Math.round(info.cur) : '–'}점 · 자기 변동폭(${info.lo}~${info.hi}) 안에서 ${info.belowBand ? '낮은 쪽' : '정상 범위'}`
               }</div>
+
+              {info.enough && info.lo != null && info.hi != null && info.med != null && info.cur != null && (
+                <ConditionGauge lo={info.lo} hi={info.hi} med={info.med} sd={info.sd} cur={info.cur} color={color} belowBand={info.belowBand} />
+              )}
 
               <DimensionBars bars={dimsOf(e)} color={color} />
 
               <div className="sc-trend">
                 <div className="sc-trend-head">시간별 추이 <span>{ago(at, nowTs)}</span></div>
                 <div className="sc-trend-chart">
-                  <Sparkline values={series} color={color} baseline={info.usual} />
+                  <Sparkline values={series} color={color} baseline={info.med} />
                 </div>
               </div>
             </div>
@@ -239,7 +259,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       </div>
 
       <div className="legend-line">
-        큰 숫자 = 추론 품질(Opus 심사위원 0~100) · <b>평소 대비 ▲▼</b> = 그 모델의 평소(기준 중앙값) 대비 지금 컨디션 · 🛡<b>객관</b> = 정답 사다리 통과율(100=다 통과) · 평소보다 떨어지면 🟡주의 🔴멍청해짐
+        큰 숫자 = 추론 품질(절대 0~100) · <b>컨디션</b> = 그 모델의 <b>관측 최저=0·최고=100</b>으로 펴서 본 지금 위치(초록 띠=평소 변동폭) · 🛡<b>객관</b> = 정답 사다리 통과율 · 평소 변동폭을 벗어나 떨어지면 🟡주의 🔴멍청해짐
       </div>
 
       {details && latest && (
@@ -252,7 +272,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
             <div className="explain">
               <div className="ex-item"><b>품질 점수 (화면의 숫자·막대)</b> — 각 차원의 어려운 문제 풀이를 독립된 <b>Opus 심사위원</b>이 0~100 채점. 정답은 코드가 계산해 심사위원에게 제공(레퍼런스 기반). 정답 여부는 다 비슷해 <b>추론의 명료성·타당성</b>으로 갈립니다.</div>
               <div className="ex-item"><b>🛡 객관 건강도</b> — 매번 새로 생성한 문제를 쉬움·중간·어려움으로 풀려 통과율을 잰 값(난이도 가중). 암기 불가·코드 채점이라 <b>가장 정직한 저하 신호</b>입니다(평소 풀던 걸 못 풀면 하락). 아래는 가장 어려운 단계의 문제와 모델별 돌파 현황(L2·L4·L6).</div>
-              <div className="ex-item"><b>평소 대비 ▲▼</b> — 점수 자체는 절대값(0~100)이라 늘 잘 푸는 문제에 가려 둔감합니다. 그래서 컨디션은 <b>그 모델의 평소(처음 측정들의 중앙값) 대비 편차</b>로 봅니다. 작은 변화도 드러나고, 평소보다 7점↓ 주의·15점↓ 멍청해짐. 객관 건강도가 떨어져도 저하로 봅니다.</div>
+              <div className="ex-item"><b>컨디션 (자기 범위 기준)</b> — 절대 점수(0~100)는 늘 맞히는 문제에 가려 둔감합니다. 그래서 <b>그 모델이 관측된 가장 낮을 때=0, 가장 높을 때=100</b>으로 범위를 펴서 지금 위치를 봅니다(작은 변화도 크게 보임). 게이지의 <b>초록 띠 = 평소 변동폭</b>(노이즈 범위)이라, 띠 안이면 정상·노이즈, 띠 아래로 벗어나면(평소보다 2σ↓ 주의·3σ↓ 멍청해짐) 진짜 저하입니다. 표본이 적을 땐 범위가 노이즈라 잠정값입니다.</div>
             </div>
             <QuestionTable latest={latest} models={shown} />
           </div>
