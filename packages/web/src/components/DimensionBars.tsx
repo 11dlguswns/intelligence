@@ -1,7 +1,8 @@
 export interface Bar {
   dim: string;
   label: string;
-  cond: number | null; // self-range condition 0..100 (this dim's own worst→best)
+  hint?: string; // which sub-dimensions this group combines (tooltip)
+  cond: number | null; // self-range condition 0..100 (this group's own worst→best)
   abs: number | null; // absolute quality, shown faint for context
   varies: boolean; // false = no spread yet (degenerate), rendered muted
 }
@@ -14,7 +15,7 @@ export function DimensionBars({ bars, color }: { bars: Bar[]; color: string }) {
       {bars.map((b) => {
         const w = Math.max(0, Math.min(100, b.cond ?? 0));
         return (
-          <div className="dbar" key={b.dim} title={b.abs != null ? `${b.label} · 컨디션 ${b.cond ?? '–'} · 절대 ${b.abs}점` : b.label}>
+          <div className="dbar" key={b.dim} title={`${b.label}${b.hint ? ` (${b.hint})` : ''}${b.abs != null ? ` · 컨디션 ${b.cond ?? '–'} · 절대 ${b.abs}점` : ''}`}>
             <span className="dbar-label">{b.label}</span>
             <span className="dbar-track">
               <span

@@ -18,8 +18,13 @@ const STATUS: Record<Status, { label: string; cls: string; icon: string }> = {
 };
 const RANK: Record<Status, number> = { degraded: 3, warn: 2, baselining: 1, incomplete: 1, normal: 0, above: 0 };
 
-const DIM_LABEL: Record<string, string> = { reasoning: '추론', math: '수학', probability: '확률', spatial: '공간', combinatorics: '조합', process: '절차' };
-const DIM_ORDER = ['reasoning', 'math', 'probability', 'spatial', 'combinatorics', 'process'];
+// Card shows 3 grouped ABILITIES (the 6 measured dims combined into related pairs) so it's
+// not too granular; the "자세히" modal still exposes all 6 individually.
+const GROUPS: { key: string; label: string; subs: string[]; hint: string }[] = [
+  { key: 'reasoning', label: '추론', subs: ['reasoning', 'process'], hint: '논리 추론 · 절차 실행' },
+  { key: 'calc', label: '계산', subs: ['math', 'probability'], hint: '수학 · 확률' },
+  { key: 'structure', label: '공간·조합', subs: ['spatial', 'combinatorics'], hint: '공간 · 경우의 수' },
+];
 
 function ago(updatedAt: string | null | undefined, nowTs: number): string {
   if (!updatedAt) return '—';
@@ -162,19 +167,23 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
     return { cur, lo, hi, med, sd, condIndex, belowBand, status, enough, n, objCur, objDrop };
   };
 
-  // Per-dimension condition, normalized to THAT dimension's own observed range (best=100,
-  // worst=0) for THIS model — same self-relative idea as the headline condition, applied
-  // to each capability so you can see WHICH one dipped.
+  // Per-GROUP condition: each ability group's quality (mean of its member dims) normalized
+  // to THAT group's own observed range (best=100, worst=0) for THIS model — same self-range
+  // idea as the headline, at a coarser, less noisy granularity.
   const dimsOf = (m: string, e: HistoryModelEntry) => {
     const completeRuns = history.runs.map((r) => r.byModel[m]).filter((x) => x && !x.incomplete) as HistoryModelEntry[];
-    return DIM_ORDER.map((d) => {
-      const series = completeRuns.map((x) => x.byQuestion?.[d]).filter((v): v is number => v != null);
-      const cur = e.byQuestion?.[d] ?? null;
+    const groupScore = (entry: HistoryModelEntry, subs: string[]): number | null => {
+      const vals = subs.map((d) => entry.byQuestion?.[d]).filter((v): v is number => v != null);
+      return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+    };
+    return GROUPS.map((g) => {
+      const series = completeRuns.map((x) => groupScore(x, g.subs)).filter((v): v is number => v != null);
+      const cur = groupScore(e, g.subs);
       const lo = series.length ? Math.min(...series) : null;
       const hi = series.length ? Math.max(...series) : null;
       const varies = lo != null && hi != null && hi > lo;
       const cond = cur == null ? null : varies ? Math.round(((cur - lo!) / (hi! - lo!)) * 100) : 100;
-      return { dim: d, label: DIM_LABEL[d] ?? d, cond, abs: cur, varies };
+      return { dim: g.key, label: g.label, hint: g.hint, cond, abs: cur != null ? Math.round(cur) : null, varies };
     });
   };
 
@@ -254,7 +263,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
                 <ConditionGauge lo={info.lo} hi={info.hi} med={info.med} sd={info.sd} cur={info.cur} color={color} belowBand={info.belowBand} />
               )}
 
-              <div className="dims-head">차원별 컨디션 <span>각자 자기 범위 · 막대 끝=평소 최고</span></div>
+              <div className="dims-head">능력별 컨디션 <span>각자 자기 범위 · 막대 끝=평소 최고</span></div>
               <DimensionBars bars={dimsOf(m, e)} color={color} />
 
               <div className="sc-trend">
@@ -269,7 +278,7 @@ npm run bench -- --models opus,sonnet,haiku`}</pre>
       </div>
 
       <div className="legend-line">
-        이 사이트는 <b>성능 순위가 아니라 컨디션</b>을 봅니다 · 큰 숫자·차원 막대 모두 <b>그 모델의 관측 최저=0·최고=100</b>으로 펴서 본 지금 위치(작은 변화도 크게) · 게이지 양끝=절대 점수 · 🛡<b>객관</b>=정답 사다리 통과율 · <b>모델·차원끼리 비교 X</b> · 평소 범위 아래로 떨어지면 🟡주의 🔴멍청해짐
+        이 사이트는 <b>성능 순위가 아니라 컨디션</b>을 봅니다 · 큰 숫자·능력 막대 모두 <b>그 모델의 관측 최저=0·최고=100</b>으로 펴서 본 지금 위치(작은 변화도 크게) · 게이지 양끝=절대 점수 · 🛡<b>객관</b>=정답 사다리 통과율 · <b>모델·능력끼리 비교 X</b> · 평소 범위 아래로 떨어지면 🟡주의 🔴멍청해짐 · 세부 6항목은 "자세히"
       </div>
 
       {details && latest && (
