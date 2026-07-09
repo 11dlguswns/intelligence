@@ -84,6 +84,11 @@
       "ttftMs": {
         "median": 10424
       }
+    },
+    "haiku": {
+      "requested": "haiku",
+      "samples": [],
+      "locked": false
     }
   }
 }
