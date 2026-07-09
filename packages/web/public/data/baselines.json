@@ -89,6 +89,16 @@
       "requested": "haiku",
       "samples": [],
       "locked": false
+    },
+    "opus": {
+      "requested": "opus",
+      "samples": [],
+      "locked": false
+    },
+    "sonnet": {
+      "requested": "sonnet",
+      "samples": [],
+      "locked": false
     }
   }
 }

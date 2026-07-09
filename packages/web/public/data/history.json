@@ -1,10 +1,12 @@
 {
-  "updatedAt": "2026-07-09T08:34:53.794Z",
+  "updatedAt": "2026-07-09T17:30:01.561Z",
   "models": [
     "claude-opus-4-8",
     "claude-sonnet-4-6",
     "claude-haiku-4-5-20251001",
-    "haiku"
+    "haiku",
+    "opus",
+    "sonnet"
   ],
   "questions": [
     "reasoning",
@@ -13076,6 +13078,122 @@
             "probability": 100,
             "spatial": 100,
             "combinatorics": 100,
+            "process": null
+          },
+          "baseline": {
+            "qMedian": null,
+            "qStd": null,
+            "ttftMedian": null,
+            "locked": false,
+            "n": 0
+          },
+          "condition": {
+            "status": "incomplete",
+            "qDelta": null,
+            "latencyRatio": null
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-07-09T17-26-25-498Z-zaev",
+      "startedAt": "2026-07-09T17:26:25.505Z",
+      "profile": "pure",
+      "answerEffort": "low",
+      "byModel": {
+        "opus": {
+          "requested": "opus",
+          "qualityScore": null,
+          "objHealth": null,
+          "incomplete": true,
+          "failedDims": 6,
+          "avgTtftMs": null,
+          "byQuestion": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "byObjective": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "baseline": {
+            "qMedian": null,
+            "qStd": null,
+            "ttftMedian": null,
+            "locked": false,
+            "n": 0
+          },
+          "condition": {
+            "status": "incomplete",
+            "qDelta": null,
+            "latencyRatio": null
+          }
+        },
+        "sonnet": {
+          "requested": "sonnet",
+          "qualityScore": null,
+          "objHealth": null,
+          "incomplete": true,
+          "failedDims": 6,
+          "avgTtftMs": null,
+          "byQuestion": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "byObjective": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "baseline": {
+            "qMedian": null,
+            "qStd": null,
+            "ttftMedian": null,
+            "locked": false,
+            "n": 0
+          },
+          "condition": {
+            "status": "incomplete",
+            "qDelta": null,
+            "latencyRatio": null
+          }
+        },
+        "haiku": {
+          "requested": "haiku",
+          "qualityScore": null,
+          "objHealth": null,
+          "incomplete": true,
+          "failedDims": 6,
+          "avgTtftMs": null,
+          "byQuestion": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "byObjective": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
             "process": null
           },
           "baseline": {
