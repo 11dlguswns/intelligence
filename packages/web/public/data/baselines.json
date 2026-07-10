@@ -107,15 +107,25 @@
           "runId": "2026-07-10T03-29-05-623Z-qcut",
           "qualityScore": 94.5,
           "ttftMean": 4131
+        },
+        {
+          "runId": "2026-07-10T05-29-07-636Z-e2i0",
+          "qualityScore": 94.2,
+          "ttftMean": 9261
+        },
+        {
+          "runId": "2026-07-10T07-29-07-532Z-k6hp",
+          "qualityScore": 92.5,
+          "ttftMean": 4686
         }
       ],
-      "locked": false,
+      "locked": true,
       "qualityScore": {
-        "median": 94.5,
-        "std": 0
+        "median": 94.2,
+        "std": 0.9
       },
       "ttftMs": {
-        "median": 4131
+        "median": 4686
       }
     }
   }
