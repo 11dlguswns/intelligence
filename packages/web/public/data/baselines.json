@@ -99,6 +99,24 @@
       "requested": "sonnet",
       "samples": [],
       "locked": false
+    },
+    "claude-sonnet-5": {
+      "requested": "sonnet",
+      "samples": [
+        {
+          "runId": "2026-07-10T03-29-05-623Z-qcut",
+          "qualityScore": 94.5,
+          "ttftMean": 4131
+        }
+      ],
+      "locked": false,
+      "qualityScore": {
+        "median": 94.5,
+        "std": 0
+      },
+      "ttftMs": {
+        "median": 4131
+      }
     }
   }
 }
