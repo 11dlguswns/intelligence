@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-11T03:51:35.389Z",
+  "updatedAt": "2026-07-11T05:43:29.500Z",
   "models": [
     "claude-opus-4-8",
     "claude-sonnet-4-6",
@@ -14716,6 +14716,122 @@
             "status": "normal",
             "qDelta": 0,
             "latencyRatio": 1.16
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-07-11T05-29-07-616Z-70ru",
+      "startedAt": "2026-07-11T05:29:07.630Z",
+      "profile": "pure",
+      "answerEffort": "low",
+      "byModel": {
+        "claude-opus-4-8": {
+          "requested": "opus",
+          "qualityScore": 93.8,
+          "objHealth": 100,
+          "incomplete": false,
+          "failedDims": 0,
+          "avgTtftMs": 3434,
+          "byQuestion": {
+            "reasoning": 95,
+            "math": 90,
+            "probability": 98,
+            "spatial": 95,
+            "combinatorics": 95,
+            "process": 90
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
+          },
+          "baseline": {
+            "qMedian": 95.3,
+            "qStd": 1.2,
+            "ttftMedian": 5073,
+            "locked": true,
+            "n": 3
+          },
+          "condition": {
+            "status": "normal",
+            "qDelta": -1.5,
+            "latencyRatio": 0.68
+          }
+        },
+        "claude-sonnet-5": {
+          "requested": "sonnet",
+          "qualityScore": 91.2,
+          "objHealth": 100,
+          "incomplete": false,
+          "failedDims": 0,
+          "avgTtftMs": 4511,
+          "byQuestion": {
+            "reasoning": 95,
+            "math": 90,
+            "probability": 92,
+            "spatial": 90,
+            "combinatorics": 90,
+            "process": 90
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
+          },
+          "baseline": {
+            "qMedian": 94.2,
+            "qStd": 0.9,
+            "ttftMedian": 4686,
+            "locked": true,
+            "n": 3
+          },
+          "condition": {
+            "status": "normal",
+            "qDelta": -3,
+            "latencyRatio": 0.96
+          }
+        },
+        "claude-haiku-4-5-20251001": {
+          "requested": "haiku",
+          "qualityScore": 97.7,
+          "objHealth": 100,
+          "incomplete": false,
+          "failedDims": 0,
+          "avgTtftMs": 19818,
+          "byQuestion": {
+            "reasoning": 98,
+            "math": 100,
+            "probability": 100,
+            "spatial": 90,
+            "combinatorics": 98,
+            "process": 100
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
+          },
+          "baseline": {
+            "qMedian": 98.8,
+            "qStd": 0.4,
+            "ttftMedian": 10424,
+            "locked": true,
+            "n": 3
+          },
+          "condition": {
+            "status": "warn",
+            "qDelta": -1.1,
+            "latencyRatio": 1.9
           }
         }
       }
