@@ -1,0 +1,632 @@
+{
+  "runId": "2026-07-13T05-29-06-230Z-zjam",
+  "startedAt": "2026-07-13T05:29:06.238Z",
+  "finishedAt": "2026-07-13T06:07:15.450Z",
+  "profile": "pure",
+  "answerEffort": "low",
+  "judgeModel": "opus",
+  "systemPrompt": "You are solving math and logic problems. Work carefully — you may reason step by step — but you MUST end your reply with a single final line in exactly the form \"정답: <answer>\" and write nothing after it. Follow each problem's requested answer format precisely.",
+  "models": [
+    {
+      "requested": "opus",
+      "resolved": "claude-opus-4-8",
+      "qualityScore": 93,
+      "objHealth": 100,
+      "incomplete": false,
+      "failedDims": 0,
+      "avgTtftMs": 3803,
+      "byQuestion": {
+        "reasoning": 95,
+        "math": 90,
+        "probability": 98,
+        "spatial": 90,
+        "combinatorics": 95,
+        "process": 90
+      },
+      "byObjective": {
+        "reasoning": 100,
+        "math": 100,
+        "probability": 100,
+        "spatial": 100,
+        "combinatorics": 100,
+        "process": 100
+      },
+      "baseline": {
+        "qMedian": 95.3,
+        "qStd": 1.2,
+        "ttftMedian": 5073,
+        "locked": true,
+        "n": 3
+      },
+      "condition": {
+        "status": "normal",
+        "qDelta": -2.3,
+        "latencyRatio": 0.75
+      },
+      "questions": [
+        {
+          "id": "reasoning",
+          "dimension": "reasoning",
+          "title": "기사와 건달",
+          "prompt": "어떤 섬에는 기사(항상 참말만 함)와 건달(항상 거짓말만 함)만 산다. 다음 진술들을 보고 각 사람이 기사인지 건달인지 추론하라.\n\n지호: \"하은와 나는 같은 부류이다\"\n민준: \"하은와 예준 중 적어도 한 명은 건달이다\"\n도윤: \"지호는 기사이다\"\n수아: \"도윤는 기사이다\"\n하은: \"민준와 수아 중 적어도 한 명은 건달이다\"\n예준: \"도윤와 수아 중 적어도 한 명은 건달이다\"\n\n이 중 '건달'인 사람을 모두 골라라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: 이름, 이름 (건달이 없으면 \"없음\")",
+          "correct": "도윤, 민준, 수아, 지호",
+          "answer": "지호·민준·도윤·수아가 건달, 하은·예준이 기사입니다.\n\n정답: 지호, 민준, 도윤, 수아",
+          "score": 95,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "math",
+          "dimension": "math",
+          "title": "연산 사슬",
+          "prompt": "어떤 수에 다음 연산을 순서대로 적용한다.\n18에서 시작한다.\n1) 3로 나눈다\n2) 3로 나눈다\n3) 2를 더한다\n4) 3을 곱한다\n5) 3로 나눈다\n6) 2을 곱한다\n7) 8를 더한다\n8) 3을 곱한다\n9) 3을 곱한다\n10) 4로 나눈다\n11) 7를 뺀다\n12) 4를 더한다\n\n모든 연산을 마친 뒤의 최종 값을 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "33",
+          "answer": "정답: 33",
+          "score": 90,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "probability",
+          "dimension": "probability",
+          "title": "공 뽑기 확률",
+          "prompt": "주머니에 빨간 공 8개와 파란 공 8개가 들어 있다. 여기서 동시에 5개를 무작위로 꺼낼 때, 꺼낸 공 중 빨간 공이 정확히 3개일 확률을 기약분수로 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <분자>/<분모>",
+          "correct": "14/39",
+          "answer": "C(8,3)·C(8,2)/C(16,5) = 56·28/4368 = 1568/4368 = 14/39\n\n정답: 14/39",
+          "score": 98,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "spatial",
+          "dimension": "spatial",
+          "title": "격자 경로",
+          "prompt": "8열 × 8행 격자가 있다. 왼쪽 맨 아래 칸 (0,0)에서 출발해 매번 오른쪽 또는 위로 한 칸씩만 이동하여 오른쪽 맨 위 칸 (7,7)까지 간다. 좌표는 (열,행)이며 다음 칸은 막혀 있어 지날 수 없다: (2,0), (2,7), (3,0), (1,2), (4,1), (7,3). 갈 수 있는 서로 다른 경로의 수를 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "1046",
+          "answer": "정답: 1046",
+          "score": 90,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "combinatorics",
+          "dimension": "combinatorics",
+          "title": "동전 교환",
+          "prompt": "1원, 2원, 5원, 50원짜리 동전을 각각 원하는 개수만큼 사용해 정확히 64원을 만들려고 한다. 동전을 내는 순서는 구분하지 않을 때, 서로 다른 방법은 모두 몇 가지인가?\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "247",
+          "answer": "정답: 247",
+          "score": 95,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "process",
+          "dimension": "process",
+          "title": "반복 모듈러",
+          "prompt": "1에서 시작한다. 다음 과정을 정확히 16번 반복한다: 현재 값에 3를 곱한 뒤, 그 결과를 31으로 나눈 나머지로 바꾼다. 16번 반복한 뒤의 최종 값을 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "28",
+          "answer": "정답: 28",
+          "score": 90,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "requested": "sonnet",
+      "resolved": "claude-sonnet-5",
+      "qualityScore": 92.7,
+      "objHealth": 94.5,
+      "incomplete": false,
+      "failedDims": 0,
+      "avgTtftMs": 9255,
+      "byQuestion": {
+        "reasoning": 88,
+        "math": 95,
+        "probability": 95,
+        "spatial": 93,
+        "combinatorics": 95,
+        "process": 90
+      },
+      "byObjective": {
+        "reasoning": 100,
+        "math": 100,
+        "probability": 100,
+        "spatial": 100,
+        "combinatorics": 100,
+        "process": 67
+      },
+      "baseline": {
+        "qMedian": 94.2,
+        "qStd": 0.9,
+        "ttftMedian": 4686,
+        "locked": true,
+        "n": 3
+      },
+      "condition": {
+        "status": "warn",
+        "qDelta": -1.5,
+        "latencyRatio": 1.98
+      },
+      "questions": [
+        {
+          "id": "reasoning",
+          "dimension": "reasoning",
+          "title": "기사와 건달",
+          "prompt": "어떤 섬에는 기사(항상 참말만 함)와 건달(항상 거짓말만 함)만 산다. 다음 진술들을 보고 각 사람이 기사인지 건달인지 추론하라.\n\n도윤: \"민준는 기사이다\"\n서연: \"예준와 하은 중 적어도 한 명은 건달이다\"\n예준: \"도윤와 민준 중 적어도 한 명은 건달이다\"\n민준: \"예준와 나는 같은 부류이다\"\n하은: \"도윤와 서연 중 적어도 한 명은 건달이다\"\n\n이 중 '건달'인 사람을 모두 골라라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: 이름, 이름 (건달이 없으면 \"없음\")",
+          "correct": "도윤, 민준, 서연",
+          "answer": "정답: 도윤, 서연, 민준",
+          "score": 88,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6⚠",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": null
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "math",
+          "dimension": "math",
+          "title": "연산 사슬",
+          "prompt": "어떤 수에 다음 연산을 순서대로 적용한다.\n18에서 시작한다.\n1) 3로 나눈다\n2) 3로 나눈다\n3) 2를 더한다\n4) 3을 곱한다\n5) 3로 나눈다\n6) 2을 곱한다\n7) 8를 더한다\n8) 3을 곱한다\n9) 3을 곱한다\n10) 4로 나눈다\n11) 7를 뺀다\n12) 4를 더한다\n\n모든 연산을 마친 뒤의 최종 값을 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "33",
+          "answer": "정답: 33",
+          "score": 95,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "probability",
+          "dimension": "probability",
+          "title": "공 뽑기 확률",
+          "prompt": "주머니에 빨간 공 8개와 파란 공 8개가 들어 있다. 여기서 동시에 5개를 무작위로 꺼낼 때, 꺼낸 공 중 빨간 공이 정확히 3개일 확률을 기약분수로 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <분자>/<분모>",
+          "correct": "14/39",
+          "answer": "정답: 14/39",
+          "score": 95,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "spatial",
+          "dimension": "spatial",
+          "title": "격자 경로",
+          "prompt": "8열 × 8행 격자가 있다. 왼쪽 맨 아래 칸 (0,0)에서 출발해 매번 오른쪽 또는 위로 한 칸씩만 이동하여 오른쪽 맨 위 칸 (7,7)까지 간다. 좌표는 (열,행)이며 다음 칸은 막혀 있어 지날 수 없다: (2,0), (2,7), (3,0), (1,2), (4,1), (7,3). 갈 수 있는 서로 다른 경로의 수를 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "1046",
+          "answer": "정답: 1046",
+          "score": 93,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "combinatorics",
+          "dimension": "combinatorics",
+          "title": "동전 교환",
+          "prompt": "1원, 2원, 5원, 50원짜리 동전을 각각 원하는 개수만큼 사용해 정확히 64원을 만들려고 한다. 동전을 내는 순서는 구분하지 않을 때, 서로 다른 방법은 모두 몇 가지인가?\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "247",
+          "answer": "정답: 247",
+          "score": 95,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "process",
+          "dimension": "process",
+          "title": "반복 모듈러",
+          "prompt": "1에서 시작한다. 다음 과정을 정확히 16번 반복한다: 현재 값에 3를 곱한 뒤, 그 결과를 31으로 나눈 나머지로 바꾼다. 16번 반복한 뒤의 최종 값을 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "28",
+          "answer": "정답: 28",
+          "score": 90,
+          "objScore": 67,
+          "measured": true,
+          "levelInfo": "L2✓ L4✗ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 0
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "requested": "haiku",
+      "resolved": "claude-haiku-4-5-20251001",
+      "qualityScore": 98.8,
+      "objHealth": 100,
+      "incomplete": false,
+      "failedDims": 0,
+      "avgTtftMs": 25174,
+      "byQuestion": {
+        "reasoning": 98,
+        "math": 100,
+        "probability": 100,
+        "spatial": 97,
+        "combinatorics": 98,
+        "process": 100
+      },
+      "byObjective": {
+        "reasoning": 100,
+        "math": 100,
+        "probability": 100,
+        "spatial": 100,
+        "combinatorics": 100,
+        "process": 100
+      },
+      "baseline": {
+        "qMedian": 98.8,
+        "qStd": 0.4,
+        "ttftMedian": 10424,
+        "locked": true,
+        "n": 3
+      },
+      "condition": {
+        "status": "warn",
+        "qDelta": 0,
+        "latencyRatio": 2.42
+      },
+      "questions": [
+        {
+          "id": "reasoning",
+          "dimension": "reasoning",
+          "title": "기사와 건달",
+          "prompt": "어떤 섬에는 기사(항상 참말만 함)와 건달(항상 거짓말만 함)만 산다. 다음 진술들을 보고 각 사람이 기사인지 건달인지 추론하라.\n\n지호: \"하은와 나는 같은 부류이다\"\n민준: \"하은와 예준 중 적어도 한 명은 건달이다\"\n도윤: \"지호는 기사이다\"\n수아: \"도윤는 기사이다\"\n하은: \"민준와 수아 중 적어도 한 명은 건달이다\"\n예준: \"도윤와 수아 중 적어도 한 명은 건달이다\"\n\n이 중 '건달'인 사람을 모두 골라라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: 이름, 이름 (건달이 없으면 \"없음\")",
+          "correct": "도윤, 민준, 수아, 지호",
+          "answer": "이 문제를 체계적으로 풀어보겠습니다.\n\n**경우 분석: 도윤이 기사인지 건달인지로 시작**\n\n**경우 1: 도윤 = 기사**\n- 수아의 진술: \"도윤은 기사이다\" → 도윤이 기사이므로 수아는 기사\n- 도윤의 진술: \"지호는 기사이다\" → 도윤이 기사이므로 지호는 기사\n- 지호의 진술: \"하은과 나는 같은 부류이다\" → 지호가 기사이므로 하은은 기사\n- 하은의 진술: \"민준과 수아 중 적어도 한 명은 건달이다\" → 하은이 기사이고 수아가 기사이므로 민준은 건달\n- 민준의 진술: \"하은과 예준 중 적어도 한 명은 건달이다\" → 민준이 건달이므로 이는 거짓 → 하은과 예준은 모두 기사 → 예준은 기사\n- 예준의 진술: \"도윤과 수아 중 적어도 한 명은 건달이다\" → 예준이 기사인데, 도윤과 수아가 모두 기사라면 이는 거짓 → **모순!**\n\n**경우 2: 도윤 = 건달**\n- 수아의 진술: \"도윤은 기사이다\" → 도윤이 건달이므로 거짓 → 수아는 건달\n- 도윤의 진술: \"지호는 기사이다\"",
+          "score": 98,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "math",
+          "dimension": "math",
+          "title": "연산 사슬",
+          "prompt": "어떤 수에 다음 연산을 순서대로 적용한다.\n18에서 시작한다.\n1) 3로 나눈다\n2) 3로 나눈다\n3) 2를 더한다\n4) 3을 곱한다\n5) 3로 나눈다\n6) 2을 곱한다\n7) 8를 더한다\n8) 3을 곱한다\n9) 3을 곱한다\n10) 4로 나눈다\n11) 7를 뺀다\n12) 4를 더한다\n\n모든 연산을 마친 뒤의 최종 값을 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "33",
+          "answer": "18에서 시작하여 각 연산을 순서대로 적용하겠습니다.\n\n시작값: 18\n\n1) 3으로 나눈다: 18 ÷ 3 = 6\n2) 3으로 나눈다: 6 ÷ 3 = 2\n3) 2를 더한다: 2 + 2 = 4\n4) 3을 곱한다: 4 × 3 = 12\n5) 3으로 나눈다: 12 ÷ 3 = 4\n6) 2를 곱한다: 4 × 2 = 8\n7) 8을 더한다: 8 + 8 = 16\n8) 3을 곱한다: 16 × 3 = 48\n9) 3을 곱한다: 48 × 3 = 144\n10) 4로 나눈다: 144 ÷ 4 = 36\n11) 7을 뺀다: 36 - 7 = 29\n12) 4를 더한다: 29 + 4 = 33\n\n정답: 33",
+          "score": 100,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "probability",
+          "dimension": "probability",
+          "title": "공 뽑기 확률",
+          "prompt": "주머니에 빨간 공 8개와 파란 공 8개가 들어 있다. 여기서 동시에 5개를 무작위로 꺼낼 때, 꺼낸 공 중 빨간 공이 정확히 3개일 확률을 기약분수로 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <분자>/<분모>",
+          "correct": "14/39",
+          "answer": "# 풀이\n\n## 1단계: 전체 경우의 수\n빨간 공 8개와 파란 공 8개(총 16개) 중에서 5개를 선택하는 경우의 수:\n\n$$\\binom{16}{5} = \\frac{16!}{5! \\cdot 11!} = \\frac{16 \\times 15 \\times 14 \\times 13 \\times 12}{120} = 4368$$\n\n## 2단계: 빨간 공이 정확히 3개인 경우의 수\n- 빨간 공 8개 중 3개 선택: $\\binom{8}{3}$\n- 파란 공 8개 중 2개 선택: $\\binom{8}{2}$\n\n$$\\binom{8}{3} = \\frac{8 \\times 7 \\times 6}{6} = 56$$\n\n$$\\binom{8}{2} = \\frac{8 \\times 7}{2} = 28$$\n\n유리한 경우의 수: $56 \\times 28 = 1568$\n\n## 3단계: 확률 계산\n$$P = \\frac{1568}{4368}$$\n\n## 4단계: 기약분수로 약분\n$1568 = 2^5 \\times 7^2$\n$4368 = ",
+          "score": 100,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "spatial",
+          "dimension": "spatial",
+          "title": "격자 경로",
+          "prompt": "8열 × 8행 격자가 있다. 왼쪽 맨 아래 칸 (0,0)에서 출발해 매번 오른쪽 또는 위로 한 칸씩만 이동하여 오른쪽 맨 위 칸 (7,7)까지 간다. 좌표는 (열,행)이며 다음 칸은 막혀 있어 지날 수 없다: (2,0), (2,7), (3,0), (1,2), (4,1), (7,3). 갈 수 있는 서로 다른 경로의 수를 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "1046",
+          "answer": "이 문제를 동적계획법(DP)으로 해결하겠습니다.\n\n**문제 설정:**\n- 시작점: (0,0), 종료점: (7,7)\n- 이동: 오른쪽(x증가) 또는 위(y증가)만 가능\n- 차단된 칸: (2,0), (2,7), (3,0), (1,2), (4,1), (7,3)\n\n**DP 접근:**\n`dp[x][y]` = (0,0)에서 (x,y)까지 가는 경로의 수\n\n점화식:\n- (x,y)가 차단되면: `dp[x][y] = 0`\n- 그 외: `dp[x][y] = dp[x-1][y] + dp[x][y-1]`\n- 초기값: `dp[0][0] = 1`\n\n**행별 계산:**\n\n| y\\x | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |\n|-----|---|---|---|---|---|---|---|------|\n| 0 | 1 | 1 | X | X | 0 | 0 | 0 | 0 |\n| 1 | 1 | 2 | 2 | 2 | X | 0 | 0 | 0 |\n| 2 | 1 | X | 2 | 4 | 4 | 4 | 4 |",
+          "score": 97,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "combinatorics",
+          "dimension": "combinatorics",
+          "title": "동전 교환",
+          "prompt": "1원, 2원, 5원, 50원짜리 동전을 각각 원하는 개수만큼 사용해 정확히 64원을 만들려고 한다. 동전을 내는 순서는 구분하지 않을 때, 서로 다른 방법은 모두 몇 가지인가?\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "247",
+          "answer": "이 문제를 체계적으로 풀어보겠습니다.\n\n동전의 개수를 다음과 같이 설정합니다:\n- a: 1원 동전의 개수\n- b: 2원 동전의 개수  \n- c: 5원 동전의 개수\n- d: 50원 동전의 개수\n\n**풀이 조건:** a + 2b + 5c + 50d = 64 (단, a, b, c, d ≥ 0)\n\n50d ≤ 64이므로 d ∈ {0, 1}\n\n## **경우 1: d = 0일 때**\n\na + 2b + 5c = 64\n\n각 c에 대해 a + 2b = 64 - 5c를 만족하는 음이 아닌 정수 쌍의 개수를 구합니다.\n\n고정된 n = 64 - 5c에 대해 a + 2b = n의 해의 개수는 **⌊n/2⌋ + 1**입니다.\n\n5c ≤ 64이므로 c는 0부터 12까지 가능합니다.\n\n| c | n | 해의 개수 |\n|---|---|---------|\n| 0 | 64 | 33 |\n| 1 | 59 | 30 |\n| 2 | 54 | 28 |\n| 3 | 49 | 25 |\n| 4 | 44 | 23 |\n| 5 | 39 | ",
+          "score": 98,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        },
+        {
+          "id": "process",
+          "dimension": "process",
+          "title": "반복 모듈러",
+          "prompt": "1에서 시작한다. 다음 과정을 정확히 16번 반복한다: 현재 값에 3를 곱한 뒤, 그 결과를 31으로 나눈 나머지로 바꾼다. 16번 반복한 뒤의 최종 값을 구하라.\n\n반드시 마지막 줄에 다른 말 없이 정확히 이 형식으로만 최종 답을 적어라 → 정답: <정수>",
+          "correct": "28",
+          "answer": "이 문제를 단계별로 풀어보겠습니다.\n\n초기값: 1\n\n각 단계마다 (현재값 × 3) mod 31을 계산합니다:\n\n| 단계 | 현재값 | ×3 | mod 31 결과 |\n|------|--------|-----|----------|\n| 0 | 1 | 3 | 3 |\n| 1 | 3 | 9 | 9 |\n| 2 | 9 | 27 | 27 |\n| 3 | 27 | 81 | 19 |\n| 4 | 19 | 57 | 26 |\n| 5 | 26 | 78 | 16 |\n| 6 | 16 | 48 | 17 |\n| 7 | 17 | 51 | 20 |\n| 8 | 20 | 60 | 29 |\n| 9 | 29 | 87 | 25 |\n| 10 | 25 | 75 | 13 |\n| 11 | 13 | 39 | 8 |\n| 12 | 8 | 24 | 24 |\n| 13 | 24 | 72 | 10 |\n| 14 | 10 | 30 | 30 |\n| 15 | 30 | 90 | 28 |\n\n16번 반복 후의 최종값은 28입니다.\n\n정답: 28",
+          "score": 100,
+          "objScore": 100,
+          "measured": true,
+          "levelInfo": "L2✓ L4✓ L6✓",
+          "levels": [
+            {
+              "level": 2,
+              "score": 100
+            },
+            {
+              "level": 4,
+              "score": 100
+            },
+            {
+              "level": 6,
+              "score": 100
+            }
+          ],
+          "ttftMs": null,
+          "error": null
+        }
+      ]
+    }
+  ]
+}
