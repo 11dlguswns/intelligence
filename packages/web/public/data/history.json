@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-17T21:44:50.634Z",
+  "updatedAt": "2026-07-24T15:34:33.344Z",
   "models": [
     "claude-opus-4-8",
     "claude-sonnet-4-6",
@@ -17152,6 +17152,238 @@
             "status": "warn",
             "qDelta": 0.4,
             "latencyRatio": 1.51
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-07-19T15-02-31-260Z-n64s",
+      "startedAt": "2026-07-19T15:02:31.289Z",
+      "profile": "pure",
+      "answerEffort": "low",
+      "byModel": {
+        "claude-opus-4-8": {
+          "requested": "opus",
+          "qualityScore": 96,
+          "objHealth": 100,
+          "incomplete": false,
+          "failedDims": 0,
+          "avgTtftMs": 5167,
+          "byQuestion": {
+            "reasoning": 96,
+            "math": 100,
+            "probability": 100,
+            "spatial": 95,
+            "combinatorics": 95,
+            "process": 90
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
+          },
+          "baseline": {
+            "qMedian": 95.3,
+            "qStd": 1.2,
+            "ttftMedian": 5073,
+            "locked": true,
+            "n": 3
+          },
+          "condition": {
+            "status": "normal",
+            "qDelta": 0.7,
+            "latencyRatio": 1.02
+          }
+        },
+        "claude-sonnet-5": {
+          "requested": "sonnet",
+          "qualityScore": 96.8,
+          "objHealth": 100,
+          "incomplete": false,
+          "failedDims": 0,
+          "avgTtftMs": 5292,
+          "byQuestion": {
+            "reasoning": 100,
+            "math": 95,
+            "probability": 100,
+            "spatial": 95,
+            "combinatorics": 95,
+            "process": 96
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
+          },
+          "baseline": {
+            "qMedian": 94.2,
+            "qStd": 0.9,
+            "ttftMedian": 4686,
+            "locked": true,
+            "n": 3
+          },
+          "condition": {
+            "status": "normal",
+            "qDelta": 2.6,
+            "latencyRatio": 1.13
+          }
+        },
+        "claude-haiku-4-5-20251001": {
+          "requested": "haiku",
+          "qualityScore": 98.8,
+          "objHealth": 100,
+          "incomplete": false,
+          "failedDims": 0,
+          "avgTtftMs": 18721,
+          "byQuestion": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 96,
+            "combinatorics": 100,
+            "process": 97
+          },
+          "byObjective": {
+            "reasoning": 100,
+            "math": 100,
+            "probability": 100,
+            "spatial": 100,
+            "combinatorics": 100,
+            "process": 100
+          },
+          "baseline": {
+            "qMedian": 98.8,
+            "qStd": 0.4,
+            "ttftMedian": 10424,
+            "locked": true,
+            "n": 3
+          },
+          "condition": {
+            "status": "warn",
+            "qDelta": 0,
+            "latencyRatio": 1.8
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-07-24T15-29-17-444Z-wcnd",
+      "startedAt": "2026-07-24T15:29:17.446Z",
+      "profile": "pure",
+      "answerEffort": "low",
+      "byModel": {
+        "opus": {
+          "requested": "opus",
+          "qualityScore": null,
+          "objHealth": null,
+          "incomplete": true,
+          "failedDims": 6,
+          "avgTtftMs": null,
+          "byQuestion": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "byObjective": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "baseline": {
+            "qMedian": null,
+            "qStd": null,
+            "ttftMedian": null,
+            "locked": false,
+            "n": 0
+          },
+          "condition": {
+            "status": "incomplete",
+            "qDelta": null,
+            "latencyRatio": null
+          }
+        },
+        "sonnet": {
+          "requested": "sonnet",
+          "qualityScore": null,
+          "objHealth": null,
+          "incomplete": true,
+          "failedDims": 6,
+          "avgTtftMs": null,
+          "byQuestion": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "byObjective": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "baseline": {
+            "qMedian": null,
+            "qStd": null,
+            "ttftMedian": null,
+            "locked": false,
+            "n": 0
+          },
+          "condition": {
+            "status": "incomplete",
+            "qDelta": null,
+            "latencyRatio": null
+          }
+        },
+        "haiku": {
+          "requested": "haiku",
+          "qualityScore": null,
+          "objHealth": null,
+          "incomplete": true,
+          "failedDims": 6,
+          "avgTtftMs": null,
+          "byQuestion": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "byObjective": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "baseline": {
+            "qMedian": null,
+            "qStd": null,
+            "ttftMedian": null,
+            "locked": false,
+            "n": 0
+          },
+          "condition": {
+            "status": "incomplete",
+            "qDelta": null,
+            "latencyRatio": null
           }
         }
       }
