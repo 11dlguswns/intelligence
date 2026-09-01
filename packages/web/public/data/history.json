@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-01T08:31:23.037Z",
+  "updatedAt": "2026-09-01T09:31:30.147Z",
   "models": [
     "claude-opus-4-8",
     "claude-sonnet-4-6",
@@ -21915,6 +21915,122 @@
     {
       "runId": "2026-09-01T08-29-17-761Z-hfew",
       "startedAt": "2026-09-01T08:29:17.763Z",
+      "profile": "pure",
+      "answerEffort": "low",
+      "byModel": {
+        "opus": {
+          "requested": "opus",
+          "qualityScore": null,
+          "objHealth": null,
+          "incomplete": true,
+          "failedDims": 6,
+          "avgTtftMs": null,
+          "byQuestion": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "byObjective": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "baseline": {
+            "qMedian": null,
+            "qStd": null,
+            "ttftMedian": null,
+            "locked": false,
+            "n": 0
+          },
+          "condition": {
+            "status": "incomplete",
+            "qDelta": null,
+            "latencyRatio": null
+          }
+        },
+        "sonnet": {
+          "requested": "sonnet",
+          "qualityScore": null,
+          "objHealth": null,
+          "incomplete": true,
+          "failedDims": 6,
+          "avgTtftMs": null,
+          "byQuestion": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "byObjective": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "baseline": {
+            "qMedian": null,
+            "qStd": null,
+            "ttftMedian": null,
+            "locked": false,
+            "n": 0
+          },
+          "condition": {
+            "status": "incomplete",
+            "qDelta": null,
+            "latencyRatio": null
+          }
+        },
+        "haiku": {
+          "requested": "haiku",
+          "qualityScore": null,
+          "objHealth": null,
+          "incomplete": true,
+          "failedDims": 6,
+          "avgTtftMs": null,
+          "byQuestion": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "byObjective": {
+            "reasoning": null,
+            "math": null,
+            "probability": null,
+            "spatial": null,
+            "combinatorics": null,
+            "process": null
+          },
+          "baseline": {
+            "qMedian": null,
+            "qStd": null,
+            "ttftMedian": null,
+            "locked": false,
+            "n": 0
+          },
+          "condition": {
+            "status": "incomplete",
+            "qDelta": null,
+            "latencyRatio": null
+          }
+        }
+      }
+    },
+    {
+      "runId": "2026-09-01T09-29-06-005Z-1rcv",
+      "startedAt": "2026-09-01T09:29:06.011Z",
       "profile": "pure",
       "answerEffort": "low",
       "byModel": {
